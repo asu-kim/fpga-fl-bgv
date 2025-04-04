@@ -1,5 +1,5 @@
 open_project -reset compiled/test_avg_pool
-set_top main
+set_top avg_pool
 
 # lib
 add_files ../include/avg_pool.h

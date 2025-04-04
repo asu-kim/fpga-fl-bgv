@@ -21,19 +21,3 @@ config_interface -m_axi_auto_max_ports
 # c sim
 csim_design
 
-if {$hls_exec == 1} {
-	# Run Synthesis and Exit
-	csynth_design
-} elseif {$hls_exec == 2} {
-	# Run Synthesis, RTL Simulation and Exit
-	csynth_design
-	cosim_design
-} elseif {$hls_exec == 3} {
-	# Run Synthesis, RTL Simulation, RTL implementation and Exit
-	csynth_design
-	cosim_design
-	export_design
-} else {
-	# Default is to exit after running csynth
-	csynth_design
-}
