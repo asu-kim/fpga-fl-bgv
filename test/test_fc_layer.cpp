@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "fc_layer.h"
+#include "lenet5/fc_layer.h"
 #include "test_utils.h"
 
 #define IN_DIM 256

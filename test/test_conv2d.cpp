@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "conv2d.h"
+#include "lenet5/conv2d.h"
 #include "test_utils.h"
 
 #define IN_ROWS 28

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "avg_pool.h"
+#include "lenet5/avg_pool.h"
 #include "test_utils.h"
 
 #define IN_ROWS 28

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "flatten.h"
+#include "lenet5/flatten.h"
 #include "test_utils.h"
 
 #ifndef __SYNTHESIS__
