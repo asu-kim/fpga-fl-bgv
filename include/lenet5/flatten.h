@@ -6,7 +6,13 @@
 
 typedef ap_fixed<8, 3> data_t;
 
-template<int N, int... Ns>
-void flatten(hls::stream<data_t>& in_stream, hls::stream<data_t>& out_stream);
+template<int... DIMs>
+void flatten(hls::stream<data_t>& in_stream, hls::stream<data_t>& out_stream) {
+#pragma HLS PIPELINE II=1
+    const int flat_dim = (1 * ... * DIMs);
+    for(int i=0; i<flat_dim; ++i) {
+        out_stream.write(in_stream.read());
+    }
+}
 
 #endif
