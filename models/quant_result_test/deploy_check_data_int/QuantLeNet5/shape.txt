@@ -1,0 +1,28 @@
+[64, 1, 28, 28]: QuantLeNet5::input_0
+[64, 1, 28, 28]: QuantLeNet5::QuantLeNet5/FusedMovingAvgObsFakeQuantize[activation_post_process]/ret.3
+[6, 1, 5, 5]: QuantLeNet5::QuantLeNet5/Conv2d[conv1]/FusedMovingAvgObsFakeQuantize[weight_fake_quant]/866
+[64, 6, 24, 24]: QuantLeNet5::QuantLeNet5/Conv2d[conv1]/ret.5
+[64, 6, 24, 24]: QuantLeNet5::QuantLeNet5/FusedMovingAvgObsFakeQuantize[activation_post_process]/ret.7
+[64, 24, 24, 6]: QuantLeNet5::QuantLeNet5/FusedMovingAvgObsFakeQuantize[activation_post_process]/ret.7_swim_transpose_0
+[64, 24, 24, 6]: QuantLeNet5::QuantLeNet5/ReLU[relu]/ret.9
+[64, 12, 12, 6]: QuantLeNet5::QuantLeNet5/AvgPool2d[avg_pool]/910
+[64, 6, 12, 12]: QuantLeNet5::QuantLeNet5/AvgPool2d[avg_pool]/910_sink_transpose_0
+[16, 6, 5, 5]: QuantLeNet5::QuantLeNet5/Conv2d[conv2]/FusedMovingAvgObsFakeQuantize[weight_fake_quant]/918
+[64, 16, 8, 8]: QuantLeNet5::QuantLeNet5/Conv2d[conv2]/ret.11
+[64, 16, 8, 8]: QuantLeNet5::QuantLeNet5/FusedMovingAvgObsFakeQuantize[activation_post_process]/ret.13
+[64, 8, 8, 16]: QuantLeNet5::QuantLeNet5/FusedMovingAvgObsFakeQuantize[activation_post_process]/ret.13_swim_transpose_1
+[64, 8, 8, 16]: QuantLeNet5::QuantLeNet5/ReLU[relu]/ret.15
+[64, 4, 4, 16]: QuantLeNet5::QuantLeNet5/AvgPool2d[avg_pool]/962
+[64, 16, 4, 4]: QuantLeNet5::QuantLeNet5/AvgPool2d[avg_pool]/962_sink_transpose_1
+[64, 256]: QuantLeNet5::QuantLeNet5/ret.19
+[120, 256]: QuantLeNet5::QuantLeNet5/Linear[fc1]/FusedMovingAvgObsFakeQuantize[weight_fake_quant]/979
+[64, 120]: QuantLeNet5::QuantLeNet5/Linear[fc1]/ret.21
+[64, 120]: QuantLeNet5::QuantLeNet5/FusedMovingAvgObsFakeQuantize[activation_post_process]/ret.23
+[64, 120]: QuantLeNet5::QuantLeNet5/ReLU[relu]/ret.25
+[84, 120]: QuantLeNet5::QuantLeNet5/Linear[fc2]/FusedMovingAvgObsFakeQuantize[weight_fake_quant]/998
+[64, 84]: QuantLeNet5::QuantLeNet5/Linear[fc2]/ret.27
+[64, 84]: QuantLeNet5::QuantLeNet5/FusedMovingAvgObsFakeQuantize[activation_post_process]/ret.29
+[64, 84]: QuantLeNet5::QuantLeNet5/ReLU[relu]/ret.31
+[10, 84]: QuantLeNet5::QuantLeNet5/Linear[fc3]/FusedMovingAvgObsFakeQuantize[weight_fake_quant]/1017
+[64, 10]: QuantLeNet5::QuantLeNet5/Linear[fc3]/ret.33
+[64, 10]: QuantLeNet5::QuantLeNet5/FusedMovingAvgObsFakeQuantize[activation_post_process]/ret

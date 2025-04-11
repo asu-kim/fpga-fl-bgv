@@ -4,7 +4,7 @@
 #include <hls_stream.h>
 #include <ap_fixed.h>
 
-typedef ap_fixed<8, 3> data_t; // 8 bit fixed point as precision
+typedef ap_int<32> data_t; // 8 bit fixed point as precision
 
 //----------------------
 // 5x5 kernel, 6 filters
@@ -15,7 +15,8 @@ void conv2d(
         hls::stream<data_t>& out_stream,
         const data_t weight[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE],
         const data_t bias[OUT_C],
-        int rows, int cols
+        int rows, int cols,
+        float act_out_scale=1, int act_out_zp=0
         ) {
     #pragma HLS INLINE OFF
     #pragma HLS ARRAY_PARTITION variable=weight complete dim=1
@@ -50,18 +51,26 @@ void conv2d(
                 for(int oc=0; oc < OUT_C; ++oc) {
 
                     #pragma HLS UNROLL factor=4
-                    data_t sum = bias[oc];
+                    ap_int<128> sum = bias[oc];
 
                     for(int ic=0; ic<IN_C; ++ic) {
                         for(int i=0; i<KERNEL_SIZE; ++i) {
                             int row_idx = (row_start+i) % KERNEL_SIZE;
                             for(int j=0; j<KERNEL_SIZE; ++j) {
-                                sum += line_buffer[ic][row_idx][c-KERNEL_SIZE+1+j] * weight[oc][ic][i][j];
+                                data_t in_val = line_buffer[ic][row_idx][c-KERNEL_SIZE+1+j];
+                                data_t w_val = weight[oc][ic][i][j];
+                                sum += (ap_int<64>)in_val * (ap_int<64>)w_val;
                             }
                         }
                     }
-
-                    out_stream.write((sum>0) ? sum : data_t(0));
+                    
+                    // quant output activation
+                    float sum_float_val = float(sum);
+                    float sum_scaled = sum_float_val * act_out_scale + (float)act_out_zp;
+                    float sum_rounded = std::floor(sum_scaled+0.5f);
+                    int32_t sum_clipped = (int32_t)sum_rounded;
+                    sum_clipped = std::max(std::numeric_limits<int32_t>::min(), std::min(std::numeric_limits<int32_t>::max(), sum_clipped));
+                    out_stream.write((data_t)sum_clipped);
                 }
             }
         }

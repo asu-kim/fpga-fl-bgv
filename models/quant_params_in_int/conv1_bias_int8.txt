@@ -1,0 +1,3 @@
+# Shape: (6,)
+# C-style row major order
+14, -106, -102, -68, 122, -96

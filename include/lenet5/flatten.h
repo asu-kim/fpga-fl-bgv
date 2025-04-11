@@ -4,7 +4,7 @@
 #include <hls_stream.h>
 #include <ap_fixed.h>
 
-typedef ap_fixed<8, 3> data_t;
+typedef ap_int<32> data_t;
 
 template<int... DIMs>
 void flatten(hls::stream<data_t>& in_stream, hls::stream<data_t>& out_stream) {
