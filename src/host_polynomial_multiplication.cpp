@@ -18,7 +18,6 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include <random>
 #include "polynomial_multiplication.hpp"
 #include "constants.hpp"
 
@@ -28,59 +27,6 @@
 #include "experimental/xrt_kernel.h"
 
 #define DATA_SIZE POLYNOMIAL_DEGREE
-
-std::mt19937 rng;
-
-void polynomial_multiplication_reference(data_t* input1, data_t* input2, data_t* output) {
-    data_t n = POLYNOMIAL_DEGREE;
-    data_t n_inv = INVERSE_POLYNOMIAL_DEGREE;
-    data_t q = CIPHERTEXT_MODULUS;
-    data_t w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
-    data_t w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
-
-    // data_t temp[POLYNOMIAL_DEGREE];
-    for (int i = 0; i < n; i++) {
-        int pos = 0;
-        for (int j = 0; j <= i; j++) {
-            pos += (input1[j] * input2[i - j]) % q;
-        }
-        int neg = 0;
-        for (int j = i + 1; j < n; j++) {
-            neg += (input1[j] * input2[n + i - j]) % q;
-        }
-        output[i] = (((pos - neg) % q) + q) % q;
-    }
-}
-
-void generate_key(int* private_key, int* public_key1, int* public_key2) {
-    int n = DATA_SIZE;
-    int p = PLAINTEXT_MODULUS;
-    int q = CIPHERTEXT_MODULUS;
-
-    int a_prime[n];
-    int error[n];
-
-    std::uniform_int_distribution<int> dist1(-1, 1);
-
-    for (int i = 0; i < n; i++) {
-        private_key[i] = dist1[rng];
-        error[i] = dist1[rng];
-    }
-
-    std::uniform_int_distribution<int> dist2(0, q - 1);
-
-    for (int i = 0; i < n; i++) {
-        a_prime[i] = dist2[rng];
-    }
-
-    int temp[n];
-    polynomial_multiplication_reference(a_prime, private_key, temp);
-    
-    for (int i = 0; i < n; i++) {
-        public_key1[i] = temp[i] + p * error[i];
-        public_key2[i] = -a_prime[i];
-    }
-}
 
 int main(int argc, char** argv) {
     // Command Line Parser
