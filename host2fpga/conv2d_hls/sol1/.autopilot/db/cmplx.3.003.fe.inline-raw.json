@@ -1,0 +1,50 @@
+{
+  "0": {
+    "basicblocks": 13,
+    "calls": "1",
+    "file": "conv2d_kernel.cpp",
+    "fileloc": 12,
+    "instructions": 84,
+    "loads": {
+      "T": 3
+    },
+    "name": "conv2d_kernel",
+    "stores": {
+      "G": 2,
+      "T": 1
+    },
+    "total_instructions": 4386
+  },
+  "1": {
+    "basicblocks": 134,
+    "calls": "2 2 2 2 2 2 2 2 2 2 2 2",
+    "file": "conv2d.h",
+    "fileloc": 15,
+    "instructions": 2526,
+    "loads": {
+      "G": 456,
+      "L": 81
+    },
+    "name": "conv2d<6, 3, 5, 28>",
+    "stores": {
+      "L": 46
+    },
+    "total_instructions": 4302
+  },
+  "2": {
+    "basicblocks": 9,
+    "calls": "",
+    "file": "hls_floor.h",
+    "fileloc": 13,
+    "instructions": 148,
+    "loads": {
+      "G": 1,
+      "L": 21
+    },
+    "name": "generic_floor<float>",
+    "stores": {
+      "L": 20
+    },
+    "total_instructions": 148
+  }
+}

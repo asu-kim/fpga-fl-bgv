@@ -1,0 +1,85 @@
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:1446:7: warning: Added loop label VITIS_LOOP_1223_1:   [xilinx-label-all-loops]
+      for (i = 0; i < __N - 1; ++i) {
+      ^~~
+      VITIS_LOOP_1223_1: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:1446:7: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:2420:5: warning: Added loop label VITIS_LOOP_676_1:   [xilinx-label-all-loops]
+    for (unsigned i = low; i != high; ++i) {
+    ^~~
+    VITIS_LOOP_676_1: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:2420:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:2434:5: warning: Added loop label VITIS_LOOP_690_1:   [xilinx-label-all-loops]
+    for (unsigned i = low; i != high; ++i) {
+    ^~~
+    VITIS_LOOP_690_1: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:2434:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:2448:5: warning: Added loop label VITIS_LOOP_704_1:   [xilinx-label-all-loops]
+    for (unsigned i = low; i != high; ++i) {
+    ^~~
+    VITIS_LOOP_704_1: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:2448:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:4077:7: warning: Added loop label VITIS_LOOP_1247_1:   [xilinx-label-all-loops]
+      for (i = 0; i < __N - 1; ++i) {
+      ^~~
+      VITIS_LOOP_1247_1: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:4077:7: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12536:5: warning: Added loop label VITIS_LOOP_31_1:   [xilinx-label-all-loops]
+    for(int r=0; r < rows+KERNEL_SIZE-1; ++r) {
+    ^~~
+    VITIS_LOOP_31_1: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12536:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12537:9: warning: Added loop label VITIS_LOOP_32_2:   [xilinx-label-all-loops]
+        for(int c=0; c < cols; ++c) {
+        ^~~
+        VITIS_LOOP_32_2: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12537:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12540:2: warning: Added loop label VITIS_LOOP_35_3:   [xilinx-label-all-loops]
+ for(int ch=0; ch<IN_C; ++ch) {
+ ^~~
+ VITIS_LOOP_35_3: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12540:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12556:13: warning: Added loop label VITIS_LOOP_51_4:   [xilinx-label-all-loops]
+            for(int c = KERNEL_SIZE-1; c<cols; ++c) {
+            ^~~
+            VITIS_LOOP_51_4: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12556:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12558:2: warning: Added loop label VITIS_LOOP_53_5:   [xilinx-label-all-loops]
+ for(int oc=0; oc < OUT_C; ++oc) {
+ ^~~
+ VITIS_LOOP_53_5: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12558:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12563:21: warning: Added loop label VITIS_LOOP_58_6:   [xilinx-label-all-loops]
+                    for(int ic=0; ic<IN_C; ++ic) {
+                    ^~~
+                    VITIS_LOOP_58_6: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12563:21: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12564:25: warning: Added loop label VITIS_LOOP_59_7:   [xilinx-label-all-loops]
+                        for(int i=0; i<KERNEL_SIZE; ++i) {
+                        ^~~
+                        VITIS_LOOP_59_7: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12564:25: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12566:29: warning: Added loop label VITIS_LOOP_61_8:   [xilinx-label-all-loops]
+                            for(int j=0; j<KERNEL_SIZE; ++j) {
+                            ^~~
+                            VITIS_LOOP_61_8: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12566:29: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12633:9: warning: Added loop label VITIS_LOOP_42_1:   [xilinx-label-all-loops]
+        for(int i=0;i<W_TOTAL;i++) {
+        ^~~
+        VITIS_LOOP_42_1: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12633:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12638:9: warning: Added loop label VITIS_LOOP_47_2:   [xilinx-label-all-loops]
+        for(int i=0;i<6;i++) {
+        ^~~
+        VITIS_LOOP_47_2: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12638:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12651:9: warning: Added loop label VITIS_LOOP_60_3:   [xilinx-label-all-loops]
+        for(int i=0;i<ACT_TOTAL;i++) {
+        ^~~
+        VITIS_LOOP_60_3: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12651:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12666:9: warning: Added loop label VITIS_LOOP_75_4:   [xilinx-label-all-loops]
+        for(int i=0;i<OUT_PIX;i++) {
+        ^~~
+        VITIS_LOOP_75_4: 
+/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/.autopilot/db/conv2d_kernel.pp.0.cpp:12666:9: note: FIX-IT applied suggested code changes

@@ -1,0 +1,60 @@
+INFO: [vitis-run 82-31] Launching vitis_hls: vitis_hls -nolog -run tcl -f /home/megan/Vitis-AI/accelerator/host2fpga/build_hls.tcl -work_dir /home/megan/Vitis-AI/accelerator/host2fpga
+
+****** Vitis HLS - High-Level Synthesis from C, C++ and OpenCL v2024.1 (64-bit)
+  **** SW Build 5069499 on May 21 2024
+  **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+  **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+  **** Start of session at: Thu Apr 17 02:01:36 2025
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source /tools/Xilinx/Vitis_HLS/2024.1/scripts/vitis_hls/hls.tcl -notrace
+INFO: [HLS 200-10] For user 'megan' on host 'en4230652l.fulton.ad.asu.edu' (Linux_x86_64 version 5.15.0-79-generic) on Thu Apr 17 02:01:36 MST 2025
+INFO: [HLS 200-10] On os Ubuntu 22.04.5 LTS
+INFO: [HLS 200-10] In directory '/home/megan/Vitis-AI/accelerator/host2fpga'
+Sourcing Tcl script '/home/megan/Vitis-AI/accelerator/host2fpga/build_hls.tcl'
+INFO: [HLS 200-1510] Running: open_project conv2d_hls 
+INFO: [HLS 200-10] Opening project '/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls'.
+INFO: [HLS 200-1510] Running: set_top conv2d_kernel 
+INFO: [HLS 200-1510] Running: add_files kernels/conv2d_kernel.cpp 
+INFO: [HLS 200-10] Adding design file 'kernels/conv2d_kernel.cpp' to the project
+INFO: [HLS 200-1510] Running: add_files kernels/aes_utils.h 
+INFO: [HLS 200-10] Adding design file 'kernels/aes_utils.h' to the project
+INFO: [HLS 200-1510] Running: open_solution sol1 -flow_target vitis 
+INFO: [HLS 200-10] Opening solution '/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1'.
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 3ns.
+INFO: [HLS 200-1611] Setting target device to 'xcvu37p-fsvh2892-2L-e'
+INFO: [HLS 200-1505] Using flow_target 'vitis'
+Resolution: For help on HLS 200-1505 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2024.1%20English&url=ug1448-hls-guidance&resourceid=200-1505.html
+INFO: [HLS 200-1464] Running solution command: config_interface -m_axi_latency=64
+INFO: [HLS 200-1464] Running solution command: config_interface -m_axi_alignment_byte_size=64
+INFO: [HLS 200-1464] Running solution command: config_interface -m_axi_max_widen_bitwidth=512
+INFO: [HLS 200-1464] Running solution command: config_interface -default_interface=kernel
+INFO: [HLS 200-1464] Running solution command: config_rtl -register_reset_num=3
+INFO: [HLS 200-1464] Running solution command: config_compile -complex-mul-dsp=0
+INFO: [HLS 200-1464] Running solution command: config_compile -pipeline_loops=1
+INFO: [XFORM 203-1171] Pipeline the innermost loop with trip count more than 1 or its parent loop when its trip count is less than or equal 1.
+INFO: [HLS 200-1510] Running: set_part xcvu37p-fsvh2892-2L-e 
+INFO: [XFORM 203-1171] Pipeline the innermost loop with trip count more than 1 or its parent loop when its trip count is less than or equal 1.
+INFO: [HLS 200-1510] Running: create_clock -period 3.0 -name default 
+INFO: [HLS 200-1510] Running: config_compile -pipeline_loops 1 
+INFO: [XFORM 203-1171] Pipeline the innermost loop with trip count more than 1 or its parent loop when its trip count is less than or equal 1.
+INFO: [HLS 200-1510] Running: csynth_design 
+INFO: [HLS 200-111] Finished File checks and directory preparation: CPU user time: 0.03 seconds. CPU system time: 0 seconds. Elapsed time: 0.03 seconds; current allocated memory: 374.398 MB.
+INFO: [HLS 200-10] Analyzing design file 'kernels/conv2d_kernel.cpp' ... 
+ERROR: [HLS 207-3776] use of undeclared identifier 'bias' (kernels/conv2d_kernel.cpp:26:38)
+WARNING: [HLS 207-5556] invalid variable expr  (kernels/conv2d_kernel.cpp:26:38)
+ERROR: [HLS 207-3776] use of undeclared identifier 'input' (kernels/conv2d_kernel.cpp:27:38)
+WARNING: [HLS 207-5556] invalid variable expr  (kernels/conv2d_kernel.cpp:27:38)
+ERROR: [HLS 207-3776] use of undeclared identifier 'output' (kernels/conv2d_kernel.cpp:28:38)
+WARNING: [HLS 207-5556] invalid variable expr  (kernels/conv2d_kernel.cpp:28:38)
+INFO: [HLS 200-2161] Finished Command csynth_design Elapsed time: 00:00:00; Allocated memory: 0.480 MB.
+ 
+    while executing
+"source /home/megan/Vitis-AI/accelerator/host2fpga/build_hls.tcl"
+    ("uplevel" body line 1)
+    invoked from within
+"uplevel \#0 [list source $tclfile] "
+
+INFO: [HLS 200-112] Total CPU user time: 1.43 seconds. Total CPU system time: 0.27 seconds. Total elapsed time: 1.62 seconds; peak allocated memory: 374.879 MB.
+INFO: [vitis-run 60-1662] Stopping dispatch session having empty uuid.

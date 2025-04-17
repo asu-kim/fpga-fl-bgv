@@ -1,0 +1,188 @@
+{
+  "0": {
+    "basicblocks": 25,
+    "calls": "10 10 10 4 6",
+    "file": "conv2d_kernel.cpp",
+    "fileloc": 12,
+    "instructions": 150,
+    "loads": {
+      "L": 3,
+      "T": 3
+    },
+    "name": "conv2d_kernel",
+    "stores": {
+      "G": 2,
+      "L": 3,
+      "T": 1
+    },
+    "total_instructions": 6696
+  },
+  "1": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "x_hls_utils.h",
+    "fileloc": 283,
+    "instructions": 55,
+    "loads": {
+      "L": 1
+    },
+    "name": "fp_struct",
+    "stores": {
+      "L": 1
+    },
+    "total_instructions": 318
+  },
+  "10": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "aes_utils.h",
+    "fileloc": 16,
+    "instructions": 3,
+    "name": "decrypt_word",
+    "total_instructions": 48
+  },
+  "11": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "x_hls_utils.h",
+    "fileloc": 298,
+    "instructions": 40,
+    "name": "fp_struct",
+    "total_instructions": 288
+  },
+  "12": {
+    "basicblocks": 1,
+    "calls": "7",
+    "file": "conv2d_kernel.pp.0.cpp",
+    "fileloc": 0,
+    "instructions": 2,
+    "name": "",
+    "total_instructions": 19
+  },
+  "13": {
+    "basicblocks": 12,
+    "calls": "3 1 15 9 15 5 11 8",
+    "file": "hls_floor.h",
+    "fileloc": 13,
+    "instructions": 103,
+    "loads": {
+      "L": 3
+    },
+    "name": "generic_floor<float>",
+    "stores": {
+      "L": 2
+    },
+    "total_instructions": 2668
+  },
+  "14": {
+    "basicblocks": 1,
+    "calls": "5",
+    "file": "x_hls_utils.h",
+    "fileloc": 322,
+    "instructions": 18,
+    "loads": {
+      "L": 1
+    },
+    "name": "to_float",
+    "stores": {
+      "L": 1
+    },
+    "total_instructions": 301
+  },
+  "15": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "x_hls_utils.h",
+    "fileloc": 349,
+    "instructions": 4,
+    "name": "__signbit",
+    "total_instructions": 9
+  },
+  "2": {
+    "basicblocks": 1,
+    "calls": "13",
+    "file": "floorfloat.cpp",
+    "fileloc": 6,
+    "instructions": 2,
+    "name": "floorf",
+    "total_instructions": 2670
+  },
+  "3": {
+    "basicblocks": 6,
+    "calls": "",
+    "file": "hls_round.h",
+    "fileloc": 20,
+    "instructions": 18,
+    "name": "init_mask_table<float>",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 18
+  },
+  "4": {
+    "basicblocks": 63,
+    "calls": "2 2",
+    "file": "conv2d.h",
+    "fileloc": 15,
+    "instructions": 234,
+    "loads": {
+      "L": 7
+    },
+    "name": "conv2d<6, 3, 5, 28>",
+    "stores": {
+      "L": 6
+    },
+    "total_instructions": 6221
+  },
+  "5": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "x_hls_utils.h",
+    "fileloc": 309,
+    "instructions": 32,
+    "name": "data",
+    "total_instructions": 279
+  },
+  "6": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "aes_utils.h",
+    "fileloc": 11,
+    "instructions": 3,
+    "name": "encrypt_word",
+    "total_instructions": 48
+  },
+  "7": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "aes_utils.h",
+    "fileloc": 9,
+    "instructions": 2,
+    "name": "__cxx_global_var_init",
+    "total_instructions": 17
+  },
+  "8": {
+    "basicblocks": 1,
+    "calls": "14",
+    "file": "x_hls_utils.h",
+    "fileloc": 346,
+    "instructions": 2,
+    "name": "to_ieee",
+    "total_instructions": 303
+  },
+  "9": {
+    "basicblocks": 1,
+    "calls": "1 1 8",
+    "file": "hls_copysign.h",
+    "fileloc": 10,
+    "instructions": 18,
+    "loads": {
+      "L": 1
+    },
+    "name": "generic_copysign<float>",
+    "stores": {
+      "L": 1
+    },
+    "total_instructions": 957
+  }
+}

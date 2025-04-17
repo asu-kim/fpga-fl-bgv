@@ -1,0 +1,29 @@
+{
+    "1": {
+        "name": "conv2d_kernel_Pipeline_VITIS_LOOP_42_1",
+        "file": "kernels\/conv2d_kernel.cpp",
+        "fileloc": "42",
+        "instructions": "19",
+        "total_instructions": "19",
+        "calls": "",
+        "basicblocks": "4",
+        "loads": {
+            "L": "1"
+        },
+        "stores": {
+            "L": "2"
+        },
+        "loops": {
+            "L": "1"
+        }
+    },
+    "0": {
+        "name": "conv2d_kernel",
+        "file": "conv2d_kernel.cpp",
+        "fileloc": "12",
+        "instructions": "30",
+        "total_instructions": "49",
+        "calls": "1",
+        "basicblocks": "1"
+    }
+}

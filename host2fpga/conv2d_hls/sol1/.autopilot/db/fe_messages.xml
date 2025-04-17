@@ -1,0 +1,191 @@
+<xilinx:hls_fe_msgs>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/aes_utils.h:12:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="encrypt_word" ARG_PragmaIsValid="1" ARG_PragmaType="inline" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/aes_utils.h:17:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="decrypt_word" ARG_PragmaIsValid="1" ARG_PragmaType="inline" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d.h:23:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d" ARG_PragmaIsValid="1" ARG_PragmaOptions="OFF" ARG_PragmaType="inline" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d.h:24:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d" ARG_PragmaIsValid="1" ARG_PragmaOptions="variable=weight complete dim=1" ARG_PragmaType="array_partition" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d.h:25:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d" ARG_PragmaIsValid="1" ARG_PragmaOptions="variable=bias complete dim=1" ARG_PragmaType="array_partition" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d.h:28:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d" ARG_PragmaIsValid="1" ARG_PragmaOptions="variable=line_buffer complete dim=1" ARG_PragmaType="array_partition" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d.h:34:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d" ARG_PragmaIsValid="1" ARG_PragmaOptions="II=1" ARG_PragmaType="pipeline" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d.h:36:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d" ARG_PragmaIsValid="1" ARG_PragmaType="unroll" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d.h:52:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d" ARG_PragmaIsValid="1" ARG_PragmaOptions="II=1" ARG_PragmaType="pipeline" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d.h:55:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d" ARG_PragmaIsValid="1" ARG_PragmaOptions="factor=4" ARG_PragmaType="unroll" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="/home/megan/Vitis-AI/accelerator/host2fpga/build_hls.tcl:12:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaContext="directive" ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="name=conv2d_kernel" ARG_PragmaType="top" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:20:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="m_axi port=enc_weights offset=slave bundle=HBM0" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:21:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="m_axi port=enc_bias offset=slave bundle=HBM0" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:22:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="m_axi port=enc_input offset=slave bundle=HBM1" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:23:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="m_axi port=enc_output offset=slave bundle=HBM2" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:25:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="s_axilite port=enc_weights bundle=control" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:26:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="s_axilite port=enc_bias bundle=control" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:27:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="s_axilite port=enc_input bundle=control" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:28:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="s_axilite port=enc_output bundle=control" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:30:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="s_axilite port=rows bundle=control" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:31:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="s_axilite port=cols bundle=control" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:32:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="s_axilite port=return bundle=control" ARG_PragmaType="interface" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:37:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="variable=weight complete dim=1" ARG_PragmaType="array_partition" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:38:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="variable=bias complete dim=1" ARG_PragmaType="array_partition" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:43:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="II=1" ARG_PragmaType="pipeline" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:48:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="II=1" ARG_PragmaType="pipeline" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:55:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="variable=in_stream depth=1024" ARG_PragmaType="stream" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:56:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="variable=out_stream depth=1024" ARG_PragmaType="stream" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:61:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="II=1" ARG_PragmaType="pipeline" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="PRAGMA_VERBOSE_DUMP" msg_id="207-5471" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:76:9" msg_body="HLS pragma dump">
+        <args ARG_PragmaFunction="conv2d_kernel" ARG_PragmaIsValid="1" ARG_PragmaOptions="II=1" ARG_PragmaType="pipeline" ClangWarningOption="dump-hls-pragmas"/>
+    </msg>
+    <msg msg_groups="CODE_UNSUPPORTED" msg_id="214-131" msg_severity="INFO" msg_loc="kernels/conv2d_kernel.cpp:44:10" msg_body="Inlining function 'decrypt_word(ap_uint&lt;32&gt;)' into 'conv2d_kernel'">
+        <args Callee="decrypt_word(ap_uint&lt;32&gt;)" Callee-DebugLoc="File kernels/aes_utils.h Line 16 Column 0" Caller="conv2d_kernel" Caller-DebugLoc="File kernels/conv2d_kernel.cpp Line 19 Column 0"/>
+    </msg>
+    <msg msg_groups="CODE_UNSUPPORTED" msg_id="214-131" msg_severity="INFO" msg_loc="kernels/conv2d_kernel.cpp:78:29" msg_body="Inlining function 'encrypt_word(ap_uint&lt;32&gt;)' into 'conv2d_kernel'">
+        <args Callee="encrypt_word(ap_uint&lt;32&gt;)" Callee-DebugLoc="File kernels/aes_utils.h Line 11 Column 0" Caller="conv2d_kernel" Caller-DebugLoc="File kernels/conv2d_kernel.cpp Line 19 Column 0"/>
+    </msg>
+    <msg msg_groups="CODE_UNSUPPORTED" msg_id="214-131" msg_severity="INFO" msg_loc="kernels/conv2d_kernel.cpp:62:26" msg_body="Inlining function 'decrypt_word(ap_uint&lt;32&gt;)' into 'conv2d_kernel'">
+        <args Callee="decrypt_word(ap_uint&lt;32&gt;)" Callee-DebugLoc="File kernels/aes_utils.h Line 16 Column 0" Caller="conv2d_kernel" Caller-DebugLoc="File kernels/conv2d_kernel.cpp Line 19 Column 0"/>
+    </msg>
+    <msg msg_groups="CODE_UNSUPPORTED" msg_id="214-131" msg_severity="INFO" msg_loc="kernels/conv2d_kernel.cpp:49:20" msg_body="Inlining function 'decrypt_word(ap_uint&lt;32&gt;)' into 'conv2d_kernel'">
+        <args Callee="decrypt_word(ap_uint&lt;32&gt;)" Callee-DebugLoc="File kernels/aes_utils.h Line 16 Column 0" Caller="conv2d_kernel" Caller-DebugLoc="File kernels/conv2d_kernel.cpp Line 19 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INTERFACE" msg_id="214-386" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:19:0" msg_body="A depth specification is required for MAXI interface port 'enc_weights' for cosimulation.">
+        <args Name="enc_weights"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INTERFACE" msg_id="214-386" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:19:0" msg_body="A depth specification is required for MAXI interface port 'enc_bias' for cosimulation.">
+        <args Name="enc_bias"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INTERFACE" msg_id="214-386" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:19:0" msg_body="A depth specification is required for MAXI interface port 'enc_input' for cosimulation.">
+        <args Name="enc_input"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INTERFACE" msg_id="214-386" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:19:0" msg_body="A depth specification is required for MAXI interface port 'enc_output' for cosimulation.">
+        <args Name="enc_output"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-291" msg_severity="INFO" msg_loc="kernels/conv2d.h:35:19" msg_body="Loop 'VITIS_LOOP_35_3' is marked as complete unroll implied by the pipeline pragma">
+        <args LoopName="VITIS_LOOP_35_3"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-291" msg_severity="INFO" msg_loc="kernels/conv2d.h:53:19" msg_body="Loop 'VITIS_LOOP_53_5' is marked as complete unroll implied by the pipeline pragma">
+        <args LoopName="VITIS_LOOP_53_5"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-291" msg_severity="INFO" msg_loc="kernels/conv2d.h:58:38" msg_body="Loop 'VITIS_LOOP_58_6' is marked as complete unroll implied by the pipeline pragma">
+        <args LoopName="VITIS_LOOP_58_6"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-291" msg_severity="INFO" msg_loc="kernels/conv2d.h:59:42" msg_body="Loop 'VITIS_LOOP_59_7' is marked as complete unroll implied by the pipeline pragma">
+        <args LoopName="VITIS_LOOP_59_7"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-291" msg_severity="INFO" msg_loc="kernels/conv2d.h:61:46" msg_body="Loop 'VITIS_LOOP_61_8' is marked as complete unroll implied by the pipeline pragma">
+        <args LoopName="VITIS_LOOP_61_8"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-186" msg_severity="INFO" msg_loc="kernels/conv2d.h:22:0" msg_body="Unrolling loop 'VITIS_LOOP_35_3' (kernels/conv2d.h:35:19) in function 'conv2d&lt;6, 3, 5, 28&gt;' completely with a factor of 3">
+        <args Factor="3" LoopLoc="kernels/conv2d.h:35:19" LoopName="VITIS_LOOP_35_3"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-186" msg_severity="INFO" msg_loc="kernels/conv2d.h:22:0" msg_body="Unrolling loop 'VITIS_LOOP_53_5' (kernels/conv2d.h:53:19) in function 'conv2d&lt;6, 3, 5, 28&gt;' completely with a factor of 6">
+        <args Factor="6" LoopLoc="kernels/conv2d.h:53:19" LoopName="VITIS_LOOP_53_5"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-186" msg_severity="INFO" msg_loc="kernels/conv2d.h:22:0" msg_body="Unrolling loop 'VITIS_LOOP_58_6' (kernels/conv2d.h:58:38) in function 'conv2d&lt;6, 3, 5, 28&gt;' completely with a factor of 3">
+        <args Factor="3" LoopLoc="kernels/conv2d.h:58:38" LoopName="VITIS_LOOP_58_6"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-186" msg_severity="INFO" msg_loc="kernels/conv2d.h:22:0" msg_body="Unrolling loop 'VITIS_LOOP_59_7' (kernels/conv2d.h:59:42) in function 'conv2d&lt;6, 3, 5, 28&gt;' completely with a factor of 5">
+        <args Factor="5" LoopLoc="kernels/conv2d.h:59:42" LoopName="VITIS_LOOP_59_7"/>
+    </msg>
+    <msg msg_groups="PRAGMA_UNROLL" msg_id="214-186" msg_severity="INFO" msg_loc="kernels/conv2d.h:22:0" msg_body="Unrolling loop 'VITIS_LOOP_61_8' (kernels/conv2d.h:61:46) in function 'conv2d&lt;6, 3, 5, 28&gt;' completely with a factor of 5">
+        <args Factor="5" LoopLoc="kernels/conv2d.h:61:46" LoopName="VITIS_LOOP_61_8"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h:322:0" msg_body="Inlining function 'fp_struct&lt;float&gt;::data() const (.3.24.34.43.54)' into 'fp_struct&lt;float&gt;::to_float() const (.21.31.40.51)'">
+        <args Callee="fp_struct&lt;float&gt;::data() const (.3.24.34.43.54)" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 309 Column 0" Caller="fp_struct&lt;float&gt;::to_float() const (.21.31.40.51)" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 322 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h:346:0" msg_body="Inlining function 'fp_struct&lt;float&gt;::to_float() const (.21.31.40.51)' into 'fp_struct&lt;float&gt;::to_ieee() const'">
+        <args Callee="fp_struct&lt;float&gt;::to_float() const (.21.31.40.51)" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 322 Column 0" Caller="fp_struct&lt;float&gt;::to_ieee() const" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 346 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_copysign.h:10:0" msg_body="Inlining function 'fp_struct&lt;float&gt;::fp_struct(float)' into 'float generic_copysign&lt;float&gt;(float, float)'">
+        <args Callee="fp_struct&lt;float&gt;::fp_struct(float)" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 283 Column 0" Caller="float generic_copysign&lt;float&gt;(float, float)" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_copysign.h Line 10 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_copysign.h:10:0" msg_body="Inlining function 'fp_struct&lt;float&gt;::to_ieee() const' into 'float generic_copysign&lt;float&gt;(float, float)'">
+        <args Callee="fp_struct&lt;float&gt;::to_ieee() const" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 346 Column 0" Caller="float generic_copysign&lt;float&gt;(float, float)" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_copysign.h Line 10 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0" msg_body="Inlining function 'fp_struct&lt;float&gt;::fp_struct(float)' into 'float generic_floor&lt;float&gt;(float)'">
+        <args Callee="fp_struct&lt;float&gt;::fp_struct(float)" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 283 Column 0" Caller="float generic_floor&lt;float&gt;(float)" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h Line 14 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0" msg_body="Inlining function 'fp_struct&lt;float&gt;::__signbit() const' into 'float generic_floor&lt;float&gt;(float)'">
+        <args Callee="fp_struct&lt;float&gt;::__signbit() const" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 349 Column 0" Caller="float generic_floor&lt;float&gt;(float)" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h Line 14 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0" msg_body="Inlining function 'float generic_copysign&lt;float&gt;(float, float)' into 'float generic_floor&lt;float&gt;(float)'">
+        <args Callee="float generic_copysign&lt;float&gt;(float, float)" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_copysign.h Line 10 Column 0" Caller="float generic_floor&lt;float&gt;(float)" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h Line 14 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0" msg_body="Inlining function 'fp_struct&lt;float&gt;::data() const (.3.24.34.43.54)' into 'float generic_floor&lt;float&gt;(float)'">
+        <args Callee="fp_struct&lt;float&gt;::data() const (.3.24.34.43.54)" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 309 Column 0" Caller="float generic_floor&lt;float&gt;(float)" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h Line 14 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0" msg_body="Inlining function 'fp_struct&lt;float&gt;::fp_struct(ap_uint&lt;32&gt;)' into 'float generic_floor&lt;float&gt;(float)'">
+        <args Callee="fp_struct&lt;float&gt;::fp_struct(ap_uint&lt;32&gt;)" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 298 Column 0" Caller="float generic_floor&lt;float&gt;(float)" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h Line 14 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0" msg_body="Inlining function 'fp_struct&lt;float&gt;::to_ieee() const' into 'float generic_floor&lt;float&gt;(float)'">
+        <args Callee="fp_struct&lt;float&gt;::to_ieee() const" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h Line 346 Column 0" Caller="float generic_floor&lt;float&gt;(float)" Caller-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h Line 14 Column 0"/>
+    </msg>
+    <msg msg_groups="PRAGMA_INLINE" msg_id="214-178" msg_severity="INFO" msg_loc="kernels/conv2d.h:22:0" msg_body="Inlining function 'floorf' into 'void conv2d&lt;6, 3, 5, 28&gt;(hls::stream&lt;ap_int&lt;32&gt;, 0&gt;&amp;, hls::stream&lt;ap_int&lt;32&gt;, 0&gt;&amp;, ap_int&lt;32&gt; const (*) [3][5][5], ap_int&lt;32&gt; const*, int, int, float, int)'">
+        <args Callee="floorf" Callee-DebugLoc="File /wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/src/c/floorfloat.cpp Line 6 Column 0" Caller="void conv2d&lt;6, 3, 5, 28&gt;(hls::stream&lt;ap_int&lt;32&gt;, 0&gt;&amp;, hls::stream&lt;ap_int&lt;32&gt;, 0&gt;&amp;, ap_int&lt;32&gt; const (*) [3][5][5], ap_int&lt;32&gt; const*, int, int, float, int)" Caller-DebugLoc="File kernels/conv2d.h Line 22 Column 0"/>
+    </msg>
+    <msg msg_groups="CODE_UNSUPPORTED" msg_id="214-167" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:45:34" msg_body="The program may have out of bound array access on variable '_ZZ13conv2d_kernelE6weight'"/>
+    <msg msg_groups="PRAGMA_MISC" msg_id="214-248" msg_severity="INFO" msg_loc="kernels/conv2d_kernel.cpp:35:0" msg_body="Applying array_partition to '_ZZ13conv2d_kernelE6weight': Complete partitioning on dimension 1.">
+        <args Dim="1" Mode="Complete" UOName="_ZZ13conv2d_kernelE6weight"/>
+    </msg>
+    <msg msg_groups="PRAGMA_MISC" msg_id="214-248" msg_severity="INFO" msg_loc="kernels/conv2d_kernel.cpp:36:0" msg_body="Applying array_partition to '_ZZ13conv2d_kernelE4bias': Complete partitioning on dimension 1.">
+        <args Dim="1" Mode="Complete" UOName="_ZZ13conv2d_kernelE4bias"/>
+    </msg>
+    <msg msg_groups="PRAGMA_MISC" msg_id="214-248" msg_severity="INFO" msg_loc="kernels/conv2d.h:27:9" msg_body="Applying array_partition to 'line_buffer': Complete partitioning on dimension 1.">
+        <args Dim="1" Mode="Complete" UOName="line_buffer"/>
+    </msg>
+    <msg msg_groups="CODE_UNSUPPORTED" msg_id="214-167" msg_severity="WARNING" msg_loc="kernels/conv2d_kernel.cpp:45:34" msg_body="The program may have out of bound array access on variable '_ZZ13conv2d_kernelE6weight_0'"/>
+</xilinx:hls_fe_msgs>
+

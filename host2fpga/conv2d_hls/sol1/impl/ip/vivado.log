@@ -1,0 +1,46 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Thu Apr 17 09:53:04 2025
+# Process ID: 559106
+# Current directory: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip
+# Command line: vivado -notrace -mode batch -source run_ippack.tcl
+# Log file: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/vivado.log
+# Journal file: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/vivado.jou
+# Running On        :en4230652l
+# Platform          :Ubuntu
+# Operating System  :Ubuntu 22.04.5 LTS
+# Processor Detail  :Intel(R) Core(TM) i9-14900K
+# CPU Frequency     :3200.000 MHz
+# CPU Physical cores:24
+# CPU Logical cores :32
+# Host memory       :134737 MB
+# Swap memory       :19893 MB
+# Total Virtual     :154630 MB
+# Available Virtual :146805 MB
+#-----------------------------------------------------------
+source run_ippack.tcl -notrace
+INFO: calling package_hls_ip ip_types=vitis sysgen json_file=/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/sol1_data.json outdir=/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip srcdir=/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1 sort_interfaces_ports=false
+INFO: Copied 1 ipmisc file(s) to /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/misc
+INFO: Copied 4 verilog file(s) to /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/hdl/verilog
+INFO: Copied 4 vhdl file(s) to /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/hdl/vhdl
+INFO: Copied 10 swdriver file(s) to /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/drivers
+INFO: Import ports from HDL: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/hdl/vhdl/conv2d_kernel.vhd (conv2d_kernel)
+INFO: Add axi4lite interface s_axi_control
+INFO: Add clock interface ap_clk
+INFO: Add reset interface ap_rst_n
+INFO: Add interrupt interface interrupt
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/Vivado/2024.1/data/ip'.
+INFO: Add axi4full interface m_axi_HBM0
+INFO: Add axi4full interface m_axi_HBM1
+INFO: Add axi4full interface m_axi_HBM2
+INFO: Calling post_process_vitis to specialize IP
+INFO: Calling post_process_sysgen to specialize IP
+Generating sysgen info xml from json file
+INFO: Created IP /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/component.xml
+INFO: Created IP archive /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/xilinx_com_hls_conv2d_kernel_1_0.zip
+INFO: [Common 17-206] Exiting Vivado at Thu Apr 17 09:53:09 2025...

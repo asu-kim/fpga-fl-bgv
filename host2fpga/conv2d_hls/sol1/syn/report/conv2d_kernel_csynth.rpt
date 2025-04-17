@@ -1,0 +1,300 @@
+
+
+================================================================
+== Vitis HLS Report for 'conv2d_kernel'
+================================================================
+* Date:           Thu Apr 17 09:53:02 2025
+
+* Version:        2024.1 (Build 5069499 on May 21 2024)
+* Project:        conv2d_hls
+* Solution:       sol1 (Vitis Kernel Flow Target)
+* Product family: virtexuplusHBM
+* Target device:  xcvu37p-fsvh2892-2L-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+---------+----------+------------+
+    |  Clock |  Target | Estimated| Uncertainty|
+    +--------+---------+----------+------------+
+    |ap_clk  |  3.00 ns|  2.190 ns|     0.81 ns|
+    +--------+---------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        ?|        ?|         ?|         ?|    ?|    ?|       no|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +--------------------------------------------------+----------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |                                                  |                                        |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+        |                     Instance                     |                 Module                 |   min   |   max   |    min   |    max   | min | max |   Type  |
+        +--------------------------------------------------+----------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |grp_conv2d_kernel_Pipeline_VITIS_LOOP_42_1_fu_99  |conv2d_kernel_Pipeline_VITIS_LOOP_42_1  |        ?|        ?|         ?|         ?|    ?|    ?|       no|
+        +--------------------------------------------------+----------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++---------------------+---------+------+---------+---------+-----+
+|         Name        | BRAM_18K|  DSP |    FF   |   LUT   | URAM|
++---------------------+---------+------+---------+---------+-----+
+|DSP                  |        -|     -|        -|        -|    -|
+|Expression           |        -|     -|        0|        2|    -|
+|FIFO                 |        -|     -|        -|        -|    -|
+|Instance             |        2|     -|     1126|     1607|    0|
+|Memory               |        -|     -|        -|        -|    -|
+|Multiplexer          |        -|     -|        0|      413|    -|
+|Register             |        -|     -|      140|        -|    -|
++---------------------+---------+------+---------+---------+-----+
+|Total                |        2|     0|     1266|     2022|    0|
++---------------------+---------+------+---------+---------+-----+
+|Available SLR        |     1344|  3008|   869120|   434560|  320|
++---------------------+---------+------+---------+---------+-----+
+|Utilization SLR (%)  |       ~0|     0|       ~0|       ~0|    0|
++---------------------+---------+------+---------+---------+-----+
+|Available            |     4032|  9024|  2607360|  1303680|  960|
++---------------------+---------+------+---------+---------+-----+
+|Utilization (%)      |       ~0|     0|       ~0|       ~0|    0|
++---------------------+---------+------+---------+---------+-----+
+
++ Detail: 
+    * Instance: 
+    +--------------------------------------------------+----------------------------------------+---------+----+-----+-----+-----+
+    |                     Instance                     |                 Module                 | BRAM_18K| DSP|  FF | LUT | URAM|
+    +--------------------------------------------------+----------------------------------------+---------+----+-----+-----+-----+
+    |HBM0_m_axi_U                                      |HBM0_m_axi                              |        2|   0|  722|  866|    0|
+    |control_s_axi_U                                   |control_s_axi                           |        0|   0|  392|  680|    0|
+    |grp_conv2d_kernel_Pipeline_VITIS_LOOP_42_1_fu_99  |conv2d_kernel_Pipeline_VITIS_LOOP_42_1  |        0|   0|   12|   61|    0|
+    +--------------------------------------------------+----------------------------------------+---------+----+-----+-----+-----+
+    |Total                                             |                                        |        2|   0| 1126| 1607|    0|
+    +--------------------------------------------------+----------------------------------------+---------+----+-----+-----+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +-----------------+----------+----+---+----+------------+------------+
+    |  Variable Name  | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +-----------------+----------+----+---+----+------------+------------+
+    |ap_block_state1  |        or|   0|  0|   2|           1|           1|
+    +-----------------+----------+----+---+----+------------+------------+
+    |Total            |          |   0|  0|   2|           1|           1|
+    +-----------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +---------------+-----+-----------+-----+-----------+
+    |      Name     | LUT | Input Size| Bits| Total Bits|
+    +---------------+-----+-----------+-----+-----------+
+    |HBM0_ARADDR    |   14|          3|   64|        192|
+    |HBM0_ARLEN     |   14|          3|   32|         96|
+    |HBM0_ARVALID   |   14|          3|    1|          3|
+    |HBM0_RREADY    |    9|          2|    1|          2|
+    |HBM0_blk_n_AR  |    9|          2|    1|          2|
+    |ap_NS_fsm      |  344|         75|    1|         75|
+    |ap_done        |    9|          2|    1|          2|
+    +---------------+-----+-----------+-----+-----------+
+    |Total          |  413|         90|  101|        372|
+    +---------------+-----+-----------+-----+-----------+
+
+    * Register: 
+    +---------------------------------------------------------------+----+----+-----+-----------+
+    |                              Name                             | FF | LUT| Bits| Const Bits|
+    +---------------------------------------------------------------+----+----+-----+-----------+
+    |ap_CS_fsm                                                      |  74|   0|   74|          0|
+    |ap_done_reg                                                    |   1|   0|    1|          0|
+    |ap_rst_n_inv                                                   |   1|   0|    1|          0|
+    |ap_rst_reg_1                                                   |   1|   0|    1|          0|
+    |ap_rst_reg_2                                                   |   1|   0|    1|          0|
+    |grp_conv2d_kernel_Pipeline_VITIS_LOOP_42_1_fu_99_ap_start_reg  |   1|   0|    1|          0|
+    |trunc_ln_reg_126                                               |  61|   0|   61|          0|
+    +---------------------------------------------------------------+----+----+-----+-----------+
+    |Total                                                          | 140|   0|  140|          0|
+    +---------------------------------------------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++-----------------------+-----+-----+---------------+---------------+--------------+
+|       RTL Ports       | Dir | Bits|    Protocol   | Source Object |    C Type    |
++-----------------------+-----+-----+---------------+---------------+--------------+
+|s_axi_control_AWVALID  |   in|    1|          s_axi|        control|        scalar|
+|s_axi_control_AWREADY  |  out|    1|          s_axi|        control|        scalar|
+|s_axi_control_AWADDR   |   in|    7|          s_axi|        control|        scalar|
+|s_axi_control_WVALID   |   in|    1|          s_axi|        control|        scalar|
+|s_axi_control_WREADY   |  out|    1|          s_axi|        control|        scalar|
+|s_axi_control_WDATA    |   in|   32|          s_axi|        control|        scalar|
+|s_axi_control_WSTRB    |   in|    4|          s_axi|        control|        scalar|
+|s_axi_control_ARVALID  |   in|    1|          s_axi|        control|        scalar|
+|s_axi_control_ARREADY  |  out|    1|          s_axi|        control|        scalar|
+|s_axi_control_ARADDR   |   in|    7|          s_axi|        control|        scalar|
+|s_axi_control_RVALID   |  out|    1|          s_axi|        control|        scalar|
+|s_axi_control_RREADY   |   in|    1|          s_axi|        control|        scalar|
+|s_axi_control_RDATA    |  out|   32|          s_axi|        control|        scalar|
+|s_axi_control_RRESP    |  out|    2|          s_axi|        control|        scalar|
+|s_axi_control_BVALID   |  out|    1|          s_axi|        control|        scalar|
+|s_axi_control_BREADY   |   in|    1|          s_axi|        control|        scalar|
+|s_axi_control_BRESP    |  out|    2|          s_axi|        control|        scalar|
+|ap_clk                 |   in|    1|  ap_ctrl_chain|  conv2d_kernel|  return value|
+|ap_rst_n               |   in|    1|  ap_ctrl_chain|  conv2d_kernel|  return value|
+|interrupt              |  out|    1|  ap_ctrl_chain|  conv2d_kernel|  return value|
+|m_axi_HBM0_AWVALID     |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWREADY     |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWADDR      |  out|   64|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWID        |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWLEN       |  out|    8|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWSIZE      |  out|    3|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWBURST     |  out|    2|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWLOCK      |  out|    2|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWCACHE     |  out|    4|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWPROT      |  out|    3|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWQOS       |  out|    4|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWREGION    |  out|    4|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_AWUSER      |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_WVALID      |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_WREADY      |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_WDATA       |  out|   64|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_WSTRB       |  out|    8|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_WLAST       |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_WID         |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_WUSER       |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARVALID     |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARREADY     |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARADDR      |  out|   64|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARID        |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARLEN       |  out|    8|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARSIZE      |  out|    3|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARBURST     |  out|    2|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARLOCK      |  out|    2|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARCACHE     |  out|    4|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARPROT      |  out|    3|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARQOS       |  out|    4|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARREGION    |  out|    4|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_ARUSER      |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_RVALID      |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_RREADY      |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_RDATA       |   in|   64|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_RLAST       |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_RID         |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_RUSER       |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_RRESP       |   in|    2|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_BVALID      |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_BREADY      |  out|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_BRESP       |   in|    2|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_BID         |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM0_BUSER       |   in|    1|          m_axi|           HBM0|       pointer|
+|m_axi_HBM1_AWVALID     |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWREADY     |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWADDR      |  out|   64|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWID        |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWLEN       |  out|    8|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWSIZE      |  out|    3|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWBURST     |  out|    2|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWLOCK      |  out|    2|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWCACHE     |  out|    4|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWPROT      |  out|    3|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWQOS       |  out|    4|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWREGION    |  out|    4|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_AWUSER      |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_WVALID      |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_WREADY      |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_WDATA       |  out|   32|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_WSTRB       |  out|    4|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_WLAST       |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_WID         |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_WUSER       |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARVALID     |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARREADY     |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARADDR      |  out|   64|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARID        |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARLEN       |  out|    8|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARSIZE      |  out|    3|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARBURST     |  out|    2|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARLOCK      |  out|    2|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARCACHE     |  out|    4|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARPROT      |  out|    3|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARQOS       |  out|    4|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARREGION    |  out|    4|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_ARUSER      |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_RVALID      |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_RREADY      |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_RDATA       |   in|   32|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_RLAST       |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_RID         |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_RUSER       |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_RRESP       |   in|    2|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_BVALID      |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_BREADY      |  out|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_BRESP       |   in|    2|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_BID         |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM1_BUSER       |   in|    1|          m_axi|           HBM1|       pointer|
+|m_axi_HBM2_AWVALID     |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWREADY     |   in|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWADDR      |  out|   64|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWID        |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWLEN       |  out|    8|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWSIZE      |  out|    3|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWBURST     |  out|    2|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWLOCK      |  out|    2|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWCACHE     |  out|    4|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWPROT      |  out|    3|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWQOS       |  out|    4|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWREGION    |  out|    4|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_AWUSER      |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_WVALID      |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_WREADY      |   in|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_WDATA       |  out|   64|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_WSTRB       |  out|    8|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_WLAST       |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_WID         |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_WUSER       |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARVALID     |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARREADY     |   in|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARADDR      |  out|   64|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARID        |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARLEN       |  out|    8|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARSIZE      |  out|    3|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARBURST     |  out|    2|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARLOCK      |  out|    2|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARCACHE     |  out|    4|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARPROT      |  out|    3|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARQOS       |  out|    4|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARREGION    |  out|    4|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_ARUSER      |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_RVALID      |   in|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_RREADY      |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_RDATA       |   in|   64|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_RLAST       |   in|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_RID         |   in|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_RUSER       |   in|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_RRESP       |   in|    2|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_BVALID      |   in|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_BREADY      |  out|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_BRESP       |   in|    2|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_BID         |   in|    1|          m_axi|           HBM2|       pointer|
+|m_axi_HBM2_BUSER       |   in|    1|          m_axi|           HBM2|       pointer|
++-----------------------+-----+-----+---------------+---------------+--------------+
+

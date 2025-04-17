@@ -1,0 +1,209 @@
+
+
+================================================================
+== Synthesis Summary Report of 'conv2d_kernel'
+================================================================
++ General Information: 
+    * Date:           Thu Apr 17 09:53:02 2025
+    * Version:        2024.1 (Build 5069499 on May 21 2024)
+    * Project:        conv2d_hls
+    * Solution:       sol1 (Vitis Kernel Flow Target)
+    * Product family: virtexuplusHBM
+    * Target device:  xcvu37p-fsvh2892-2L-e
+    
+
++ Performance & Resource Estimates: 
+    
+    PS: '+' for module; 'o' for loop; '*' for dataflow
+    +-------------------------------------------+------+------+---------+-----------+----------+---------+------+----------+---------+----+------------+------------+-----+
+    |                  Modules                  | Issue|      | Latency |  Latency  | Iteration|         | Trip |          |         |    |            |            |     |
+    |                  & Loops                  | Type | Slack| (cycles)|    (ns)   |  Latency | Interval| Count| Pipelined|  BRAM   | DSP|     FF     |     LUT    | URAM|
+    +-------------------------------------------+------+------+---------+-----------+----------+---------+------+----------+---------+----+------------+------------+-----+
+    |+ conv2d_kernel                            |     -|  0.00|        -|          -|         -|        -|     -|        no|  2 (~0%)|   -|  1266 (~0%)|  2022 (~0%)|    -|
+    | + conv2d_kernel_Pipeline_VITIS_LOOP_42_1  |     -|  0.00|        -|          -|         -|        -|     -|        no|        -|   -|    12 (~0%)|    61 (~0%)|    -|
+    |  o VITIS_LOOP_42_1                        |     -|  2.19|      451|  1.353e+03|         2|        1|   450|       yes|        -|   -|           -|           -|    -|
+    +-------------------------------------------+------+------+---------+-----------+----------+---------+------+----------+---------+----+------------+------------+-----+
+
+
+================================================================
+== HW Interfaces
+================================================================
+* M_AXI
++------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
+| Interface  | Read/Write | Data Width | Address Width | Latency | Offset | Register | Max Widen | Max Read     | Max Write    | Num Read    | Num Write   | Resource Estimate |
+|            |            | (SW->HW)   |               |         |        |          | Bitwidth  | Burst Length | Burst Length | Outstanding | Outstanding |                   |
++------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
+| m_axi_HBM0 | READ_ONLY  | 32 -> 64   | 64            | 64      | slave  | 0        | 512       | 16           | 16           | 16          | 16          | BRAM=2            |
+| m_axi_HBM1 | READ_ONLY  | 32 -> 32   | 64            | 64      | slave  | 0        | 512       | 16           | 16           | 16          | 16          |                   |
+| m_axi_HBM2 | READ_ONLY  | 32 -> 64   | 64            | 64      | slave  | 0        | 512       | 16           | 16           | 16          | 16          |                   |
++------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
+
+* S_AXILITE Interfaces
++---------------+------------+---------------+--------+----------+
+| Interface     | Data Width | Address Width | Offset | Register |
++---------------+------------+---------------+--------+----------+
+| s_axi_control | 32         | 7             | 16     | 0        |
++---------------+------------+---------------+--------+----------+
+
+* S_AXILITE Registers
++---------------+---------------+--------+-------+--------+----------------------------------+------------------------------------------------------------------------------------+
+| Interface     | Register      | Offset | Width | Access | Description                      | Bit Fields                                                                         |
++---------------+---------------+--------+-------+--------+----------------------------------+------------------------------------------------------------------------------------+
+| s_axi_control | CTRL          | 0x00   | 32    | RW     | Control signals                  | 0=AP_START 1=AP_DONE 2=AP_IDLE 3=AP_READY 4=AP_CONTINUE 7=AUTO_RESTART 9=INTERRUPT |
+| s_axi_control | GIER          | 0x04   | 32    | RW     | Global Interrupt Enable Register | 0=Enable                                                                           |
+| s_axi_control | IP_IER        | 0x08   | 32    | RW     | IP Interrupt Enable Register     | 0=CHAN0_INT_EN 1=CHAN1_INT_EN                                                      |
+| s_axi_control | IP_ISR        | 0x0c   | 32    | RW     | IP Interrupt Status Register     | 0=CHAN0_INT_ST 1=CHAN1_INT_ST                                                      |
+| s_axi_control | enc_weights_1 | 0x10   | 32    | W      | Data signal of enc_weights       |                                                                                    |
+| s_axi_control | enc_weights_2 | 0x14   | 32    | W      | Data signal of enc_weights       |                                                                                    |
+| s_axi_control | enc_bias_1    | 0x1c   | 32    | W      | Data signal of enc_bias          |                                                                                    |
+| s_axi_control | enc_bias_2    | 0x20   | 32    | W      | Data signal of enc_bias          |                                                                                    |
+| s_axi_control | enc_input_1   | 0x28   | 32    | W      | Data signal of enc_input         |                                                                                    |
+| s_axi_control | enc_input_2   | 0x2c   | 32    | W      | Data signal of enc_input         |                                                                                    |
+| s_axi_control | enc_output_1  | 0x34   | 32    | W      | Data signal of enc_output        |                                                                                    |
+| s_axi_control | enc_output_2  | 0x38   | 32    | W      | Data signal of enc_output        |                                                                                    |
+| s_axi_control | rows          | 0x40   | 32    | W      | Data signal of rows              |                                                                                    |
+| s_axi_control | cols          | 0x48   | 32    | W      | Data signal of cols              |                                                                                    |
++---------------+---------------+--------+-------+--------+----------------------------------+------------------------------------------------------------------------------------+
+
+* TOP LEVEL CONTROL
++-----------+---------------+-----------+
+| Interface | Type          | Ports     |
++-----------+---------------+-----------+
+| ap_clk    | clock         | ap_clk    |
+| ap_rst_n  | reset         | ap_rst_n  |
+| interrupt | interrupt     | interrupt |
+| ap_ctrl   | ap_ctrl_chain |           |
++-----------+---------------+-----------+
+
+
+================================================================
+== SW I/O Information
+================================================================
+* Top Function Arguments
++-------------+-----------+---------------------+
+| Argument    | Direction | Datatype            |
++-------------+-----------+---------------------+
+| enc_weights | in        | ap_uint<32> const * |
+| enc_bias    | in        | ap_uint<32> const * |
+| enc_input   | in        | ap_uint<32> const * |
+| enc_output  | out       | ap_uint<32>*        |
+| rows        | in        | int                 |
+| cols        | in        | int                 |
++-------------+-----------+---------------------+
+
+* SW-to-HW Mapping
++-------------+---------------+-----------+----------+-----------------------------------------+
+| Argument    | HW Interface  | HW Type   | HW Usage | HW Info                                 |
++-------------+---------------+-----------+----------+-----------------------------------------+
+| enc_weights | m_axi_HBM0    | interface |          | channel=0                               |
+| enc_weights | s_axi_control | register  | offset   | name=enc_weights_1 offset=0x10 range=32 |
+| enc_weights | s_axi_control | register  | offset   | name=enc_weights_2 offset=0x14 range=32 |
+| enc_bias    | m_axi_HBM0    | interface |          | channel=0                               |
+| enc_bias    | s_axi_control | register  | offset   | name=enc_bias_1 offset=0x1c range=32    |
+| enc_bias    | s_axi_control | register  | offset   | name=enc_bias_2 offset=0x20 range=32    |
+| enc_input   | m_axi_HBM1    | interface |          | channel=0                               |
+| enc_input   | s_axi_control | register  | offset   | name=enc_input_1 offset=0x28 range=32   |
+| enc_input   | s_axi_control | register  | offset   | name=enc_input_2 offset=0x2c range=32   |
+| enc_output  | m_axi_HBM2    | interface |          | channel=0                               |
+| enc_output  | s_axi_control | register  | offset   | name=enc_output_1 offset=0x34 range=32  |
+| enc_output  | s_axi_control | register  | offset   | name=enc_output_2 offset=0x38 range=32  |
+| rows        | s_axi_control | register  |          | name=rows offset=0x40 range=32          |
+| cols        | s_axi_control | register  |          | name=cols offset=0x48 range=32          |
++-------------+---------------+-----------+----------+-----------------------------------------+
+
+
+================================================================
+== M_AXI Burst Information
+================================================================
+ Note: All burst requests might be further partitioned into multiple requests during RTL generation based on max_read_burst_length or max_write_burst_length settings.
+
+* Inferred Burst Summary
++--------------+-----------+----------+-------+-----------------+---------------------------------+
+| HW Interface | Direction | Length   | Width | Loop            | Loop Location                   |
++--------------+-----------+----------+-------+-----------------+---------------------------------+
+| m_axi_HBM0   | read      | 225      | 64    |                 |                                 |
+| m_axi_HBM0   | read      | 3        | 64    |                 |                                 |
+| m_axi_HBM1   | read      | variable | 32    | VITIS_LOOP_60_3 | kernels/conv2d_kernel.cpp:60:26 |
+| m_axi_HBM2   | write     | variable | 64    |                 |                                 |
++--------------+-----------+----------+-------+-----------------+---------------------------------+
+
+* All M_AXI Variable Accesses
++--------------+-------------+---------------------------------+-----------+--------------+----------+-----------------+---------------------------------+------------+------------------------------------------------+
+| HW Interface | Variable    | Access Location                 | Direction | Burst Status | Length   | Loop            | Loop Location                   | Resolution | Problem                                        |
++--------------+-------------+---------------------------------+-----------+--------------+----------+-----------------+---------------------------------+------------+------------------------------------------------+
+| m_axi_HBM0   | enc_weights | kernels/conv2d_kernel.cpp:42:26 | read      | Widened      | 225      | VITIS_LOOP_42_1 | kernels/conv2d_kernel.cpp:42:26 |            |                                                |
+| m_axi_HBM0   | enc_weights | kernels/conv2d_kernel.cpp:42:26 | read      | Inferred     | 450      | VITIS_LOOP_42_1 | kernels/conv2d_kernel.cpp:42:26 |            |                                                |
+| m_axi_HBM0   | enc_bias    | kernels/conv2d_kernel.cpp:47:26 | read      | Widened      | 3        | VITIS_LOOP_47_2 | kernels/conv2d_kernel.cpp:47:26 |            |                                                |
+| m_axi_HBM0   | enc_bias    | kernels/conv2d_kernel.cpp:47:26 | read      | Inferred     | 6        | VITIS_LOOP_47_2 | kernels/conv2d_kernel.cpp:47:26 |            |                                                |
+| m_axi_HBM1   | enc_input   | kernels/conv2d_kernel.cpp:60:26 | read      | Widen Fail   |          | VITIS_LOOP_60_3 | kernels/conv2d_kernel.cpp:60:26 | 214-234    | Sequential access length is not divisible by 2 |
+| m_axi_HBM1   | enc_input   | kernels/conv2d_kernel.cpp:60:26 | read      | Inferred     | variable | VITIS_LOOP_60_3 | kernels/conv2d_kernel.cpp:60:26 |            |                                                |
+| m_axi_HBM2   | enc_output  | kernels/conv2d_kernel.cpp:78:27 | write     | Widened      | variable | VITIS_LOOP_75_4 | kernels/conv2d_kernel.cpp:75:26 |            |                                                |
+| m_axi_HBM2   | enc_output  | kernels/conv2d_kernel.cpp:78:27 | write     | Inferred     | variable | VITIS_LOOP_75_4 | kernels/conv2d_kernel.cpp:75:26 |            |                                                |
++--------------+-------------+---------------------------------+-----------+--------------+----------+-----------------+---------------------------------+------------+------------------------------------------------+
+
+    * Resolution URL: docs.xilinx.com/access/sources/dita/topic?Doc_Version=2024.1%20English&url=ug1448-hls-guidance&resourceid=XXX-YYY.html (replace XXX-YYY with column value)
+
+================================================================
+== Bind Op Report
+================================================================
++-------------------------------------------+-----+--------+----------+-----+--------+---------+
+| Name                                      | DSP | Pragma | Variable | Op  | Impl   | Latency |
++-------------------------------------------+-----+--------+----------+-----+--------+---------+
+| + conv2d_kernel                           | 0   |        |          |     |        |         |
+|  + conv2d_kernel_Pipeline_VITIS_LOOP_42_1 | 0   |        |          |     |        |         |
+|    add_ln42_fu_75_p2                      |     |        | add_ln42 | add | fabric | 0       |
++-------------------------------------------+-----+--------+----------+-----+--------+---------+
+
+
+================================================================
+== Storage Report
+================================================================
++-------------------+-----------+-----------+------+------+--------+----------+------+---------+------------------+
+| Name              | Usage     | Type      | BRAM | URAM | Pragma | Variable | Impl | Latency | Bitwidth, Depth, |
+|                   |           |           |      |      |        |          |      |         | Banks            |
++-------------------+-----------+-----------+------+------+--------+----------+------+---------+------------------+
+| + conv2d_kernel   |           |           | 2    | 0    |        |          |      |         |                  |
+|   control_s_axi_U | interface | s_axilite |      |      |        |          |      |         |                  |
+|   HBM0_m_axi_U    | interface | m_axi     | 2    |      |        |          |      |         |                  |
++-------------------+-----------+-----------+------+------+--------+----------+------+---------+------------------+
+
+
+================================================================
+== Pragma Report
+================================================================
+* Valid Pragma Syntax
++-----------------+-------------------------------------------------+------------------------------------------------------------+
+| Type            | Options                                         | Location                                                   |
++-----------------+-------------------------------------------------+------------------------------------------------------------+
+| inline          |                                                 | kernels/aes_utils.h:12 in encrypt_word                     |
+| inline          |                                                 | kernels/aes_utils.h:17 in decrypt_word                     |
+| inline          | OFF                                             | kernels/conv2d.h:23 in conv2d                              |
+| array_partition | variable=weight complete dim=1                  | kernels/conv2d.h:24 in conv2d, weight                      |
+| array_partition | variable=bias complete dim=1                    | kernels/conv2d.h:25 in conv2d, bias                        |
+| array_partition | variable=line_buffer complete dim=1             | kernels/conv2d.h:28 in conv2d, line_buffer                 |
+| pipeline        | II=1                                            | kernels/conv2d.h:34 in conv2d                              |
+| unroll          |                                                 | kernels/conv2d.h:36 in conv2d                              |
+| pipeline        | II=1                                            | kernels/conv2d.h:52 in conv2d                              |
+| unroll          | factor=4                                        | kernels/conv2d.h:55 in conv2d                              |
+| interface       | m_axi port=enc_weights offset=slave bundle=HBM0 | kernels/conv2d_kernel.cpp:20 in conv2d_kernel, enc_weights |
+| interface       | m_axi port=enc_bias offset=slave bundle=HBM0    | kernels/conv2d_kernel.cpp:21 in conv2d_kernel, enc_bias    |
+| interface       | m_axi port=enc_input offset=slave bundle=HBM1   | kernels/conv2d_kernel.cpp:22 in conv2d_kernel, enc_input   |
+| interface       | m_axi port=enc_output offset=slave bundle=HBM2  | kernels/conv2d_kernel.cpp:23 in conv2d_kernel, enc_output  |
+| interface       | s_axilite port=enc_weights bundle=control       | kernels/conv2d_kernel.cpp:25 in conv2d_kernel, enc_weights |
+| interface       | s_axilite port=enc_bias bundle=control          | kernels/conv2d_kernel.cpp:26 in conv2d_kernel, enc_bias    |
+| interface       | s_axilite port=enc_input bundle=control         | kernels/conv2d_kernel.cpp:27 in conv2d_kernel, enc_input   |
+| interface       | s_axilite port=enc_output bundle=control        | kernels/conv2d_kernel.cpp:28 in conv2d_kernel, enc_output  |
+| interface       | s_axilite port=rows bundle=control              | kernels/conv2d_kernel.cpp:30 in conv2d_kernel, rows        |
+| interface       | s_axilite port=cols bundle=control              | kernels/conv2d_kernel.cpp:31 in conv2d_kernel, cols        |
+| interface       | s_axilite port=return bundle=control            | kernels/conv2d_kernel.cpp:32 in conv2d_kernel, return      |
+| array_partition | variable=weight complete dim=1                  | kernels/conv2d_kernel.cpp:37 in conv2d_kernel, weight      |
+| array_partition | variable=bias complete dim=1                    | kernels/conv2d_kernel.cpp:38 in conv2d_kernel, bias        |
+| pipeline        | II=1                                            | kernels/conv2d_kernel.cpp:43 in conv2d_kernel              |
+| pipeline        | II=1                                            | kernels/conv2d_kernel.cpp:48 in conv2d_kernel              |
+| stream          | variable=in_stream depth=1024                   | kernels/conv2d_kernel.cpp:55 in conv2d_kernel, in_stream   |
+| stream          | variable=out_stream depth=1024                  | kernels/conv2d_kernel.cpp:56 in conv2d_kernel, out_stream  |
+| pipeline        | II=1                                            | kernels/conv2d_kernel.cpp:61 in conv2d_kernel              |
+| pipeline        | II=1                                            | kernels/conv2d_kernel.cpp:76 in conv2d_kernel              |
++-----------------+-------------------------------------------------+------------------------------------------------------------+
+
+

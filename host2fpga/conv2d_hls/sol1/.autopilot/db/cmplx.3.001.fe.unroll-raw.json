@@ -1,0 +1,146 @@
+{
+  "0": {
+    "basicblocks": 21,
+    "calls": "1",
+    "file": "conv2d_kernel.cpp",
+    "fileloc": 12,
+    "instructions": 99,
+    "loads": {
+      "T": 3
+    },
+    "name": "conv2d_kernel",
+    "stores": {
+      "G": 2,
+      "T": 1
+    },
+    "total_instructions": 7913
+  },
+  "1": {
+    "basicblocks": 196,
+    "calls": "3 3 3 3 3 3 3 3 3 3 3 3",
+    "file": "conv2d.h",
+    "fileloc": 15,
+    "instructions": 5378,
+    "loads": {
+      "G": 456,
+      "L": 456
+    },
+    "name": "conv2d<6, 3, 5, 28>",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 7814
+  },
+  "10": {
+    "basicblocks": 1,
+    "calls": "6",
+    "file": "x_hls_utils.h",
+    "fileloc": 346,
+    "instructions": 2,
+    "name": "to_ieee",
+    "total_instructions": 21
+  },
+  "2": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "x_hls_utils.h",
+    "fileloc": 298,
+    "instructions": 7,
+    "name": "fp_struct",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 7
+  },
+  "3": {
+    "basicblocks": 1,
+    "calls": "9",
+    "file": "floorfloat.cpp",
+    "fileloc": 6,
+    "instructions": 2,
+    "name": "floorf",
+    "total_instructions": 177
+  },
+  "4": {
+    "basicblocks": 1,
+    "calls": "8 8 10",
+    "file": "hls_copysign.h",
+    "fileloc": 10,
+    "instructions": 12,
+    "loads": {
+      "L": 1
+    },
+    "name": "generic_copysign<float>",
+    "stores": {
+      "L": 1
+    },
+    "total_instructions": 49
+  },
+  "5": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "x_hls_utils.h",
+    "fileloc": 349,
+    "instructions": 3,
+    "loads": {
+      "L": 1
+    },
+    "name": "__signbit",
+    "total_instructions": 3
+  },
+  "6": {
+    "basicblocks": 1,
+    "calls": "7",
+    "file": "x_hls_utils.h",
+    "fileloc": 322,
+    "instructions": 5,
+    "loads": {
+      "L": 1
+    },
+    "name": "to_float",
+    "total_instructions": 19
+  },
+  "7": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "x_hls_utils.h",
+    "fileloc": 309,
+    "instructions": 14,
+    "loads": {
+      "L": 4
+    },
+    "name": "data",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 14
+  },
+  "8": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "x_hls_utils.h",
+    "fileloc": 283,
+    "instructions": 8,
+    "name": "fp_struct",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 8
+  },
+  "9": {
+    "basicblocks": 12,
+    "calls": "8 5 4 5 7 2 10",
+    "file": "hls_floor.h",
+    "fileloc": 13,
+    "instructions": 70,
+    "loads": {
+      "G": 1,
+      "L": 10
+    },
+    "name": "generic_floor<float>",
+    "stores": {
+      "L": 4
+    },
+    "total_instructions": 175
+  }
+}
