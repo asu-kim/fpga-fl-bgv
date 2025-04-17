@@ -1,0 +1,116 @@
+
+****** Vitis HLS - High-Level Synthesis from C, C++ and OpenCL v2024.1 (64-bit)
+  **** SW Build 5069499 on May 21 2024
+  **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+  **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+  **** Start of session at: Thu Apr 17 01:56:52 2025
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source /tools/Xilinx/Vitis_HLS/2024.1/scripts/vitis_hls/hls.tcl -notrace
+INFO: [HLS 200-10] For user 'megan' on host 'en4230652l.fulton.ad.asu.edu' (Linux_x86_64 version 5.15.0-79-generic) on Thu Apr 17 01:56:53 MST 2025
+INFO: [HLS 200-10] On os Ubuntu 22.04.5 LTS
+INFO: [HLS 200-10] In directory '/home/megan/Vitis-AI/accelerator/host2fpga'
+WARNING: [HLS 200-2053] The vitis_hls executable is deprecated. Consider using vitis-run --mode hls --tcl
+Sourcing Tcl script 'build_hls.tcl'
+INFO: [HLS 200-1510] Running: source build_hls.tcl
+INFO: [HLS 200-1510] Running: open_project conv2d_hls 
+INFO: [HLS 200-10] Opening project '/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls'.
+INFO: [HLS 200-1510] Running: set_top conv2d_kernel 
+INFO: [HLS 200-1510] Running: add_files kernels/conv2d_kernel.cpp 
+INFO: [HLS 200-10] Adding design file 'kernels/conv2d_kernel.cpp' to the project
+INFO: [HLS 200-1510] Running: add_files kernels/aes_utils.h 
+INFO: [HLS 200-10] Adding design file 'kernels/aes_utils.h' to the project
+INFO: [HLS 200-1510] Running: open_solution sol1 -flow_target vitis 
+INFO: [HLS 200-10] Opening solution '/home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1'.
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 3ns.
+INFO: [HLS 200-1611] Setting target device to 'xcvu37p-fsvh2892-2L-e'
+INFO: [HLS 200-1505] Using flow_target 'vitis'
+Resolution: For help on HLS 200-1505 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2024.1%20English&url=ug1448-hls-guidance&resourceid=200-1505.html
+INFO: [HLS 200-1464] Running solution command: config_interface -m_axi_latency=64
+INFO: [HLS 200-1464] Running solution command: config_interface -m_axi_alignment_byte_size=64
+INFO: [HLS 200-1464] Running solution command: config_interface -m_axi_max_widen_bitwidth=512
+INFO: [HLS 200-1464] Running solution command: config_interface -default_interface=kernel
+INFO: [HLS 200-1464] Running solution command: config_rtl -register_reset_num=3
+INFO: [HLS 200-1464] Running solution command: config_compile -complex-mul-dsp=0
+INFO: [HLS 200-1464] Running solution command: config_compile -pipeline_loops=1
+INFO: [XFORM 203-1171] Pipeline the innermost loop with trip count more than 1 or its parent loop when its trip count is less than or equal 1.
+INFO: [HLS 200-1510] Running: set_part xcvu37p-fsvh2892-2L-e 
+INFO: [XFORM 203-1171] Pipeline the innermost loop with trip count more than 1 or its parent loop when its trip count is less than or equal 1.
+INFO: [HLS 200-1510] Running: create_clock -period 3.0 -name default 
+INFO: [HLS 200-1510] Running: config_compile -pipeline_loops 1 
+INFO: [XFORM 203-1171] Pipeline the innermost loop with trip count more than 1 or its parent loop when its trip count is less than or equal 1.
+INFO: [HLS 200-1510] Running: csynth_design 
+INFO: [HLS 200-111] Finished File checks and directory preparation: CPU user time: 0.03 seconds. CPU system time: 0 seconds. Elapsed time: 0.03 seconds; current allocated memory: 374.465 MB.
+INFO: [HLS 200-10] Analyzing design file 'kernels/conv2d_kernel.cpp' ... 
+INFO: [HLS 200-111] Finished Source Code Analysis and Preprocessing: CPU user time: 1.26 seconds. CPU system time: 0.23 seconds. Elapsed time: 1.48 seconds; current allocated memory: 375.645 MB.
+INFO: [HLS 200-777] Using interface defaults for 'Vitis' flow target.
+INFO: [HLS 200-1995] There were 6,692 instructions in the design after the 'Compile/Link' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 7,909 instructions in the design after the 'Unroll/Inline (step 1)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 4,995 instructions in the design after the 'Unroll/Inline (step 2)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 4,386 instructions in the design after the 'Unroll/Inline (step 3)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,067 instructions in the design after the 'Unroll/Inline (step 4)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,257 instructions in the design after the 'Array/Struct (step 1)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,094 instructions in the design after the 'Array/Struct (step 2)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,094 instructions in the design after the 'Array/Struct (step 3)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,094 instructions in the design after the 'Array/Struct (step 4)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,130 instructions in the design after the 'Array/Struct (step 5)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,136 instructions in the design after the 'Performance (step 1)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,136 instructions in the design after the 'Performance (step 2)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,133 instructions in the design after the 'Performance (step 3)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,133 instructions in the design after the 'Performance (step 4)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,148 instructions in the design after the 'HW Transforms (step 1)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 3,158 instructions in the design after the 'HW Transforms (step 2)' phase of compilation. See the Design Size Report for more details: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/syn/report/csynth_design_size.rpt
+INFO: [HLS 214-131] Inlining function 'decrypt_word(ap_uint<32>)' into 'conv2d_kernel' (kernels/conv2d_kernel.cpp:38:10)
+INFO: [HLS 214-131] Inlining function 'encrypt_word(ap_uint<32>)' into 'conv2d_kernel' (kernels/conv2d_kernel.cpp:72:29)
+INFO: [HLS 214-131] Inlining function 'decrypt_word(ap_uint<32>)' into 'conv2d_kernel' (kernels/conv2d_kernel.cpp:56:26)
+INFO: [HLS 214-131] Inlining function 'decrypt_word(ap_uint<32>)' into 'conv2d_kernel' (kernels/conv2d_kernel.cpp:43:20)
+WARNING: [HLS 214-386] A depth specification is required for MAXI interface port 'enc_weights' for cosimulation. (kernels/conv2d_kernel.cpp:19:0)
+WARNING: [HLS 214-386] A depth specification is required for MAXI interface port 'enc_bias' for cosimulation. (kernels/conv2d_kernel.cpp:19:0)
+WARNING: [HLS 214-386] A depth specification is required for MAXI interface port 'enc_input' for cosimulation. (kernels/conv2d_kernel.cpp:19:0)
+WARNING: [HLS 214-386] A depth specification is required for MAXI interface port 'enc_output' for cosimulation. (kernels/conv2d_kernel.cpp:19:0)
+INFO: [HLS 214-291] Loop 'VITIS_LOOP_35_3' is marked as complete unroll implied by the pipeline pragma (kernels/conv2d.h:35:19)
+INFO: [HLS 214-291] Loop 'VITIS_LOOP_53_5' is marked as complete unroll implied by the pipeline pragma (kernels/conv2d.h:53:19)
+INFO: [HLS 214-291] Loop 'VITIS_LOOP_58_6' is marked as complete unroll implied by the pipeline pragma (kernels/conv2d.h:58:38)
+INFO: [HLS 214-291] Loop 'VITIS_LOOP_59_7' is marked as complete unroll implied by the pipeline pragma (kernels/conv2d.h:59:42)
+INFO: [HLS 214-291] Loop 'VITIS_LOOP_61_8' is marked as complete unroll implied by the pipeline pragma (kernels/conv2d.h:61:46)
+INFO: [HLS 214-186] Unrolling loop 'VITIS_LOOP_35_3' (kernels/conv2d.h:35:19) in function 'conv2d<6, 3, 5, 28>' completely with a factor of 3 (kernels/conv2d.h:22:0)
+INFO: [HLS 214-186] Unrolling loop 'VITIS_LOOP_53_5' (kernels/conv2d.h:53:19) in function 'conv2d<6, 3, 5, 28>' completely with a factor of 6 (kernels/conv2d.h:22:0)
+INFO: [HLS 214-186] Unrolling loop 'VITIS_LOOP_58_6' (kernels/conv2d.h:58:38) in function 'conv2d<6, 3, 5, 28>' completely with a factor of 3 (kernels/conv2d.h:22:0)
+INFO: [HLS 214-186] Unrolling loop 'VITIS_LOOP_59_7' (kernels/conv2d.h:59:42) in function 'conv2d<6, 3, 5, 28>' completely with a factor of 5 (kernels/conv2d.h:22:0)
+INFO: [HLS 214-186] Unrolling loop 'VITIS_LOOP_61_8' (kernels/conv2d.h:61:46) in function 'conv2d<6, 3, 5, 28>' completely with a factor of 5 (kernels/conv2d.h:22:0)
+ERROR: [HLS 214-219] Vitis kernel mode requires that all s_axilite ports must be bundled into one bundle. The following ports ('rows,cols,return' and 'enc_weights,enc_bias,enc_input,enc_output', in function 'conv2d_kernel') have different bundle names: 'control' and 'control_r'. Consider removing the bundle names on these ports. (kernels/conv2d_kernel.cpp:19:0)
+INFO: [HLS 214-178] Inlining function 'fp_struct<float>::data() const (.3.24.34.43.54)' into 'fp_struct<float>::to_float() const (.21.31.40.51)' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h:322:0)
+INFO: [HLS 214-178] Inlining function 'fp_struct<float>::to_float() const (.21.31.40.51)' into 'fp_struct<float>::to_ieee() const' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/src/hls/utils/x_hls_utils.h:346:0)
+INFO: [HLS 214-178] Inlining function 'fp_struct<float>::fp_struct(float)' into 'float generic_copysign<float>(float, float)' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_copysign.h:10:0)
+INFO: [HLS 214-178] Inlining function 'fp_struct<float>::to_ieee() const' into 'float generic_copysign<float>(float, float)' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_copysign.h:10:0)
+INFO: [HLS 214-178] Inlining function 'fp_struct<float>::fp_struct(float)' into 'float generic_floor<float>(float)' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0)
+INFO: [HLS 214-178] Inlining function 'fp_struct<float>::__signbit() const' into 'float generic_floor<float>(float)' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0)
+INFO: [HLS 214-178] Inlining function 'float generic_copysign<float>(float, float)' into 'float generic_floor<float>(float)' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0)
+INFO: [HLS 214-178] Inlining function 'fp_struct<float>::data() const (.3.24.34.43.54)' into 'float generic_floor<float>(float)' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0)
+INFO: [HLS 214-178] Inlining function 'fp_struct<float>::fp_struct(ap_uint<32>)' into 'float generic_floor<float>(float)' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0)
+INFO: [HLS 214-178] Inlining function 'fp_struct<float>::to_ieee() const' into 'float generic_floor<float>(float)' (/wrk/ci/prod/2024.1/hls_product/continuous/545/2024.1/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_floor.h:14:0)
+INFO: [HLS 214-178] Inlining function 'floorf' into 'void conv2d<6, 3, 5, 28>(hls::stream<ap_int<32>, 0>&, hls::stream<ap_int<32>, 0>&, ap_int<32> const (*) [3][5][5], ap_int<32> const*, int, int, float, int)' (kernels/conv2d.h:22:0)
+WARNING: [HLS 214-167] The program may have out of bound array access on variable '_ZZ13conv2d_kernelE6weight' (kernels/conv2d_kernel.cpp:39:34)
+INFO: [HLS 214-248] Applying array_partition to '_ZZ13conv2d_kernelE6weight': Complete partitioning on dimension 1. (kernels/conv2d_kernel.cpp:29:0)
+INFO: [HLS 214-248] Applying array_partition to '_ZZ13conv2d_kernelE4bias': Complete partitioning on dimension 1. (kernels/conv2d_kernel.cpp:30:0)
+INFO: [HLS 214-248] Applying array_partition to 'line_buffer': Complete partitioning on dimension 1. (kernels/conv2d.h:27:9)
+WARNING: [HLS 214-167] The program may have out of bound array access on variable '_ZZ13conv2d_kernelE6weight_0' (kernels/conv2d_kernel.cpp:39:34)
+INFO: [HLS 214-115] Multiple burst reads of length 225 and bit width 64 has been inferred on bundle 'HBM0'. These burst requests might be further partitioned into multiple requests during RTL generation, based on max_read_burst_length or max_write_burst_length settings. (kernels/conv2d_kernel.cpp:36:26)
+INFO: [HLS 214-115] Multiple burst reads of length 3 and bit width 64 has been inferred on bundle 'HBM0'. These burst requests might be further partitioned into multiple requests during RTL generation, based on max_read_burst_length or max_write_burst_length settings. (kernels/conv2d_kernel.cpp:41:26)
+INFO: [HLS 214-115] Multiple burst reads of variable length and bit width 32 in loop 'VITIS_LOOP_54_3'(kernels/conv2d_kernel.cpp:54:26) has been inferred on bundle 'HBM1'. These burst requests might be further partitioned into multiple requests during RTL generation, based on max_read_burst_length or max_write_burst_length settings. (kernels/conv2d_kernel.cpp:54:26)
+INFO: [HLS 214-115] Multiple burst writes of variable length and bit width 64 has been inferred on bundle 'HBM2'. These burst requests might be further partitioned into multiple requests during RTL generation, based on max_read_burst_length or max_write_burst_length settings. (kernels/conv2d_kernel.cpp:69:26)
+ERROR: [HLS 200-1715] Encountered problem during source synthesis
+INFO: [HLS 200-2161] Finished Command csynth_design Elapsed time: 00:00:08; Allocated memory: 13.520 MB.
+Pre-synthesis failed.
+    while executing
+"source build_hls.tcl"
+    invoked from within
+"hls::main build_hls.tcl"
+    ("uplevel" body line 1)
+    invoked from within
+"uplevel 1 hls::main {*}$newargs"
+    (procedure "hls_proc" line 16)
+    invoked from within
+"hls_proc [info nameofexecutable] $argv"
+INFO: [HLS 200-112] Total CPU user time: 5.97 seconds. Total CPU system time: 0.58 seconds. Total elapsed time: 9.28 seconds; peak allocated memory: 387.984 MB.

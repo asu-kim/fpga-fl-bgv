@@ -1,0 +1,6 @@
+
+Family       : virtexuplushbm
+Device       : xcvu37p
+Package      : -fsvh2892
+Speed Grade  : -2L-e
+Clock Period : 3

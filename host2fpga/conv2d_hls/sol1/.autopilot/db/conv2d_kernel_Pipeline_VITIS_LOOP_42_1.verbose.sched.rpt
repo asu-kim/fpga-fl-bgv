@@ -1,0 +1,152 @@
+
+
+================================================================
+== Vitis HLS Report for 'conv2d_kernel_Pipeline_VITIS_LOOP_42_1'
+================================================================
+* Date:           Thu Apr 17 09:53:02 2025
+
+* Version:        2024.1 (Build 5069499 on May 21 2024)
+* Project:        conv2d_hls
+* Solution:       sol1 (Vitis Kernel Flow Target)
+* Product family: virtexuplusHBM
+* Target device:  xcvu37p-fsvh2892-2L-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+---------+----------+------------+
+    |  Clock |  Target | Estimated| Uncertainty|
+    +--------+---------+----------+------------+
+    |ap_clk  |  3.00 ns|  2.190 ns|     0.81 ns|
+    +--------+---------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        ?|        ?|         ?|         ?|    ?|    ?|       no|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        +-------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |                   |  Latency (cycles) | Iteration|  Initiation Interval  | Trip |          |
+        |     Loop Name     |   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +-------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |- VITIS_LOOP_42_1  |      451|      451|         2|          1|          1|   450|       yes|
+        +-------------------+---------+---------+----------+-----------+-----------+------+----------+
+
+============================================================
++ Verbose Summary: Synthesis Manager
+============================================================
+InlineROM: 1
+ExposeGlobal: 0
+============================================================
++ Verbose Summary: CDFG Model
+============================================================
+IsTopModel: 0
+ResetActiveHigh: 1
+IsCombinational: 0
+IsDatapathOnly: 0
+HasWiredReturn: 0
+HasMFsm: 2
+HasVarLatency: 1
+IsPipeline: 0
+IsRtlPipelined: 0
+IsInstanceOverlapped: 0
+IsDontTouch: 0
+HasImplIP: 0
+IsGatedGlobalClock: 0
+
++ Individual pipeline summary: 
+  * Pipeline-0: initiation interval (II) = 1, depth = 2
+
+
+============================================================
++ Verbose Summary: Schedule
+============================================================
+* Number of FSM states : 3
+* Pipeline : 1
+  Pipeline-0 : II = 1, D = 2, States = { 2 3 }
+* Dataflow Pipeline: 0
+
+* FSM state transitions: 
+1 --> 2 
+2 --> 3 
+3 --> 2 
+
+* FSM state operations: 
+
+State 1 <SV = 0> <Delay = 0.38>
+ST_1 : Operation 4 [1/1] (0.00ns)   --->   "%i = alloca i32 1" [kernels/conv2d_kernel.cpp:42]   --->   Operation 4 'alloca' 'i' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 5 [1/1] (0.00ns)   --->   "%sext_ln42_read = read i61 @_ssdm_op_Read.ap_auto.i61, i61 %sext_ln42"   --->   Operation 5 'read' 'sext_ln42_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 6 [1/1] (0.00ns)   --->   "%sext_ln42_cast = sext i61 %sext_ln42_read"   --->   Operation 6 'sext' 'sext_ln42_cast' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 7 [1/1] (0.00ns)   --->   "%specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i64 %HBM0, void @empty_8, i32 0, i32 0, void @empty, i32 64, i32 0, void @empty_15, void @empty_12, void @empty, i32 16, i32 16, i32 16, i32 16, void @empty, void @empty, i32 4294967295, i32 0, i32 0"   --->   Operation 7 'specinterface' 'specinterface_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 8 [1/1] (0.38ns)   --->   "%store_ln42 = store i7 0, i7 %i" [kernels/conv2d_kernel.cpp:42]   --->   Operation 8 'store' 'store_ln42' <Predicate = true> <Delay = 0.38>
+ST_1 : Operation 9 [1/1] (0.00ns)   --->   "%br_ln0 = br void %for.inc"   --->   Operation 9 'br' 'br_ln0' <Predicate = true> <Delay = 0.00>
+
+State 2 <SV = 1> <Delay = 1.09>
+ST_2 : Operation 10 [1/1] (0.00ns)   --->   "%i_1 = load i7 %i" [kernels/conv2d_kernel.cpp:42]   --->   Operation 10 'load' 'i_1' <Predicate = true> <Delay = 0.00>
+ST_2 : Operation 11 [1/1] (0.00ns)   --->   "%trunc_ln42 = trunc i7 %i_1" [kernels/conv2d_kernel.cpp:42]   --->   Operation 11 'trunc' 'trunc_ln42' <Predicate = true> <Delay = 0.00>
+ST_2 : Operation 12 [1/1] (0.70ns)   --->   "%add_ln42 = add i7 %i_1, i7 1" [kernels/conv2d_kernel.cpp:42]   --->   Operation 12 'add' 'add_ln42' <Predicate = true> <Delay = 0.70> <CoreInst = "Adder">   --->   Core 1 'Adder' <Latency = 0> <II = 1> <Delay = 0.70> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
+ST_2 : Operation 13 [1/1] (0.00ns)   --->   "%br_ln42 = br i1 %trunc_ln42, void, void %for.inc.split._crit_edge" [kernels/conv2d_kernel.cpp:42]   --->   Operation 13 'br' 'br_ln42' <Predicate = true> <Delay = 0.00>
+ST_2 : Operation 14 [1/1] (0.38ns)   --->   "%store_ln42 = store i7 %add_ln42, i7 %i" [kernels/conv2d_kernel.cpp:42]   --->   Operation 14 'store' 'store_ln42' <Predicate = true> <Delay = 0.38>
+ST_2 : Operation 15 [1/1] (0.00ns)   --->   "%br_ln42 = br void %for.inc" [kernels/conv2d_kernel.cpp:42]   --->   Operation 15 'br' 'br_ln42' <Predicate = true> <Delay = 0.00>
+
+State 3 <SV = 2> <Delay = 2.19>
+ST_3 : Operation 16 [1/1] (0.00ns)   --->   "%specbitsmap_ln0 = specbitsmap void @_ssdm_op_SpecBitsMap, i64 %HBM0"   --->   Operation 16 'specbitsmap' 'specbitsmap_ln0' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 17 [1/1] (0.00ns)   --->   "%HBM0_addr = getelementptr i64 %HBM0, i64 %sext_ln42_cast" [kernels/conv2d_kernel.cpp:42]   --->   Operation 17 'getelementptr' 'HBM0_addr' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 18 [1/1] (0.00ns)   --->   "%specpipeline_ln43 = specpipeline void @_ssdm_op_SpecPipeline, i32 1, i32 0, i32 0, i32 0, void @empty" [kernels/conv2d_kernel.cpp:43]   --->   Operation 18 'specpipeline' 'specpipeline_ln43' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 19 [1/1] (0.00ns)   --->   "%speclooptripcount_ln42 = speclooptripcount void @_ssdm_op_SpecLoopTripCount, i64 450, i64 450, i64 450" [kernels/conv2d_kernel.cpp:42]   --->   Operation 19 'speclooptripcount' 'speclooptripcount_ln42' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 20 [1/1] (0.00ns)   --->   "%specloopname_ln42 = specloopname void @_ssdm_op_SpecLoopName, void @empty_7" [kernels/conv2d_kernel.cpp:42]   --->   Operation 20 'specloopname' 'specloopname_ln42' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 21 [1/1] (2.19ns)   --->   "%HBM0_addr_read = read i64 @_ssdm_op_Read.m_axi.p1i64, i64 %HBM0_addr" [kernels/conv2d_kernel.cpp:42]   --->   Operation 21 'read' 'HBM0_addr_read' <Predicate = (!trunc_ln42)> <Delay = 2.19> <CoreInst = "m_axi">   --->   Core 119 'm_axi' <Latency = 0> <II = 1> <Delay = 1.00> <Adapter> <Opcode : 'read' 'write' 'readreq' 'writereq' 'writeresp'>
+ST_3 : Operation 22 [1/1] (0.00ns)   --->   "%br_ln0 = br void %for.inc.split._crit_edge"   --->   Operation 22 'br' 'br_ln0' <Predicate = (!trunc_ln42)> <Delay = 0.00>
+
+
+============================================================
++ Verbose Summary: Timing violations
+============================================================
+Target clock period: 3.000ns, clock uncertainty: 0.810ns.
+
+ <State 1>: 0.387ns
+The critical path consists of the following:
+	'alloca' operation 7 bit ('i', kernels/conv2d_kernel.cpp:42) [3]  (0.000 ns)
+	'store' operation 0 bit ('store_ln42', kernels/conv2d_kernel.cpp:42) of constant 0 on local variable 'i', kernels/conv2d_kernel.cpp:42 [7]  (0.387 ns)
+
+ <State 2>: 1.093ns
+The critical path consists of the following:
+	'load' operation 7 bit ('i', kernels/conv2d_kernel.cpp:42) on local variable 'i', kernels/conv2d_kernel.cpp:42 [10]  (0.000 ns)
+	'add' operation 7 bit ('add_ln42', kernels/conv2d_kernel.cpp:42) [17]  (0.706 ns)
+	'store' operation 0 bit ('store_ln42', kernels/conv2d_kernel.cpp:42) of variable 'add_ln42', kernels/conv2d_kernel.cpp:42 on local variable 'i', kernels/conv2d_kernel.cpp:42 [23]  (0.387 ns)
+
+ <State 3>: 2.190ns
+The critical path consists of the following:
+	'getelementptr' operation 64 bit ('HBM0_addr', kernels/conv2d_kernel.cpp:42) [12]  (0.000 ns)
+	bus read operation ('HBM0_addr_read', kernels/conv2d_kernel.cpp:42) on port 'HBM0' (kernels/conv2d_kernel.cpp:42) [20]  (2.190 ns)
+
+
+============================================================
++ Verbose Summary: Binding
+============================================================
+N/A
+* FSMD analyzer results:
+  - Output states:
+ - Input state : 
+  - Chain level:
+	State 1
+	State 2
+	State 3
+
+
+============================================================
++ Verbose Summary: Datapath Resource usage 
+============================================================
+N/A

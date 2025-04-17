@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Thu Apr 17 09:53:04 2025
+# Process ID: 559106
+# Current directory: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip
+# Command line: vivado -notrace -mode batch -source run_ippack.tcl
+# Log file: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/vivado.log
+# Journal file: /home/megan/Vitis-AI/accelerator/host2fpga/conv2d_hls/sol1/impl/ip/vivado.jou
+# Running On        :en4230652l
+# Platform          :Ubuntu
+# Operating System  :Ubuntu 22.04.5 LTS
+# Processor Detail  :Intel(R) Core(TM) i9-14900K
+# CPU Frequency     :3200.000 MHz
+# CPU Physical cores:24
+# CPU Logical cores :32
+# Host memory       :134737 MB
+# Swap memory       :19893 MB
+# Total Virtual     :154630 MB
+# Available Virtual :146805 MB
+#-----------------------------------------------------------
+source run_ippack.tcl -notrace
