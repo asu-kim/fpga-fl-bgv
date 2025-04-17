@@ -8,21 +8,32 @@
 #include "fc_layer.h"
 #include "flatten.h"
 
-typedef ap_fixed<8, 3> data_t;
+typedef ap_int<32> data_t;
+typedef ap_int<32> bias_t;
 
 void lenet5(
         hls::stream<data_t>& in_stream,
         hls::stream<data_t>& out_stream,
         const data_t conv1_weight[6][1][5][5],
-        const data_t conv1_bias[6],
+        const bias_t conv1_bias[6],
+        const float conv1_act_out_scale,
+        const int conv1_act_out_zp,
         const data_t conv2_weight[16][6][5][5],
-        const data_t conv2_bias[16],
+        const bias_t conv2_bias[16],
+        const float conv2_act_out_scale,
+        const int conv2_act_out_zp,
         const data_t fc1_weight[120][256],
-        const data_t fc1_bias[120],
+        const bias_t fc1_bias[120],
+        const float fc1_act_out_scale,
+        const int fc1_act_out_zp,
         const data_t fc2_weight[84][120],
-        const data_t fc2_bias[84],
+        const bias_t fc2_bias[84],
+        const float fc2_act_out_scale,
+        const int fc2_act_out_zp,
         const data_t fc3_weight[10][84],
-        const data_t fc3_bias[10]
+        const bias_t fc3_bias[10],
+        const float fc3_act_out_scale,
+        const int fc3_act_out_zp,
     ) {
     #pragma HLS INTERFACE axis port=in_stream
     #pragma HLS INTERFACE axis port=out_stream
@@ -32,7 +43,7 @@ void lenet5(
 
     // tempalte param: # of filters, size of kernel
     // layer1: conv2d [Nx1x28x28 -> Nx24x24x6]
-    conv2d<6, 1, 5>(in_stream, conv1_out, conv1_weight, conv1_bias, 28, 28);
+    conv2d<6, 1, 5>(in_stream, conv1_out, conv1_weight, conv1_bias, 28, 28, conv1_act_out_scale, conv1_act_out_zp);
 
     // template param: pool size
     // layer2: avg pool [Nx24x24x6 -> Nx12x12x6]
@@ -40,7 +51,7 @@ void lenet5(
 
 
     // layer3: conv2d [Nx12x12x6 -> Nx8x8x16]
-    conv2d<16, 6, 5>(pool1_out, conv2_out, conv2_weight, conv2_bias, 12, 12);
+    conv2d<16, 6, 5>(pool1_out, conv2_out, conv2_weight, conv2_bias, 12, 12, conv2_act_out_scale, conv2_act_out_zp);
 
     // layer4: pool2d [Nx8x8x16 -> Nx4x4x16]
     avg_pool<2>(conv2_out, pool2_out, 8, 8, 16);
@@ -49,13 +60,13 @@ void lenet5(
     flatten<4,4,16>(pool2_out, flatten_out);
 
     // layer5: mlp [Nx256 -> Nx120]
-    fc_layer<120, 256>(flatten_out, fc1_out, fc1_weight, fc1_bias, true);
+    fc_layer<120, 256>(flatten_out, fc1_out, fc1_weight, fc1_bias, fc1_act_out_scale, fc1_act_out_zp, true);
 
     // layer6: mlp [Nx120 -> Nx84]
-    fc_layer<84, 120>(fc1_out, fc2_out, fc2_weight, fc2_bias, true);
+    fc_layer<84, 120>(fc1_out, fc2_out, fc2_weight, fc2_bias, fc2_act_out_scale, fc2_act_out_zp, true);
 
     // layer7: mlp [Nx84 -> Nx10]
-    fc_layer<10, 84>(fc2_out, out_stream, fc3_weight, fc3_bias, false);
+    fc_layer<10, 84>(fc2_out, out_stream, fc3_weight, fc3_bias, fc3_act_out_scale, fc3_act_out_zp, false);
 }
 
 #endif
