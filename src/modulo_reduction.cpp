@@ -9,6 +9,8 @@ data_t modulo_reduction(data_t in1, data_t in2) {
     // #pragma HLS INTERFACE m_axi port=out bundle=gmem2 depth=POLYNOMIAL_DEGREE
 
     data_t temp = hls::remainder(in1, in2);
-    temp = temp < 0 ? temp + in2 : temp;
+    if (temp < (data_t) 0) {
+        temp = (data_t) (temp + in2);
+    }
     return temp;
 }

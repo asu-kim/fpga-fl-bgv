@@ -27,7 +27,7 @@ PLATFORM_BLOCKLIST += nodma
 PLATFORM ?= xilinx_u55c_gen3x16_xdma_3_202210_1
 
 # Define top function name as a variable (default is "encryption")
-TOP_FUNC ?= polynomial_multiplication
+TOP_FUNC ?= top_encryption_decryption_test
 
 HOST_ARCH := x86
 
