@@ -9,7 +9,8 @@
 #include <filesystem>
 #include <string>
 
-typedef ap_fixed<8, 3> data_t;
+// typedef ap_fixed<8, 3> data_t;
+typedef ap_int<32> data_t;
 
 // base path
 const std::string BASE_PATH="/home/megan/Vitis-AI/accelerator/matmul";

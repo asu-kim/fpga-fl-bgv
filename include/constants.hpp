@@ -6,7 +6,7 @@
 
 /** 
  * Rules: 
- * 1. q is a big prime number that satisfies q mod 2n = 1 
+ * 1. q is a big prime number that satisfies q mod 2n = 1
  * 3. p << q
  * 
  */
@@ -14,12 +14,11 @@
 const int64_t POLYNOMIAL_DEGREE = 128; // N
 const int64_t INVERSE_POLYNOMIAL_DEGREE = 16841979; // N^-1 (4*13 mod 17 = 52 mod 17 = 1)
 const int64_t PLAINTEXT_MODULUS = 256; // P
-const int64_t CIPHERTEXT_MODULUS = 16974593; // Q
+const int64_t CIPHERTEXT_MODULUS = 16974593; // Q 257^3
 const int64_t PRIMITIVE_N_TH_ROOT_OF_UNITY = 908870; // W
 const int64_t INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY = 12269082; // W^-1 (4*13 mod 17 = 52 mod 17 = 1)
 const int64_t SQUARE_ROOT_OF_W = 3259673; // E
 const int64_t INVERSE_SQUARE_ROOT_OF_W = 1797420; // E^-1
-
 // const int64_t COEFFICIENT_WIDTH = 8; // E^-1
 
 // const int64_t POLYNOMIAL_DEGREE = 4;         // N
@@ -45,12 +44,6 @@ const int64_t INVERSE_SQUARE_ROOT_OF_W = 1797420; // E^-1
 constexpr int64_t log2_constexpr(int64_t n) {
     return (n <= 1) ? 0 : 1 + log2_constexpr(n/2);
 }
-
-/**
- * w^4 % q = 2143183
- * 8 10353247
- * 16 6407014
- */
 
 constexpr int64_t LOG2_N = log2_constexpr(POLYNOMIAL_DEGREE);
 
