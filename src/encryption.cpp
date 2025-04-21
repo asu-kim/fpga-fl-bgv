@@ -1,8 +1,8 @@
 #include "hls_stream.h"
-#include "encryption.hpp"
 #include "constants.hpp"
 #include "modulo_reduction.hpp"
 #include "polynomial_multiplication.hpp"
+#include "encryption.hpp"
 
 extern "C" {
 void encryption(data_t* e1, data_t* e2, data_t* r, data_t* pk1, data_t* pk2, data_t* pt, data_t* ct1, data_t* ct2) {

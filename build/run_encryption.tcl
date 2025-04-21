@@ -25,8 +25,10 @@ add_files ../src/encryption.cpp -cflags "-I../include"
 # Add test bench & files
 add_files -tb ../test/test_encryption.cpp -cflags "-I../include"
 
+set top_name "decryption"
+
 # Set the top-level function
-set_top top_encryption_decryption_test
+set_top $top_name
 
 ########################################################
 # Create a solution
@@ -35,10 +37,10 @@ open_solution -reset solution1 -flow_target vitis
 set_part  {xcu55c-fsvh2892-2L-e}
 create_clock -period 10
 
-config_export -format xo -output top_encryption_decryption_test.xo
+config_export -format xo -output $top_name.xo
 
 # Set variable to select which steps to execute
-set hls_exec 1
+set hls_exec 3
 
 csim_design
 # Set any optimization directives
