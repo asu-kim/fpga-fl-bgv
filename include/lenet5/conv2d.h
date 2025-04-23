@@ -65,7 +65,7 @@ void conv2d(
                     float sum_scaled = sum_float_val * act_out_scale + (float)act_out_zp;
                     float sum_rounded = hls::floor(sum_scaled+0.5f);
                     data_t sum_clipped = (data_t)sum_rounded;
-                    sum_clipped = hls::max(hls::numeric_limits<data_t>::min(), hls::min(hls::numeric_limits<data_t>::max(), sum_clipped));
+                    sum_clipped = hls::max(MIN_VAL, hls::min(MAX_VAL, sum_clipped));
                     // out_stream.write((data_t)sum_clipped);
                     int out_row = r - (KERNEL_SIZE - 1);
                     int out_col = c;

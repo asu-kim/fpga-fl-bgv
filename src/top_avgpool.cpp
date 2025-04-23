@@ -40,14 +40,13 @@ void top(
     decryption(private_key, encrypted_conv1_weight1_0, encrypted_conv1_weight1_1, decrypted);
     for(int i = 128; i < 150; i++) {
         decrypted_conv1_weight[i] = decrypted[i - 128];
-        std::cout << decrypted[i - 128] << ", ";
+        std::cout << decrypted[i] << ", ";
     }
     std::cout << "]\n ";
     std::cout << "Decrypted bias = [";
     decryption(private_key, encrypted_conv1_bias0, encrypted_conv1_bias1, decrypted);
     for(int i = 0; i < 6; i++) {
         decrypted_conv1_bias[i] = decrypted[i];
-        std::cout << decrypted[i] << ", ";
     }
     std::cout << "]\n ";
     data_t local_weight[6][1][5][5];

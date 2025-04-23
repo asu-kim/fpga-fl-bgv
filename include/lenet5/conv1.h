@@ -1,8 +1,7 @@
 #ifndef CONV1_H
 #define CONV1_H
 
-#include <hls_stream.h>
-#include <ap_fixed.h>
+// #include <hls_stream.h>
 #include "data_type.hpp"
 
 extern "C" {

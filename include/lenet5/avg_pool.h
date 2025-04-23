@@ -2,39 +2,37 @@
 #define AVG_POOL_H
 
 #include <hls_stream.h>
-#include <ap_fixed.h>
+#include <hls_math.h>
 #include <limits>
 #include <cmath>
 
-typedef ap_int<32> data_t;
+// typedef ap_int<32> data_t;
 
-template<int POOL_SIZE>
+template<int POOL_SIZE, int CHANNELS, int ROWS, int COLS>
 void avg_pool(
-        hls::stream<data_t>& in_stream,
-        hls::stream<data_t>& out_stream,
-        int rows,
-        int cols, 
-        int channels
+        const data_t* in_data,  // Input data array of size CHANNELS*ROWS*COLS
+        data_t* out_data        // Output data array of size CHANNELS*(ROWS/POOL_SIZE)*(COLS/POOL_SIZE)
         ) {
-    const int POOLED_ROWS = rows / POOL_SIZE;
-    const int POOLED_COLS = cols / POOL_SIZE;
+    const int pooled_rows = ROWS / POOL_SIZE;
+    const int pooled_cols = COLS / POOL_SIZE;
     const int divisor = POOL_SIZE * POOL_SIZE;
 
-    for(int channel=0; channel<channels; ++channel) {
-        data_t line_buffer[rows][cols];
+    for(int channel=0; channel<CHANNELS; ++channel) {
+        data_t line_buffer[ROWS][COLS];
         #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=0
 
-        // load channel input
-        for(int r=0; r<rows; ++r) {
-            for(int c=0; c<cols; ++c) {
+        // load channel input from pointer
+        for(int r=0; r<ROWS; ++r) {
+            for(int c=0; c<COLS; ++c) {
                 #pragma HLS PIPELINE II=1
-                line_buffer[r][c] = in_stream.read();
+                // Access pattern for CHANNELS*ROWS*COLS layout
+                line_buffer[r][c] = in_data[channel + CHANNELS*(r*COLS + c)];
             }
         }
 
         // compute avg pool
-        for(int pr=0; pr<POOLED_ROWS; ++pr) {
-            for(int pc=0; pc<POOLED_COLS; ++pc) {
+        for(int pr=0; pr<pooled_rows; ++pr) {
+            for(int pc=0; pc<pooled_cols; ++pc) {
                 #pragma HLS PIPELINE II=1
                 ap_int<64> sum = 0; // we need a wider bitwidth for accumulation
 
@@ -43,9 +41,10 @@ void avg_pool(
                         sum += line_buffer[pr*POOL_SIZE+i][pc*POOL_SIZE+j];
                     }
                 }
-                int32_t avg = (int32_t)((sum + (divisor / 2)) / divisor);
-                avg = std::max(std::numeric_limits<int32_t>::min(), std::min(std::numeric_limits<int32_t>::max(), avg));
-                out_stream.write((data_t)avg);
+                data_t avg = (data_t)((sum + (divisor / 2)) / divisor);
+                avg = hls::max(MIN_VAL, hls::min(MAX_VAL, avg));
+                // Write to output array with CHANNELS*(ROWS/POOL_SIZE)*(COLS/POOL_SIZE) layout
+                out_data[channel + CHANNELS*(pr*pooled_cols + pc)] = avg;
             }
         }
     }
