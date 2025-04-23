@@ -19,8 +19,8 @@ extern "C" {
         #pragma HLS INTERFACE m_axi port=conv1_bias bundle=gmem3 depth=128
 
         // Create local copy
-        data_t local_weight[6][1][5][5];
-        data_t local_bias[6];
+        data_t local_weight[1][1][5][5];
+        data_t local_bias[1];
 
         // Copy data
         for(int i=0; i<6; i++) {
@@ -34,6 +34,6 @@ extern "C" {
             }
         }
         // conv2d<6, 1, 5, 28, 28>(in_data, out_data, local_weight, local_bias);
-        conv2d<6, 1, 5, 28, 28>(in_data, out_data, local_weight, local_bias);
+        conv2d<1, 1, 5, 28, 28>(in_data, out_data, local_weight, local_bias);
     }
 }

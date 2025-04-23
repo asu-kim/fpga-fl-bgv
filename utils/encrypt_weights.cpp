@@ -25,7 +25,8 @@
 #include <vector>
 #include <regex>
 
-#include <../data/weights_bias.h>
+#include <weights_bias.h>
+#include <keys.h>
 
 int n = 128;
 int p = 256;
@@ -185,9 +186,15 @@ int main(int argc, char** argv) {
     int public_key1[n];
     int public_key2[n];
 
-    generate_key(private_key, public_key1, public_key2);
+    for(int i = 0; i < 128; i++) {
+        private_key[i] = PRIVATE_KEY[i];
+        public_key1[i] = PUBLIC_KEY1[i];
+        public_key2[i] = PUBLIC_KEY2[i];
+    }
 
-    save_keys(private_key, public_key1, public_key2, "../data/keys.h");
+    // generate_key(private_key, public_key1, public_key2);
+
+    // save_keys(private_key, public_key1, public_key2, "../data/keys.h");
     
     // Global flag for overall test success
     bool all_tests_passed = true;
@@ -255,14 +262,6 @@ int main(int argc, char** argv) {
     }
     encrypted_header << "\n};\n\n";
     
-    // Write CONV1_BIAS shape (unchanged)
-    encrypted_header << "static const int CONV1_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(CONV1_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << CONV1_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(CONV1_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-    
     // Process CONV1_WEIGHT_INT8_DATA
     int num_weight = 1;
     for(int i = 0; i < sizeof(CONV1_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
@@ -323,142 +322,6 @@ int main(int argc, char** argv) {
         }
         encrypted_header << "\n};\n\n";
     }
-    
-    // Write CONV1_WEIGHT shape (unchanged)
-    encrypted_header << "static const int CONV1_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(CONV1_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << CONV1_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(CONV1_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-    
-    // Process CONV2_BIAS_INT8_DATA
-    num_bias = 1;
-    for(int i = 0; i < sizeof(CONV2_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        num_bias *= CONV2_BIAS_INT8_SHAPE[i];
-    }
-    std::cout << "CONV2_BIAS num elements: " << num_bias << std::endl;
-
-    for(int i = 0; i < n; i++) {
-        if(i < num_bias) {
-            bias_padded[i] = CONV2_BIAS_INT8_DATA[i];
-        } else {
-            bias_padded[i] = 0;
-        }
-    }
-    
-    encryption(bias_padded, public_key1, public_key2, bias_padded_encrypted[0], bias_padded_encrypted[1]);
-    decryption(private_key, bias_padded_encrypted[0], bias_padded_encrypted[1], bias_decrypted);
-
-    test_passed = true;
-    for(int i = 0; i < n; i++) {
-        if(bias_padded[i] != bias_decrypted[i]) {
-            printf("CONV2_BIAS: plaintext[%d] = %d != decrypted[%d] = %d\n", i, bias_padded[i], i, bias_decrypted[i]);
-            test_passed = false;
-            all_tests_passed = false;
-        }
-    }
-    
-    if(test_passed) {
-        std::cout << "CONV2_BIAS encryption test passed" << std::endl;
-    } else {
-        std::cout << "CONV2_BIAS encryption test failed" << std::endl;
-        exit(1);
-    }
-    
-    // Write encrypted CONV2_BIAS to the header
-    encrypted_header << "static const int32_t CONV2_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
-    for(int i = 0; i < n; i++) {
-        encrypted_header << bias_padded_encrypted[0][i];
-        if(i < n - 1) encrypted_header << ", ";
-        if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
-    }
-    encrypted_header << "\n};\n";
-    
-    encrypted_header << "static const int32_t CONV2_BIAS_INT8_DATA_ENC2[" << n << "] = {\n  ";
-    for(int i = 0; i < n; i++) {
-        encrypted_header << bias_padded_encrypted[1][i];
-        if(i < n - 1) encrypted_header << ", ";
-        if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
-    }
-    encrypted_header << "\n};\n\n";
-    
-    // Write CONV2_BIAS shape (unchanged)
-    encrypted_header << "static const int CONV2_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(CONV2_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << CONV2_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(CONV2_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-        
-    // Process CONV2_WEIGHT_INT8_DATA
-    num_weight = 1;
-    for(int i = 0; i < sizeof(CONV2_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        num_weight *= CONV2_WEIGHT_INT8_SHAPE[i];
-    }
-    std::cout << "CONV2_WEIGHT num elements: " << num_weight << std::endl;
-    num_slices = (int)std::ceil((double)num_weight / n);
-    std::cout << "CONV2_WEIGHT num slices: " << num_slices << std::endl;
-
-    for(int slice = 0; slice < num_slices; slice++) {
-        int weights_padded[n];
-        int weights_padded_encrypted[2][n];
-        int weights_decrypted[n];
-        
-        for(int j = 0; j < n; j++) {
-            int index = slice * n + j;
-            if(index < num_weight) {
-                weights_padded[j] = CONV2_WEIGHT_INT8_DATA[index];
-            } else {
-                weights_padded[j] = 0;
-            }
-        }
-        
-        encryption(weights_padded, public_key1, public_key2, weights_padded_encrypted[0], weights_padded_encrypted[1]);
-        decryption(private_key, weights_padded_encrypted[0], weights_padded_encrypted[1], weights_decrypted);
-        
-        test_passed = true;
-        for(int j = 0; j < n; j++) {
-            if(weights_padded[j] != weights_decrypted[j]) {
-                printf("CONV2_WEIGHT slice %d: plaintext[%d] = %d != decrypted[%d] = %d\n", 
-                    slice, j, weights_padded[j], j, weights_decrypted[j]);
-                test_passed = false;
-                all_tests_passed = false;
-            }
-        }
-        
-        if(test_passed) {
-            std::cout << "CONV2_WEIGHT slice " << slice << " encryption test passed" << std::endl;
-        } else {
-            std::cout << "CONV2_WEIGHT slice " << slice << " encryption test failed" << std::endl;
-            exit(1);
-        }
-        
-        // Write encrypted CONV2_WEIGHT slice to the header
-        encrypted_header << "static const int32_t CONV2_WEIGHT_INT8_DATA" << slice << "_ENC1[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[0][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n";
-        
-        encrypted_header << "static const int32_t CONV2_WEIGHT_INT8_DATA" << slice << "_ENC2[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[1][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n\n";
-    }
-
-    // Write CONV2_WEIGHT shape
-    encrypted_header << "static const int CONV2_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(CONV2_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << CONV2_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(CONV2_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
 
     // Process FC1_BIAS_INT8_DATA
     num_bias = 1;
@@ -510,14 +373,6 @@ int main(int argc, char** argv) {
         if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
     }
     encrypted_header << "\n};\n\n";
-
-    // Write FC1_BIAS shape
-    encrypted_header << "static const int FC1_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC1_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC1_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(FC1_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
 
     // Process FC1_WEIGHT_INT8_DATA
     num_weight = 1;
@@ -580,270 +435,6 @@ int main(int argc, char** argv) {
         encrypted_header << "\n};\n\n";
     }
 
-    // Write FC1_WEIGHT shape
-    encrypted_header << "static const int FC1_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC1_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC1_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(FC1_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-
-    // Process FC2_BIAS_INT8_DATA
-    num_bias = 1;
-    for(int i = 0; i < sizeof(FC2_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        num_bias *= FC2_BIAS_INT8_SHAPE[i];
-    }
-    std::cout << "FC2_BIAS num elements: " << num_bias << std::endl;
-
-    for(int i = 0; i < n; i++) {
-        if(i < num_bias) {
-            bias_padded[i] = FC2_BIAS_INT8_DATA[i];
-        } else {
-            bias_padded[i] = 0;
-        }
-    }
-
-    encryption(bias_padded, public_key1, public_key2, bias_padded_encrypted[0], bias_padded_encrypted[1]);
-    decryption(private_key, bias_padded_encrypted[0], bias_padded_encrypted[1], bias_decrypted);
-
-    test_passed = true;
-    for(int i = 0; i < n; i++) {
-        if(bias_padded[i] != bias_decrypted[i]) {
-            printf("FC2_BIAS: plaintext[%d] = %d != decrypted[%d] = %d\n", i, bias_padded[i], i, bias_decrypted[i]);
-            test_passed = false;
-            all_tests_passed = false;
-        }
-    }
-
-    if(test_passed) {
-        std::cout << "FC2_BIAS encryption test passed" << std::endl;
-    } else {
-        std::cout << "FC2_BIAS encryption test failed" << std::endl;
-        exit(1);
-    }
-
-    // Write encrypted FC2_BIAS to the header
-    encrypted_header << "static const int32_t FC2_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
-    for(int i = 0; i < n; i++) {
-        encrypted_header << bias_padded_encrypted[0][i];
-        if(i < n - 1) encrypted_header << ", ";
-        if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
-    }
-    encrypted_header << "\n};\n";
-
-    encrypted_header << "static const int32_t FC2_BIAS_INT8_DATA_ENC2[" << n << "] = {\n  ";
-    for(int i = 0; i < n; i++) {
-        encrypted_header << bias_padded_encrypted[1][i];
-        if(i < n - 1) encrypted_header << ", ";
-        if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
-    }
-    encrypted_header << "\n};\n\n";
-
-    // Write FC2_BIAS shape
-    encrypted_header << "static const int FC2_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC2_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC2_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(FC2_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-
-    // Process FC2_WEIGHT_INT8_DATA
-    num_weight = 1;
-    for(int i = 0; i < sizeof(FC2_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        num_weight *= FC2_WEIGHT_INT8_SHAPE[i];
-    }
-    std::cout << "FC2_WEIGHT num elements: " << num_weight << std::endl;
-    num_slices = (int)std::ceil((double)num_weight / n);
-    std::cout << "FC2_WEIGHT num slices: " << num_slices << std::endl;
-
-    for(int slice = 0; slice < num_slices; slice++) {
-        int weights_padded[n];
-        int weights_padded_encrypted[2][n];
-        int weights_decrypted[n];
-        
-        for(int j = 0; j < n; j++) {
-            int index = slice * n + j;
-            if(index < num_weight) {
-                weights_padded[j] = FC2_WEIGHT_INT8_DATA[index];
-            } else {
-                weights_padded[j] = 0;
-            }
-        }
-        
-        encryption(weights_padded, public_key1, public_key2, weights_padded_encrypted[0], weights_padded_encrypted[1]);
-        decryption(private_key, weights_padded_encrypted[0], weights_padded_encrypted[1], weights_decrypted);
-        
-        test_passed = true;
-        for(int j = 0; j < n; j++) {
-            if(weights_padded[j] != weights_decrypted[j]) {
-                printf("FC2_WEIGHT slice %d: plaintext[%d] = %d != decrypted[%d] = %d\n", 
-                    slice, j, weights_padded[j], j, weights_decrypted[j]);
-                test_passed = false;
-                all_tests_passed = false;
-            }
-        }
-        
-        if(test_passed) {
-            std::cout << "FC2_WEIGHT slice " << slice << " encryption test passed" << std::endl;
-        } else {
-            std::cout << "FC2_WEIGHT slice " << slice << " encryption test failed" << std::endl;
-            exit(1);
-        }
-        
-        // Write encrypted FC2_WEIGHT slice to the header
-        encrypted_header << "static const int32_t FC2_WEIGHT_INT8_DATA" << slice << "_ENC1[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[0][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n";
-        
-        encrypted_header << "static const int32_t FC2_WEIGHT_INT8_DATA" << slice << "_ENC2[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[1][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n\n";
-    }
-
-    // Write FC2_WEIGHT shape
-    encrypted_header << "static const int FC2_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC2_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC2_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(FC2_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-
-    // Process FC3_BIAS_INT8_DATA
-    num_bias = 1;
-    for(int i = 0; i < sizeof(FC3_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        num_bias *= FC3_BIAS_INT8_SHAPE[i];
-    }
-    std::cout << "FC3_BIAS num elements: " << num_bias << std::endl;
-
-    for(int i = 0; i < n; i++) {
-        if(i < num_bias) {
-            bias_padded[i] = FC3_BIAS_INT8_DATA[i];
-        } else {
-            bias_padded[i] = 0;
-        }
-    }
-
-    encryption(bias_padded, public_key1, public_key2, bias_padded_encrypted[0], bias_padded_encrypted[1]);
-    decryption(private_key, bias_padded_encrypted[0], bias_padded_encrypted[1], bias_decrypted);
-
-    test_passed = true;
-    for(int i = 0; i < n; i++) {
-        if(bias_padded[i] != bias_decrypted[i]) {
-            printf("FC3_BIAS: plaintext[%d] = %d != decrypted[%d] = %d\n", i, bias_padded[i], i, bias_decrypted[i]);
-            test_passed = false;
-            all_tests_passed = false;
-        }
-    }
-
-    if(test_passed) {
-        std::cout << "FC3_BIAS encryption test passed" << std::endl;
-    } else {
-        std::cout << "FC3_BIAS encryption test failed" << std::endl;
-        exit(1);
-    }
-
-    // Write encrypted FC3_BIAS to the header
-    encrypted_header << "static const int32_t FC3_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
-    for(int i = 0; i < n; i++) {
-        encrypted_header << bias_padded_encrypted[0][i];
-        if(i < n - 1) encrypted_header << ", ";
-        if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
-    }
-    encrypted_header << "\n};\n";
-
-    encrypted_header << "static const int32_t FC3_BIAS_INT8_DATA_ENC2[" << n << "] = {\n  ";
-    for(int i = 0; i < n; i++) {
-        encrypted_header << bias_padded_encrypted[1][i];
-        if(i < n - 1) encrypted_header << ", ";
-        if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
-    }
-    encrypted_header << "\n};\n\n";
-
-    // Write FC3_BIAS shape
-    encrypted_header << "static const int FC3_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC3_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC3_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(FC3_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-
-    // Process FC3_WEIGHT_INT8_DATA
-    num_weight = 1;
-    for(int i = 0; i < sizeof(FC3_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        num_weight *= FC3_WEIGHT_INT8_SHAPE[i];
-    }
-    std::cout << "FC3_WEIGHT num elements: " << num_weight << std::endl;
-    num_slices = (int)std::ceil((double)num_weight / n);
-    std::cout << "FC3_WEIGHT num slices: " << num_slices << std::endl;
-
-    for(int slice = 0; slice < num_slices; slice++) {
-        int weights_padded[n];
-        int weights_padded_encrypted[2][n];
-        int weights_decrypted[n];
-        
-        for(int j = 0; j < n; j++) {
-            int index = slice * n + j;
-            if(index < num_weight) {
-                weights_padded[j] = FC3_WEIGHT_INT8_DATA[index];
-            } else {
-                weights_padded[j] = 0;
-            }
-        }
-        
-        encryption(weights_padded, public_key1, public_key2, weights_padded_encrypted[0], weights_padded_encrypted[1]);
-        decryption(private_key, weights_padded_encrypted[0], weights_padded_encrypted[1], weights_decrypted);
-        
-        test_passed = true;
-        for(int j = 0; j < n; j++) {
-            if(weights_padded[j] != weights_decrypted[j]) {
-                printf("FC3_WEIGHT slice %d: plaintext[%d] = %d != decrypted[%d] = %d\n", 
-                    slice, j, weights_padded[j], j, weights_decrypted[j]);
-                test_passed = false;
-                all_tests_passed = false;
-            }
-        }
-        
-        if(test_passed) {
-            std::cout << "FC3_WEIGHT slice " << slice << " encryption test passed" << std::endl;
-        } else {
-            std::cout << "FC3_WEIGHT slice " << slice << " encryption test failed" << std::endl;
-            exit(1);
-        }
-        
-        // Write encrypted FC3_WEIGHT slice to the header
-        encrypted_header << "static const int32_t FC3_WEIGHT_INT8_DATA" << slice << "_ENC1[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[0][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n";
-        
-        encrypted_header << "static const int32_t FC3_WEIGHT_INT8_DATA" << slice << "_ENC2[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[1][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n\n";
-    }
-
-    // Write FC3_WEIGHT shape
-    encrypted_header << "static const int FC3_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC3_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC3_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(FC3_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-    
     // Close the header with endif
     encrypted_header << "#endif // ENCRYPTED_WEIGHTS_BIAS_H\n";
     encrypted_header.close();
