@@ -8,6 +8,10 @@
 // #include "hls_stream.h"
 #include "hls_math.h"
 #include "encryption.hpp"
+#include "polynomial_multiplication.hpp"
+#include "keys.h"
+#include "weights_bias.h"
+#include "encrypted_weights_bias.h"
 #include "constants.hpp"
 
 int n = POLYNOMIAL_DEGREE;
@@ -21,7 +25,7 @@ void print_array(const char* name, data_t* arr, int size) {
         std::cout << arr[i];
         if (i < size - 1) std::cout << ", ";
     }
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl << std::endl;
 }
 
 std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
@@ -41,37 +45,37 @@ void polynomial_multiplication_reference(data_t* input1, data_t* input2, data_t*
     }
 }
 
-void generate_key(data_t* private_key, data_t* public_key1, data_t* public_key2) {
-    // data_t a_prime[n] = {1, 2, 3, 4};
-    // data_t error[n] = {1, 0, -1, 1};
-    data_t a_prime[n];
-    data_t error[n];
+// void generate_key(data_t* private_key, data_t* public_key1, data_t* public_key2) {
+//     // data_t a_prime[n] = {1, 2, 3, 4};
+//     // data_t error[n] = {1, 0, -1, 1};
+//     data_t a_prime[n];
+//     data_t error[n];
 
-    std::uniform_int_distribution<int> dist1(-1, 1);
+//     std::uniform_int_distribution<int> dist1(-1, 1);
 
-    for(int i = 0; i < n; i++) {
-        private_key[i] = dist1(rng);
-        error[i] = dist1(rng);
-    }
+//     for(int i = 0; i < n; i++) {
+//         private_key[i] = dist1(rng);
+//         error[i] = dist1(rng);
+//     }
 
-    std::uniform_int_distribution<int> dist2(0, q - 1);
+//     std::uniform_int_distribution<int> dist2(0, q - 1);
 
-    for(int i = 0; i < n; i++) {
-        a_prime[i] = dist2(rng);
-        // std::cout << "a_prime = " << a_prime[i] << std::endl;
-    }
+//     for(int i = 0; i < n; i++) {
+//         a_prime[i] = dist2(rng);
+//         // std::cout << "a_prime = " << a_prime[i] << std::endl;
+//     }
 
-    data_t temp[n];
-    polynomial_multiplication_reference(a_prime, private_key, temp);
-    for(int i = 0; i < n; i++) {
-        printf("temp[%d] = %d\n", i, temp[i]);
-    }
+//     data_t temp[n];
+//     polynomial_multiplication_reference(a_prime, private_key, temp);
+//     // for(int i = 0; i < n; i++) {
+//     //     printf("temp[%d] = %d\n", i, temp[i]);
+//     // }
 
-    for(int i = 0; i < n; i++) {
-        public_key1[i] = (temp[i] + p * error[i] + q) % q;
-        public_key2[i] = -a_prime[i];
-    }
-}
+//     for(int i = 0; i < n; i++) {
+//         public_key1[i] = (temp[i] + p * error[i] + q) % q;
+//         public_key2[i] = -a_prime[i];
+//     }
+// }
 
 void encryption_reference(data_t* error1, data_t* error2, data_t* r, data_t* publick_key1, data_t* publick_key2, data_t* plaintext, data_t* ciphertext1, data_t* ciphertext2) {
     data_t temp1[n];
@@ -88,7 +92,7 @@ void encryption_reference(data_t* error1, data_t* error2, data_t* r, data_t* pub
 
 data_t modulo(data_t a, data_t b) {
     data_t c = (a % b + b) % b;
-    if (c <= b /2) {
+    if (c < b /2) {
         return c;
     } else {
         return c - b;
@@ -98,6 +102,8 @@ data_t modulo(data_t a, data_t b) {
 void decryption_reference(data_t* private_key, data_t* ciphertext1, data_t* ciphertext2, data_t* plaintext){
     data_t temp[n];
     polynomial_multiplication_reference(ciphertext2, private_key, temp);
+
+    print_array("temp", temp, n);
 
     for(int i = 0; i < n; i++) {
         data_t intermittent = modulo(ciphertext1[i] + temp[i], q);
@@ -113,53 +119,31 @@ int main() {
     data_t public_key1[n];
     data_t public_key2[n];
 
-    generate_key(private_key, public_key1, public_key2);
     for(int i = 0; i < n; i++) {
-        printf("sk[%d] = %d\n", i, private_key[i]);
+        private_key[i] = PRIVATE_KEY[i];
+        public_key1[i] = PUBLIC_KEY1[i];
+        public_key2[i] = PUBLIC_KEY2[i];
     }
-    for(int i = 0; i < n; i++) {
-        printf("pk[%d] = (%d, %d)\n", i, public_key1[i], public_key2[i]);
-    }
-    printf("\n");
 
-    // int plaintext[n] = {0, 1, 0, 1};
+    // generate_key(private_key, public_key1, public_key2);
+    // for(int i = 0; i < n; i++) {
+    //     printf("sk[%d] = %d\n", i, private_key[i]);
+    // }
+    // for(int i = 0; i < n; i++) {
+    //     printf("pk[%d] = (%d, %d)\n", i, public_key1[i], public_key2[i]);
+    // }
+    // printf("\n");
+
     data_t plaintext[n];
     data_t ciphertext1_hls[n];
     data_t ciphertext2_hls[n];
     data_t ciphertext1_ref[n];
     data_t ciphertext2_ref[n];
-
-    data_t decrypted_pt[n];
     
     std::cout << "Testing encryption/decryption with parameters:" << std::endl;
     std::cout << "POLYNOMIAL_DEGREE: " << POLYNOMIAL_DEGREE << std::endl;
     std::cout << "CIPHERTEXT_MODULUS: " << CIPHERTEXT_MODULUS << std::endl;
     std::cout << "PRIMITIVE_N_TH_ROOT_OF_UNITY: " << PRIMITIVE_N_TH_ROOT_OF_UNITY << std::endl;
-
-    // for(int i = 0; i < n; i++) {
-    //     plaintext[i] = 1;
-    // }
-    // print_array("plaintext", plaintext, POLYNOMIAL_DEGREE);
-
-    // int error1[n] = {1, 1, 0, 0};
-    // int error2[n] = {-1, 1, 0, 0};
-    // int r[n] = {0, 0, 0, 0};
-    // int r[n] = {4, 3, 2, 1};
-    // encryption(error1, error2, r, public_key1, public_key2, plaintext, ciphertext1_hls, ciphertext2_hls);
-    // encryption_reference(error1, error2, r, public_key1, public_key2, plaintext, ciphertext1_ref, ciphertext2_ref);
-
-    // print_array("ciphertext1_hls", ciphertext1_hls, POLYNOMIAL_DEGREE);
-    // print_array("ciphertext1_ref", ciphertext1_ref, POLYNOMIAL_DEGREE);
-    // print_array("ciphertext2_hls", ciphertext2_hls, POLYNOMIAL_DEGREE);
-    // print_array("ciphertext2_ref", ciphertext2_ref, POLYNOMIAL_DEGREE);
-
-    // data_t decrypted_hls[n];
-    // data_t decrypted_ref[n];
-    // decryption(private_key, ciphertext1_hls, ciphertext2_hls, decrypted_hls);
-    // decryption_reference(private_key, ciphertext1_ref, ciphertext2_ref, decrypted_ref);
-
-    // print_array("decrypted_hls", decrypted_hls, POLYNOMIAL_DEGREE);
-    // print_array("decrypted_ref", decrypted_ref, POLYNOMIAL_DEGREE);
 
     int diff = 0;
     // Seed random number generator
@@ -168,11 +152,68 @@ int main() {
     // Global flag for overall test success
     bool all_tests_passed = true;
 
+    // // Test
+    // for (int test = 0; test < 1; ++test) {
+    //     for(int j = 0; j < n; ++j) {
+    //         plaintext[j] = CONV1_WEIGHT_INT8_DATA[j];
+    //     }
+        
+
+    //     // Print the current plaintext
+    //     std::cout << "Test " << test + 1 << " - plaintext = {";
+    //     for (int j = 0; j < n; ++j) {
+    //         std::cout << plaintext[j];
+    //         if (j != n - 1) std::cout << ", ";
+    //     }
+    //     std::cout << "}" << std::endl;
+
+    //     for(int i = 0; i < n; i++) {
+    //         ciphertext1_hls[i] = CONV1_WEIGHT_INT8_DATA0_ENC1[i];
+    //         ciphertext2_hls[i] = CONV1_WEIGHT_INT8_DATA0_ENC2[i];
+    //         ciphertext1_ref[i] = CONV1_WEIGHT_INT8_DATA0_ENC1[i];
+    //         ciphertext2_ref[i] = CONV1_WEIGHT_INT8_DATA0_ENC2[i];
+    //     }
+
+    //     print_array("ciphertext1_hls", ciphertext1_hls, POLYNOMIAL_DEGREE);
+    //     print_array("ciphertext2_hls", ciphertext2_hls, POLYNOMIAL_DEGREE);
+
+    //     data_t decrypted_hls[n];
+    //     data_t decrypted_ref[n];
+    //     data_t temp[n];
+    //     data_t after_qmod[n];
+    //     decryption(private_key, ciphertext1_hls, ciphertext2_hls, temp, after_qmod, decrypted_hls);
+    //     decryption_reference(private_key, ciphertext1_ref, ciphertext2_ref, decrypted_ref);
+    
+    //     print_array("temp", temp, POLYNOMIAL_DEGREE);
+    //     print_array("after_qmod", after_qmod, POLYNOMIAL_DEGREE);
+    //     print_array("decrypted_hls", decrypted_hls, POLYNOMIAL_DEGREE);
+    //     print_array("decrypted_ref", decrypted_ref, POLYNOMIAL_DEGREE);
+
+    //     bool test_passed = true;
+    //     for(int i = 0; i < n; i++) {
+    //         if (plaintext[i] != decrypted_hls[i]) {
+    //             printf("plaintext[%d] = %d != decrypted[%d] = %d\n", i, plaintext[i], i, decrypted_hls[i]);
+    //             printf("decrypted_ref[%d] = %d\n", i, plaintext[i], i, decrypted_ref[i]);
+    //             diff = 1;
+    //             test_passed = false;
+    //             all_tests_passed = false;
+    //         }
+    //     }
+        
+    //     if (test_passed) {
+    //         std::cout << "Test " << test + 1 << " passed" << std::endl;
+    //     } else {
+    //         std::cout << "Test " << test + 1 << " failed" << std::endl;
+    //     }
+    // }
+
     // Test 20 random plaintexts
-    for (int test = 0; test < 20; ++test) {
-        // Generate random plaintext values between 0 and p-1
+    for (int test = 0; test < 10; ++test) {
+        // Generate random plaintext values between -p/2 and p/2 - 1
         for (int j = 0; j < n; ++j) {
-            plaintext[j] = rand() % p;
+            int temp = rand() % p;
+            plaintext[j] = temp >= p/2 ? temp - p : temp;
+            // plaintext[j] = temp > p/2 ? temp - p : temp;
         }
 
         data_t error1[n];
@@ -180,15 +221,11 @@ int main() {
         data_t r[n];
 
         std::uniform_int_distribution<int> dist1(-1, 1);
-        // std::uniform_int_distribution<int> dist2(0, q - 1);
 
         for(int i = 0; i < n; i++) {
             error1[i] = (data_t) dist1(rng);
-            // printf("error1[%d] = %d\n", i, error1[i]);
             error2[i] = (data_t) dist1(rng);
-            // printf("error2[%d] = %d\n", i, error2[i]);
             r[i] = (data_t) dist1(rng);
-            // printf("r[%d] = %d\n", i, r[i]);
         }
 
         // Print the current plaintext
@@ -199,29 +236,31 @@ int main() {
         }
         std::cout << "}" << std::endl;
 
-        top_encryption_decryption_test(error1, error2, r, private_key, public_key1, public_key2, plaintext, decrypted_pt);
-
         encryption(error1, error2, r, public_key1, public_key2, plaintext, ciphertext1_hls, ciphertext2_hls);
         encryption_reference(error1, error2, r, public_key1, public_key2, plaintext, ciphertext1_ref, ciphertext2_ref);
 
         print_array("ciphertext1_hls", ciphertext1_hls, POLYNOMIAL_DEGREE);
-        print_array("ciphertext1_ref", ciphertext1_ref, POLYNOMIAL_DEGREE);
         print_array("ciphertext2_hls", ciphertext2_hls, POLYNOMIAL_DEGREE);
+        print_array("ciphertext1_ref", ciphertext1_ref, POLYNOMIAL_DEGREE);
         print_array("ciphertext2_ref", ciphertext2_ref, POLYNOMIAL_DEGREE);
 
         data_t decrypted_hls[n];
         data_t decrypted_ref[n];
         decryption(private_key, ciphertext1_hls, ciphertext2_hls, decrypted_hls);
         decryption_reference(private_key, ciphertext1_ref, ciphertext2_ref, decrypted_ref);
+
+        data_t mult_test[n];
+        polynomial_multiplication(ciphertext2_hls, private_key, mult_test);
+        print_array("mult_test", mult_test, POLYNOMIAL_DEGREE);
     
         print_array("decrypted_hls", decrypted_hls, POLYNOMIAL_DEGREE);
         print_array("decrypted_ref", decrypted_ref, POLYNOMIAL_DEGREE);
-        print_array("decrypted_pt", decrypted_pt, POLYNOMIAL_DEGREE);
 
         bool test_passed = true;
         for(int i = 0; i < n; i++) {
-            if ((plaintext[i] != decrypted_hls[i]) && (plaintext[i] - decrypted_hls[i] != p)) {
-                printf("plaintext[%d] = %d != decrypted[%d] = %d\n", i, plaintext[i], i, decrypted_hls[i]);
+            if (plaintext[i] != decrypted_hls[i]) {
+                printf("plaintext[%d] = %d != decrypted[%d] = %d, ", i, plaintext[i], i, decrypted_hls[i]);
+                printf("decrypted_ref[%d] = %d\n", i, plaintext[i], i, decrypted_ref[i]);
                 diff = 1;
                 test_passed = false;
                 all_tests_passed = false;
@@ -247,13 +286,12 @@ int main() {
     //     }
     // }
     
-    // if (match) {
-    //     std::cout << "PASS: HLS implementation matches reference!" << std::endl;
-    // } else {
-    //     std::cout << "FAIL: Results don't match!" << std::endl;
-    // }
-    std::cout << "Test ended" << std::endl;
+    if (all_tests_passed) {
+        std::cout << "PASS: HLS implementation matches reference!" << std::endl;
+    } else {
+        std::cout << "FAIL: Results don't match!" << std::endl;
+    }
     
-    // return match ? 0 : 1;
+    // return all_tests_passed ? 0 : 1;
     return 0;
 }

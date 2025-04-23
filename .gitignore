@@ -1,2 +1,6 @@
 # LeNet5 model
 quant_result_test/
+_x*/
+build/*.log
+build/*.xclbin*
+build/FPGA_FL_CLIENT/

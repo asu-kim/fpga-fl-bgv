@@ -5,7 +5,6 @@
 #include <limits.h>
 
 #include <fstream>
-#include <ap_fixed.h>
 #include <filesystem>
 #include <string>
 

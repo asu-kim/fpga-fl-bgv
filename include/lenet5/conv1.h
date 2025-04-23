@@ -12,10 +12,12 @@ extern "C" {
 //     Parameter* param
 // );
 void conv1(
-    hls::stream<data_t>& in_stream,
-    hls::stream<data_t>& out_stream,
-    data_t conv1_weight[6][1][5][5],
-    data_t conv1_bias[6]
+    // hls::stream<data_t>& in_stream,
+    // hls::stream<data_t>& out_stream,
+    data_t in_data[784],
+    data_t out_data[3456],
+    data_t conv1_weight[256],
+    data_t conv1_bias[128]
 );
 }
 #endif

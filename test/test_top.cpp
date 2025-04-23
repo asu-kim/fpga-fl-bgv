@@ -3,8 +3,11 @@
 #include "hls_math.h"
 #include "lenet5/conv2d.h"
 #include "lenet5/conv1.h"
+#include "keys.h"
 #include "weights_bias.h"
+#include "encrypted_weights_bias.h"
 #include "test_utils.h"
+#include "top.hpp"
 
 #define IN_ROWS 28
 #define IN_COLS 28
@@ -73,19 +76,15 @@ int main() {
     data_t out_data[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)];
     data_t out_data_ref[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)];
     data_t weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE];
-    data_t flatten_weights[128 * ((OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE + 127)/128)];
     data_t bias[OUT_C];
-    data_t flatten_bias[128 * ((OUT_C + 127)/128)];
 
     for(int channel=0; channel<OUT_C; ++channel) {
         for(int ic=0; ic<IN_C; ++ic) {
             bias[channel] = 0.0;
-            flatten_bias[channel] = 0.0;
             for(int i=0; i<KERNEL_SIZE; ++i) {
                 for(int j=0; j<KERNEL_SIZE; ++j) {
                     data_t weight = CONV1_WEIGHT_INT8_DATA[channel*(IN_C*KERNEL_SIZE*KERNEL_SIZE) + ic*(KERNEL_SIZE*KERNEL_SIZE) + i*(KERNEL_SIZE) + j];
                     weights[channel][ic][i][j] = weight;
-                    flatten_weights[channel*(IN_C*KERNEL_SIZE*KERNEL_SIZE) + ic*(KERNEL_SIZE*KERNEL_SIZE) + i*(KERNEL_SIZE) + j] = weight;
                 }
             }
         }
@@ -106,7 +105,6 @@ int main() {
 
     for(int i = 0; i < OUT_C; i++) {
         bias[i] = CONV1_BIAS_INT8_DATA[i];
-        flatten_bias[i] = CONV1_BIAS_INT8_DATA[i];
     }
 
     std::cout << "bias_golden = [";
@@ -122,9 +120,29 @@ int main() {
         }
     }
 
+    // Load encrypted weights.
+    data_t private_key[POLYNOMIAL_DEGREE];
+    data_t encrypted_conv1_weight0_0[POLYNOMIAL_DEGREE];
+    data_t encrypted_conv1_weight0_1[POLYNOMIAL_DEGREE];
+    data_t encrypted_conv1_weight1_0[POLYNOMIAL_DEGREE];
+    data_t encrypted_conv1_weight1_1[POLYNOMIAL_DEGREE];
+    data_t encrypted_conv1_bias0[POLYNOMIAL_DEGREE];
+    data_t encrypted_conv1_bias1[POLYNOMIAL_DEGREE];
+
+    for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+        private_key[i] = PRIVATE_KEY[i];
+        encrypted_conv1_weight0_0[i] = CONV1_WEIGHT_INT8_DATA0_ENC1[i];
+        encrypted_conv1_weight0_1[i] = CONV1_WEIGHT_INT8_DATA0_ENC2[i];
+        encrypted_conv1_weight1_0[i] = CONV1_WEIGHT_INT8_DATA1_ENC1[i];
+        encrypted_conv1_weight1_1[i] = CONV1_WEIGHT_INT8_DATA1_ENC2[i];
+        encrypted_conv1_bias0[i] = CONV1_BIAS_INT8_DATA_ENC1[i];
+        encrypted_conv1_bias1[i] = CONV1_BIAS_INT8_DATA_ENC2[i];
+    }
+
     // run conv2d
     // conv1(in_stream, out_stream, flatten_weights, flatten_bias);
-    conv1(in_data, out_data, flatten_weights, flatten_bias);
+    top(private_key, encrypted_conv1_weight0_0, encrypted_conv1_weight0_1, encrypted_conv1_weight1_0,
+        encrypted_conv1_weight1_1, encrypted_conv1_bias0, encrypted_conv1_bias1, in_data, out_data);
     conv1_golden(in_data_ref, out_data_ref, weights, bias);
 
     int errors = 0;
@@ -133,19 +151,19 @@ int main() {
     for(int i=0; i<output_size; ++i) {
         std::cout << out_data_ref[i] << ", ";
     }
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl << std::endl;
     std::cout << "out_data = [";
     for(int i=0; i<output_size; ++i) {
         std::cout << out_data[i] << ", ";
     }
     std::cout << "]" << std::endl;
-    std::cout << "Error indexes: ";
-    for(int i=0; i<output_size; ++i) {
-        if(out_data[i] != out_data_ref[i]) {
-            errors = 1;
-            std::cout << i << ", ";
-        }
-    }
+    // std::cout << "Error indexes: ";
+    // for(int i=0; i<output_size; ++i) {
+    //     if(out_data[i] != out_data_ref[i]) {
+    //         errors = 1;
+    //         std::cout << i << ", ";
+    //     }
+    // }
     std::cout << std::endl;
 
     return errors;

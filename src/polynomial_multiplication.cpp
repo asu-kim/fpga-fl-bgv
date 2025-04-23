@@ -6,9 +6,12 @@
 #include "polynomial_multiplication.hpp"
 
 void polynomial_multiplication(data_t* in1, data_t* in2, data_t* out) {
-    #pragma HLS INTERFACE m_axi port=in1 bundle=gmem0 depth=POLYNOMIAL_DEGREE
-    #pragma HLS INTERFACE m_axi port=in2 bundle=gmem1 depth=POLYNOMIAL_DEGREE
-    #pragma HLS INTERFACE m_axi port=out bundle=gmem2 depth=POLYNOMIAL_DEGREE
+    #pragma HLS INTERFACE m_axi port=in1 bundle=gmem2 depth=POLYNOMIAL_DEGREE
+    #pragma HLS INTERFACE m_axi port=in2 bundle=gmem0 depth=POLYNOMIAL_DEGREE
+    #pragma HLS INTERFACE m_axi port=out bundle=gmem4 depth=POLYNOMIAL_DEGREE
+    // #pragma HLS INTERFACE ap_memory port=in1 depth=POLYNOMIAL_DEGREE
+    // #pragma HLS INTERFACE ap_memory port=in2 depth=POLYNOMIAL_DEGREE
+    // #pragma HLS INTERFACE ap_memory port=out depth=POLYNOMIAL_DEGREE
 
     data_t n = POLYNOMIAL_DEGREE;
     data_t q = CIPHERTEXT_MODULUS;

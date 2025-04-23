@@ -3,7 +3,6 @@
 
 #include <hls_stream.h>
 #include <hls_math.h>
-#include <ap_fixed.h>
 #include "data_type.hpp"
 
 // typedef ap_int<32> data_t; // 8 bit fixed point as precision
@@ -13,8 +12,11 @@
 //----------------------
 template<int OUT_C, int IN_C, int KERNEL_SIZE, int ROW, int COL>
 void conv2d(
-        hls::stream<data_t>& in_stream,
-        hls::stream<data_t>& out_stream,
+        // data_t in_data[IN_C][ROW][COL],
+        data_t in_data[IN_C * ROW * COL],
+        data_t out_data[OUT_C * (ROW - KERNEL_SIZE + 1) * (COL - KERNEL_SIZE + 1)],
+        // hls::stream<data_t>& in_stream,
+        // hls::stream<data_t>& out_stream,
         const data_t weight[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE],
         const data_t bias[OUT_C],
         float act_out_scale=1, int act_out_zp=0
@@ -32,8 +34,9 @@ void conv2d(
             #pragma HLS PIPELINE II=1
             for(int ch=0; ch<IN_C; ++ch) {
                 #pragma HLS UNROLL
-                data_t pixel = in_stream.read();
-                line_buffer[ch][cur_row][c] = pixel;
+                // data_t pixel = in_stream.read();
+                // line_buffer[ch][cur_row][c] = pixel;
+                line_buffer[ch][cur_row][c] = in_data[r * COL * IN_C + c * IN_C + ch];
             }
         }
 
@@ -63,7 +66,13 @@ void conv2d(
                     float sum_rounded = hls::floor(sum_scaled+0.5f);
                     data_t sum_clipped = (data_t)sum_rounded;
                     sum_clipped = hls::max(hls::numeric_limits<data_t>::min(), hls::min(hls::numeric_limits<data_t>::max(), sum_clipped));
-                    out_stream.write((data_t)sum_clipped);
+                    // out_stream.write((data_t)sum_clipped);
+                    int out_row = r - (KERNEL_SIZE - 1);
+                    int out_col = c;
+                    int out_index = oc * (ROW - KERNEL_SIZE + 1) * (COL - KERNEL_SIZE + 1)
+                                    + out_row * (COL - KERNEL_SIZE + 1)
+                                    + out_col;
+                    out_data[out_index] = sum_clipped;
                 }
             }
         }

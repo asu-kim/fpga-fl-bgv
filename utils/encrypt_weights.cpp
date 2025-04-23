@@ -224,7 +224,7 @@ int main(int argc, char** argv) {
 
     bool test_passed = true;
     for(int i = 0; i < n; i++) {
-        if(bias_padded[i] != bias_decrypted[i] && (bias_padded[i] - bias_decrypted[i]) != p) {
+        if(bias_padded[i] != bias_decrypted[i]) {
             printf("CONV1_BIAS: plaintext[%d] = %d != decrypted[%d] = %d\n", i, bias_padded[i], i, bias_decrypted[i]);
             test_passed = false;
             all_tests_passed = false;
@@ -291,7 +291,7 @@ int main(int argc, char** argv) {
         
         test_passed = true;
         for(int j = 0; j < n; j++) {
-            if(weights_padded[j] != weights_decrypted[j] && (weights_padded[j] - weights_decrypted[j]) != p) {
+            if(weights_padded[j] != weights_decrypted[j]) {
                 printf("CONV1_WEIGHT slice %d: plaintext[%d] = %d != decrypted[%d] = %d\n", 
                        slice, j, weights_padded[j], j, weights_decrypted[j]);
                 test_passed = false;
@@ -352,7 +352,7 @@ int main(int argc, char** argv) {
 
     test_passed = true;
     for(int i = 0; i < n; i++) {
-        if(bias_padded[i] != bias_decrypted[i] && (bias_padded[i] - bias_decrypted[i]) != p) {
+        if(bias_padded[i] != bias_decrypted[i]) {
             printf("CONV2_BIAS: plaintext[%d] = %d != decrypted[%d] = %d\n", i, bias_padded[i], i, bias_decrypted[i]);
             test_passed = false;
             all_tests_passed = false;
@@ -419,7 +419,7 @@ int main(int argc, char** argv) {
         
         test_passed = true;
         for(int j = 0; j < n; j++) {
-            if(weights_padded[j] != weights_decrypted[j] && (weights_padded[j] - weights_decrypted[j]) != p) {
+            if(weights_padded[j] != weights_decrypted[j]) {
                 printf("CONV2_WEIGHT slice %d: plaintext[%d] = %d != decrypted[%d] = %d\n", 
                     slice, j, weights_padded[j], j, weights_decrypted[j]);
                 test_passed = false;
@@ -480,7 +480,7 @@ int main(int argc, char** argv) {
 
     test_passed = true;
     for(int i = 0; i < n; i++) {
-        if(bias_padded[i] != bias_decrypted[i] && (bias_padded[i] - bias_decrypted[i]) != p) {
+        if(bias_padded[i] != bias_decrypted[i]) {
             printf("FC1_BIAS: plaintext[%d] = %d != decrypted[%d] = %d\n", i, bias_padded[i], i, bias_decrypted[i]);
             test_passed = false;
             all_tests_passed = false;
@@ -547,7 +547,7 @@ int main(int argc, char** argv) {
         
         test_passed = true;
         for(int j = 0; j < n; j++) {
-            if(weights_padded[j] != weights_decrypted[j] && (weights_padded[j] - weights_decrypted[j]) != p) {
+            if(weights_padded[j] != weights_decrypted[j]) {
                 printf("FC1_WEIGHT slice %d: plaintext[%d] = %d != decrypted[%d] = %d\n", 
                     slice, j, weights_padded[j], j, weights_decrypted[j]);
                 test_passed = false;
@@ -608,7 +608,7 @@ int main(int argc, char** argv) {
 
     test_passed = true;
     for(int i = 0; i < n; i++) {
-        if(bias_padded[i] != bias_decrypted[i] && (bias_padded[i] - bias_decrypted[i]) != p) {
+        if(bias_padded[i] != bias_decrypted[i]) {
             printf("FC2_BIAS: plaintext[%d] = %d != decrypted[%d] = %d\n", i, bias_padded[i], i, bias_decrypted[i]);
             test_passed = false;
             all_tests_passed = false;
@@ -675,7 +675,7 @@ int main(int argc, char** argv) {
         
         test_passed = true;
         for(int j = 0; j < n; j++) {
-            if(weights_padded[j] != weights_decrypted[j] && (weights_padded[j] - weights_decrypted[j]) != p) {
+            if(weights_padded[j] != weights_decrypted[j]) {
                 printf("FC2_WEIGHT slice %d: plaintext[%d] = %d != decrypted[%d] = %d\n", 
                     slice, j, weights_padded[j], j, weights_decrypted[j]);
                 test_passed = false;
@@ -736,7 +736,7 @@ int main(int argc, char** argv) {
 
     test_passed = true;
     for(int i = 0; i < n; i++) {
-        if(bias_padded[i] != bias_decrypted[i] && (bias_padded[i] - bias_decrypted[i]) != p) {
+        if(bias_padded[i] != bias_decrypted[i]) {
             printf("FC3_BIAS: plaintext[%d] = %d != decrypted[%d] = %d\n", i, bias_padded[i], i, bias_decrypted[i]);
             test_passed = false;
             all_tests_passed = false;
@@ -803,7 +803,7 @@ int main(int argc, char** argv) {
         
         test_passed = true;
         for(int j = 0; j < n; j++) {
-            if(weights_padded[j] != weights_decrypted[j] && (weights_padded[j] - weights_decrypted[j]) != p) {
+            if(weights_padded[j] != weights_decrypted[j]) {
                 printf("FC3_WEIGHT slice %d: plaintext[%d] = %d != decrypted[%d] = %d\n", 
                     slice, j, weights_padded[j], j, weights_decrypted[j]);
                 test_passed = false;
