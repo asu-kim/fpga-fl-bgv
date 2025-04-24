@@ -24,6 +24,7 @@ extern "C" {
         #pragma HLS INTERFACE m_axi port=out_data bundle=gmem1 depth=3456
         #pragma HLS INTERFACE m_axi port=conv1_weight bundle=gmem2 depth=256
         #pragma HLS INTERFACE m_axi port=conv1_bias bundle=gmem3 depth=128
+        #pragma HLS INTERFACE s_axilite port=return bundle=control
     
         float act_out_scale=1;
         float act_out_zp=0;
