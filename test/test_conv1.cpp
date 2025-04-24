@@ -6,11 +6,11 @@
 #include "weights_bias.h"
 #include "test_utils.h"
 
-#define IN_ROWS 10
-#define IN_COLS 10
+#define IN_ROWS 28
+#define IN_COLS 28
 #define KERNEL_SIZE 5
 #define IN_C 1
-#define OUT_C 1
+#define OUT_C 6
 
 void conv1_golden(
     const data_t in_data[IN_C][IN_ROWS][IN_COLS],
@@ -110,17 +110,19 @@ int main() {
     }
 
     std::cout << "bias_golden = [";
-    for(int i=0; i<1; i++) {
+    for(int i=0; i<OUT_C; i++) {
         std::cout << bias[i] << ", ";
     }
     std::cout << "]" << std::endl;
 
+    std::cout << "check\n";
     for(int i=0; i<IN_ROWS; i++) {
         for(int j = 0; j < IN_COLS; j++) {
             in_data[i * IN_COLS + j] = 1;
             in_data_ref[0][i][j] = 1;
         }
     }
+    std::cout << "check\n";
 
     // run conv2d
     // conv1(in_stream, out_stream, flatten_weights, flatten_bias);

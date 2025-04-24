@@ -4,10 +4,10 @@
 
 #include <cstdint>
 
-static const int32_t CONV1_BIAS_INT8_DATA[1] = {
-  10
+static const int32_t CONV1_BIAS_INT8_DATA[6] = {
+  10, -10, 5, -5, 50, -40
 };
-static const int CONV1_BIAS_INT8_SHAPE[] = { 1 };
+static const int CONV1_BIAS_INT8_SHAPE[] = { 4 };
 
 // static const int32_t CONV1_WEIGHT_INT8_DATA[25] = {
 //   -128, -100, -50, -10, 0,
@@ -16,14 +16,44 @@ static const int CONV1_BIAS_INT8_SHAPE[] = { 1 };
 //   100, 110, 120, 125, 126,
 //   127, 127, 127, 127, 127
 // };
-static const int32_t CONV1_WEIGHT_INT8_DATA[25] = {
+static const int32_t CONV1_WEIGHT_INT8_DATA[150] = {
   -128, -100, -50, -10, 0,
   0, 10, 50, 100, 1,
   2, 3, 4, 5, 6,
   7, 8, 9, 10, 0,
-  0, 0, 0, 0, 127
+  0, 0, 0, 0, 127,
+
+  0, -100, -50, -10, 0,
+  0, 10, 50, 100, 1,
+  2, 3, 4, 5, 6,
+  7, 8, 9, 10, 0,
+  0, 0, 0, 0, 0,
+
+  0, 0, 0, 0, 0,
+  0, 0, 0, 0, 1,
+  2, 3, 4, 5, 6,
+  7, 8, 9, 10, 0,
+  0, 0, 0, 0, 0, 
+
+  0, 0, 0, 0, 0,
+  0, 0, 0, 0, 1,
+  2, 3, 4, 5, 6,
+  7, 8, 9, 10, 0,
+  0, 0, 0, 0, 0, 
+
+  5, 0, 0, 0, 0,
+  0, 0, 10, 0, 1,
+  2, 3, 4, 5, 6,
+  7, 8, 9, 10, 0,
+  0, 0, 0, 0, 0, 
+
+  -5, 0, 0, 0, 0,
+  0, 0, 0, 0, 1,
+  2, 3, 4, 5, 6,
+  7, 8, 9, 10, 0,
+  0, 0, 0, 0, 0
 };
-static const int CONV1_WEIGHT_INT8_SHAPE[] = { 1, 1, 5, 5 };
+static const int CONV1_WEIGHT_INT8_SHAPE[] = { 4, 1, 5, 5 };
 
 static const int32_t FC1_BIAS_INT8_DATA[5] = {
   0, 1, 2, 3, 4

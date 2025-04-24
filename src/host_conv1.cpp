@@ -38,14 +38,16 @@
 
 std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
 
-#define IN_ROWS 10
-#define IN_COLS 10
+#define IN_ROWS 28
+#define IN_COLS 28
 #define KERNEL_SIZE 5
 #define IN_C 1
-#define OUT_C 6
+#define OUT_C 4
+#define OUT_ROWS (IN_ROWS - KERNEL_SIZE + 1)
+#define OUT_COLS (IN_COLS - KERNEL_SIZE + 1)
 void conv1_golden(
     const data_t in_flatten[IN_C*IN_ROWS*IN_COLS],
-    data_t out_data[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)],
+    data_t out_data[OUT_C * OUT_ROWS * OUT_COLS],
     const data_t weights_flatten[256],
     const data_t bias_flatten[128],
     float act_out_scale = 1.0f, 
@@ -116,8 +118,8 @@ void conv1_golden(
                             hls::min(hls::numeric_limits<data_t>::max(), result));
                 
                 // Calculate output index and store result
-                int out_idx = oc * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)
-                            + oh * (IN_COLS - KERNEL_SIZE + 1)
+                int out_idx = oc * OUT_ROWS * OUT_COLS
+                            + oh * OUT_COLS
                             + ow;
                 out_data[out_idx] = result;
                 // printf("out[%d] = %d\n", out_idx, result);
@@ -142,8 +144,8 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    std::vector<data_t> in_data(100);
-    std::vector<data_t> out_data(64);
+    std::vector<data_t> in_data(IN_ROWS*IN_COLS);
+    std::vector<data_t> out_data(OUT_C * OUT_ROWS * OUT_COLS);
 
     std::cout << "Open the device " << device_index << std::endl;
     auto device = xrt::device(device_index);
@@ -151,8 +153,8 @@ int main(int argc, char **argv)
     auto uuid = device.load_xclbin(binaryFile);
 
     size_t vector_size_bytes = sizeof(data_t) * DATA_SIZE;
-    size_t in_size_bytes = sizeof(data_t) * 100;
-    size_t out_size_bytes = sizeof(data_t) * 64;
+    size_t in_size_bytes = sizeof(data_t) * IN_ROWS * IN_COLS;
+    size_t out_size_bytes = sizeof(data_t) * OUT_C * OUT_ROWS * OUT_COLS;
 
     // Create kernels
     auto conv1_krnl = xrt::kernel(device, uuid, "conv1");
@@ -179,19 +181,26 @@ int main(int argc, char **argv)
     std::fill(bo_bias_map, bo_bias_map + 128, 0);
 
 
-    std::fill(bo_in_data_map, bo_in_data_map + 100, 0);
-    std::fill(bo_out_data_map, bo_out_data_map + 64, 0);
+    std::fill(bo_in_data_map, bo_in_data_map + IN_ROWS * IN_COLS, 0);
+    std::fill(bo_out_data_map, bo_out_data_map + OUT_C * OUT_ROWS * OUT_COLS, 0);
 
     // Write input data (all 1s)
     for(int i = 0; i < IN_ROWS; i++) {
         for(int j = 0; j < IN_COLS; j++) {
             in_data[i * IN_COLS + j] = 1;
+            // printf("index = %d, value = %d\n", i * IN_COLS + j, in_data[i * IN_COLS + j]);
         }
     }
 
+    std::cout << "input = [";
+    for(int i = 0; i < 784; i++) {
+        std::cout << in_data[i] << ", ";
+    }
+    std::cout << "]" << std::endl;
+
     for(int i = 0; i < 128; i++) {
-        if (i < 25) {
-            if (i < 6) {
+        if (i < 100) {
+            if (i < 4) {
                 bo_bias_map[i] = CONV1_BIAS_INT8_DATA[i];
             }
             bo_weights_map[i] = CONV1_WEIGHT_INT8_DATA[i];
@@ -242,19 +251,18 @@ int main(int argc, char **argv)
     // Read output from stream
     bo_out_data.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
-    data_t bo_out_data_golden[64];
+    data_t bo_out_data_golden[OUT_C * OUT_ROWS * OUT_COLS];
     conv1_golden(bo_in_data_map, bo_out_data_golden, bo_weights_map, bo_bias_map);
-
     // Print results
     std::cout << "Convolution results:\n";
     std::cout << "out_data = [";
-    for(int i=0; i<64; i++) {
+    for(int i=0; i< OUT_C * OUT_ROWS * OUT_COLS; i++) {
         std::cout << bo_out_data_map[i] << ", ";
     }
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl << std::endl;
 
     std::cout << "out_data_golden = [";
-    for(int i=0; i<64; ++i) {
+    for(int i=0; i< OUT_C * OUT_ROWS * OUT_COLS; ++i) {
         std::cout << bo_out_data_golden[i] << ", ";
     }
     std::cout << "]" << std::endl;
