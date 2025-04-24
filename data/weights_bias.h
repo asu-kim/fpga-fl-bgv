@@ -9,12 +9,19 @@ static const int32_t CONV1_BIAS_INT8_DATA[1] = {
 };
 static const int CONV1_BIAS_INT8_SHAPE[] = { 1 };
 
+// static const int32_t CONV1_WEIGHT_INT8_DATA[25] = {
+//   -128, -100, -50, -10, 0,
+//   0, 10, 20, 30, 40,
+//   50, 60, 70, 80, 90,
+//   100, 110, 120, 125, 126,
+//   127, 127, 127, 127, 127
+// };
 static const int32_t CONV1_WEIGHT_INT8_DATA[25] = {
   -128, -100, -50, -10, 0,
-  0, 10, 20, 30, 40,
-  50, 60, 70, 80, 90,
-  100, 110, 120, 125, 126,
-  127, 127, 127, 127, 127
+  0, 10, 50, 100, 1,
+  2, 3, 4, 5, 6,
+  7, 8, 9, 10, 0,
+  0, 0, 0, 0, 127
 };
 static const int CONV1_WEIGHT_INT8_SHAPE[] = { 1, 1, 5, 5 };
 

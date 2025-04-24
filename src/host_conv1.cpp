@@ -38,8 +38,8 @@
 
 std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
 
-#define IN_ROWS 28
-#define IN_COLS 28
+#define IN_ROWS 10
+#define IN_COLS 10
 #define KERNEL_SIZE 5
 #define IN_C 1
 #define OUT_C 6
@@ -72,34 +72,6 @@ void conv1_golden(
             }
         }
     }
-
-    // std::cout << "weights_golden = [";
-    // for(int i=0; i<6; i++) {
-    //     for(int j=0; j<1; j++) {
-    //         for(int k=0; k<5; k++) {
-    //             for(int l=0; l<5; l++) {
-    //                 std::cout << weights[i][j][k][l] << ", ";
-    //             }
-    //         }
-    //     }
-    // }
-    // std::cout << "]" << std::endl;
-
-    // std::cout << "bias_golden = [";
-    // for(int i=0; i<6; i++) {
-    //     std::cout << bias[i] << ", ";
-    // }
-    // std::cout << "]" << std::endl;
-
-    // std::cout << "input_golden = [";
-    // for(int i = 0; i < IN_C; i++) {
-    //     for(int j = 0; j < IN_ROWS; j++) {
-    //         for(int k = 0; k < IN_COLS; k++) {
-    //             std::cout << in_data[i][j][k] << ", ";
-    //         }
-    //     }
-    // }
-    // std::cout << "]" << std::endl;
 
     // Loop over each output channel
     for (int oc = 0; oc < OUT_C; oc++) {
@@ -170,8 +142,8 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    std::vector<data_t> in_data(784);
-    std::vector<data_t> out_data(3456);
+    std::vector<data_t> in_data(100);
+    std::vector<data_t> out_data(64);
 
     std::cout << "Open the device " << device_index << std::endl;
     auto device = xrt::device(device_index);
@@ -179,8 +151,8 @@ int main(int argc, char **argv)
     auto uuid = device.load_xclbin(binaryFile);
 
     size_t vector_size_bytes = sizeof(data_t) * DATA_SIZE;
-    size_t in_size_bytes = sizeof(data_t) * 784;
-    size_t out_size_bytes = sizeof(data_t) * 3456;
+    size_t in_size_bytes = sizeof(data_t) * 100;
+    size_t out_size_bytes = sizeof(data_t) * 64;
 
     // Create kernels
     auto conv1_krnl = xrt::kernel(device, uuid, "conv1");
@@ -191,25 +163,24 @@ int main(int argc, char **argv)
     auto bo_in_data = xrt::bo(device, in_size_bytes, conv1_krnl.group_id(0));
     auto bo_out_data = xrt::bo(device, out_size_bytes, conv1_krnl.group_id(1));
 
-    // Allocate HBM buffers for conv1
-    auto bo_weights = xrt::bo(device, sizeof(data_t) * 256, conv1_krnl.group_id(2));
-    auto bo_bias = xrt::bo(device, sizeof(data_t) * 128, conv1_krnl.group_id(3));
+    // Allocate weights and biases for conv1
+    auto bo_weights = xrt::bo(device, vector_size_bytes, conv1_krnl.group_id(2));
+    auto bo_bias = xrt::bo(device, vector_size_bytes, conv1_krnl.group_id(3));
 
     // Map buffers to host memory
+    auto bo_in_data_map = bo_in_data.map<data_t *>();
+    auto bo_out_data_map = bo_out_data.map<data_t *>();
     auto bo_weights_map = bo_weights.map<data_t *>();
     auto bo_bias_map = bo_bias.map<data_t *>();
 
-    auto bo_in_data_map = bo_in_data.map<data_t *>();
-    auto bo_out_data_map = bo_out_data.map<data_t *>();
-
     std::cout << "Initialize buffers\n";
     // Initialize buffers
-    std::fill(bo_weights_map, bo_weights_map + 256, 0);
+    std::fill(bo_weights_map, bo_weights_map + 128, 0);
     std::fill(bo_bias_map, bo_bias_map + 128, 0);
 
 
-    std::fill(bo_in_data_map, bo_in_data_map + DATA_SIZE, 0);
-    std::fill(bo_out_data_map, bo_out_data_map + DATA_SIZE, 0);
+    std::fill(bo_in_data_map, bo_in_data_map + 100, 0);
+    std::fill(bo_out_data_map, bo_out_data_map + 64, 0);
 
     // Write input data (all 1s)
     for(int i = 0; i < IN_ROWS; i++) {
@@ -218,17 +189,12 @@ int main(int argc, char **argv)
         }
     }
 
-    for(int i = 0; i < 256; i++) {
-        if (i < 150) {
+    for(int i = 0; i < 128; i++) {
+        if (i < 25) {
             if (i < 6) {
                 bo_bias_map[i] = CONV1_BIAS_INT8_DATA[i];
-            } else {
-                bo_bias_map[i] = 0;
             }
             bo_weights_map[i] = CONV1_WEIGHT_INT8_DATA[i];
-        } else {
-            bo_bias_map[i] = 0;
-            bo_weights_map[i] = 0;
         }
     }
 
@@ -237,7 +203,7 @@ int main(int argc, char **argv)
     bo_bias.sync(XCL_BO_SYNC_BO_TO_DEVICE);
 
     std::cout << "weight = [";
-    for(int i = 0; i < 256; i++) {
+    for(int i = 0; i < 128; i++) {
         std::cout << bo_weights_map[i] << ", ";
     }
     std::cout << "]" << std::endl;
@@ -265,30 +231,30 @@ int main(int argc, char **argv)
     // Run convolution
     std::cout << "Running convolution\n";
     auto run = conv1_krnl(bo_in_data, bo_out_data, bo_weights, bo_bias);
-    auto state = run.wait(std::chrono::seconds(20)); // Add timeout
-    if (state != ERT_CMD_STATE_COMPLETED) {
-        std::cout << "Kernel execution timed out or failed" << std::endl;
-        // Handle error
-    }
-    // run.wait();
+    // auto state = run.wait(std::chrono::seconds(20)); // Add timeout
+    // if (state != ERT_CMD_STATE_COMPLETED) {
+    //     std::cout << "Kernel execution timed out or failed" << std::endl;
+    //     // Handle error
+    // }
+    run.wait();
     std::cout << "Done convolution\n";
 
     // Read output from stream
     bo_out_data.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
-    data_t bo_out_data_golden[3456];
+    data_t bo_out_data_golden[64];
     conv1_golden(bo_in_data_map, bo_out_data_golden, bo_weights_map, bo_bias_map);
 
     // Print results
     std::cout << "Convolution results:\n";
     std::cout << "out_data = [";
-    for(int i=0; i<3456; i++) {
+    for(int i=0; i<64; i++) {
         std::cout << bo_out_data_map[i] << ", ";
     }
     std::cout << "]" << std::endl;
 
     std::cout << "out_data_golden = [";
-    for(int i=0; i<3456; ++i) {
+    for(int i=0; i<64; ++i) {
         std::cout << bo_out_data_golden[i] << ", ";
     }
     std::cout << "]" << std::endl;
