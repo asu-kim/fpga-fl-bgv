@@ -34,7 +34,8 @@ void conv2d(
         for(int c=0; c < COL; ++c) {
             #pragma HLS PIPELINE II=2
             for(int ch=0; ch<IN_C; ++ch) {
-                line_buffer[ch*(COL*KERNEL_SIZE) + cur_row*COL + c] = in_data[r * COL * IN_C + c * IN_C + ch];
+                // line_buffer[ch*(COL*KERNEL_SIZE) + cur_row*COL + c] = in_data[r * COL * IN_C + c * IN_C + ch];
+                line_buffer[ch*(COL*KERNEL_SIZE) + cur_row*COL + c] = in_data[ch * COL * IN_C + c * COL + r];
             }
         }
 
