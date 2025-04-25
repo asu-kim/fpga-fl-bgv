@@ -3,10 +3,9 @@
 #include "conv2d.h"
 
 #define OUT_C 6
-#define IN_C  3
+#define IN_C  1
 #define KSIZE 5
-#define MAX_ROWS 28
-#define MAX_COLS 28
+#define IN_DIM 28
 
 extern "C" {
     void conv2d_kernel(
@@ -63,12 +62,10 @@ extern "C" {
         }
 
         // core convolution (template instantiated)
-        conv2d<OUT_C,IN_C,KSIZE,MAX_COLS>(in_stream,
+        conv2d<OUT_C,IN_C,KSIZE,IN_DIM>(in_stream,
                 out_stream,
                 weight,
-                bias,
-                rows,
-                cols);
+                bias);
 
         // encrypt and write output
         int OUT_PIX = (rows - KSIZE + 1) * (cols - KSIZE + 1) * OUT_C;
