@@ -42,13 +42,13 @@ std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
 #define IN_COLS 28
 #define KERNEL_SIZE 5
 #define IN_C 1
-#define OUT_C 4
+#define OUT_C 6
 #define OUT_ROWS (IN_ROWS - KERNEL_SIZE + 1)
 #define OUT_COLS (IN_COLS - KERNEL_SIZE + 1)
 void conv1_golden(
     const data_t in_flatten[IN_C*IN_ROWS*IN_COLS],
     data_t out_data[OUT_C * OUT_ROWS * OUT_COLS],
-    const data_t weights_flatten[256],
+    const data_t weights_flatten[128],
     const data_t bias_flatten[128],
     float act_out_scale = 1.0f, 
     int act_out_zp = 0
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
     auto bo_out_data = xrt::bo(device, out_size_bytes, conv1_krnl.group_id(1));
 
     // Allocate weights and biases for conv1
-    auto bo_weights = xrt::bo(device, vector_size_bytes, conv1_krnl.group_id(2));
+    auto bo_weights = xrt::bo(device, 2*vector_size_bytes, conv1_krnl.group_id(2));
     auto bo_bias = xrt::bo(device, vector_size_bytes, conv1_krnl.group_id(3));
 
     // Map buffers to host memory
@@ -177,7 +177,7 @@ int main(int argc, char **argv)
 
     std::cout << "Initialize buffers\n";
     // Initialize buffers
-    std::fill(bo_weights_map, bo_weights_map + 128, 0);
+    std::fill(bo_weights_map, bo_weights_map + 256, 0);
     std::fill(bo_bias_map, bo_bias_map + 128, 0);
 
 
@@ -198,12 +198,14 @@ int main(int argc, char **argv)
     }
     std::cout << "]" << std::endl;
 
-    for(int i = 0; i < 128; i++) {
-        if (i < 100) {
-            if (i < 4) {
+    for(int i = 0; i < 256; i++) {
+        if (i < OUT_C*KERNEL_SIZE*KERNEL_SIZE) {
+            if (i < OUT_C) {
                 bo_bias_map[i] = CONV1_BIAS_INT8_DATA[i];
+                // bo_bias_map[i] = 1;
             }
             bo_weights_map[i] = CONV1_WEIGHT_INT8_DATA[i];
+            // bo_weights_map[i] = 1;
         }
     }
 
@@ -212,7 +214,7 @@ int main(int argc, char **argv)
     bo_bias.sync(XCL_BO_SYNC_BO_TO_DEVICE);
 
     std::cout << "weight = [";
-    for(int i = 0; i < 128; i++) {
+    for(int i = 0; i < 256; i++) {
         std::cout << bo_weights_map[i] << ", ";
     }
     std::cout << "]" << std::endl;

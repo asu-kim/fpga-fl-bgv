@@ -115,14 +115,12 @@ int main() {
     }
     std::cout << "]" << std::endl;
 
-    std::cout << "check\n";
     for(int i=0; i<IN_ROWS; i++) {
         for(int j = 0; j < IN_COLS; j++) {
             in_data[i * IN_COLS + j] = 1;
             in_data_ref[0][i][j] = 1;
         }
     }
-    std::cout << "check\n";
 
     // run conv2d
     // conv1(in_stream, out_stream, flatten_weights, flatten_bias);
@@ -135,12 +133,12 @@ int main() {
     for(int i=0; i<output_size; ++i) {
         std::cout << out_data_ref[i] << ", ";
     }
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl << std::endl;
     std::cout << "out_data = [";
     for(int i=0; i<output_size; ++i) {
         std::cout << out_data[i] << ", ";
     }
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl << std::endl;
     std::cout << "Error indexes: ";
     for(int i=0; i<output_size; ++i) {
         if(out_data[i] != out_data_ref[i]) {
