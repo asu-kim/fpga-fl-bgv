@@ -93,10 +93,10 @@ int main() {
     std::cout << std::endl;
 
     std::cout << "weights_golden = [";
-    for(int i=0; i<6; i++) {
-        for(int j=0; j<1; j++) {
-            for(int k=0; k<5; k++) {
-                for(int l=0; l<5; l++) {
+    for(int i=0; i<OUT_C; i++) {
+        for(int j=0; j<IN_C; j++) {
+            for(int k=0; k<KERNEL_SIZE; k++) {
+                for(int l=0; l<KERNEL_SIZE; l++) {
                     std::cout << weights[i][j][k][l] << ", ";
                 }
             }
@@ -110,7 +110,7 @@ int main() {
     }
 
     std::cout << "bias_golden = [";
-    for(int i=0; i<6; i++) {
+    for(int i=0; i<OUT_C; i++) {
         std::cout << bias[i] << ", ";
     }
     std::cout << "]" << std::endl;
@@ -133,12 +133,12 @@ int main() {
     for(int i=0; i<output_size; ++i) {
         std::cout << out_data_ref[i] << ", ";
     }
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl << std::endl;
     std::cout << "out_data = [";
     for(int i=0; i<output_size; ++i) {
         std::cout << out_data[i] << ", ";
     }
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl << std::endl;
     std::cout << "Error indexes: ";
     for(int i=0; i<output_size; ++i) {
         if(out_data[i] != out_data_ref[i]) {
