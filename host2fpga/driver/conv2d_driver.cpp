@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     cl::Kernel kernel(program, "conv2d_kernel");
 
     // Generate test data & encrypt
-    extern uint32_t CONV1_WEIGHT_SHAPE[]
+    extern uint32_t CONV1_WEIGHT_SHAPE[];
     const int ROWS=28, COLS=28;
     constexpr int OUT_C=CONV1_WEIGHT_SHAPE[0], IN_C=CONV1_WEIGHT_SHAPE[1], KS=CONV1_WEIGHT_SHAPE[2];
 

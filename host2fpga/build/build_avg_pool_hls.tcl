@@ -1,6 +1,7 @@
-open_project conv2d_hls
-set_top conv2d_kernel
-add_files kernels/conv2d_kernel.cpp
+open_project avg_pool_hls
+set_top avg_pool_kernel
+
+add_files kernels/avg_pool_kernel.cpp
 add_files kernels/aes_utils.h
 
 open_solution sol1 -flow_target vitis
@@ -13,6 +14,6 @@ csynth_design
 export_design \
     -rtl verilog \
     -format ip_catalog \
-    -output conv2d_ip \
-    -ipname conv2d_kernel
+    -output avg_pool_ip \
+    -ipname avg_pool_kernel
 exit
