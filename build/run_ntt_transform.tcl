@@ -18,13 +18,13 @@
 open_project -reset FPGA_FL_CLIENT
 
 # Add design files
-add_files ../src/polynomial_multiplication.cpp -cflags "-I../include"
+add_files ../src/modulo_reduction.cpp -cflags "-I../include"
 add_files ../src/ntt_transform.cpp -cflags "-I../include" 
 # Add test bench & files
-add_files -tb ../test/polynomial_multiplication_test.cpp -cflags "-I../include"
+add_files -tb ../test/test_ntt_transform.cpp -cflags "-I../include"
 
 # Set the top-level function
-set_top polynomial_multiplication
+set_top ntt_transform
 
 ########################################################
 # Create a solution
@@ -33,10 +33,10 @@ open_solution -reset solution1 -flow_target vitis
 set_part  {xcu55c-fsvh2892-2L-e}
 create_clock -period 10
 
-config_export -format xo -output polynomial_multiplication.xo
+config_export -format xo -output ntt_transform.xo
 
 # Set variable to select which steps to execute
-set hls_exec 3
+set hls_exec 1
 
 csim_design
 # Set any optimization directives

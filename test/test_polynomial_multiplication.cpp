@@ -74,42 +74,6 @@ void intt_reference(data_t* input, data_t* output) {
     }
 }
 
-void polynomial_multiplication_reference(data_t* input1, data_t* input2, data_t* output) {
-    data_t n = POLYNOMIAL_DEGREE;
-    data_t n_inv = INVERSE_POLYNOMIAL_DEGREE;
-    data_t q = CIPHERTEXT_MODULUS;
-    data_t w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
-    data_t w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
-
-    data_t in1_tilde[POLYNOMIAL_DEGREE];
-    data_t in2_tilde[POLYNOMIAL_DEGREE];
-    for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
-        in1_tilde[i] = (E_POWERS_LUT[i] * input1[i]) % q;
-        in2_tilde[i] = (E_POWERS_LUT[i] * input2[i]) % q;
-    }
-    print_array("in1_tilde", in1_tilde, POLYNOMIAL_DEGREE);
-
-    data_t transformed_in1_tilde[POLYNOMIAL_DEGREE];
-    data_t transformed_in2_tilde[POLYNOMIAL_DEGREE];
-    ntt_reference(in1_tilde, transformed_in1_tilde);
-    ntt_reference(in2_tilde, transformed_in2_tilde);
-    print_array("transformed_in1_tilde", transformed_in1_tilde, POLYNOMIAL_DEGREE);
-
-    data_t transformed_out_tilde[POLYNOMIAL_DEGREE];
-    for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
-        transformed_out_tilde[i] = (transformed_in1_tilde[i] * transformed_in2_tilde[i]) % q;
-    }
-    print_array("transformed_out_tilde", transformed_out_tilde, POLYNOMIAL_DEGREE);
-
-    data_t out_tilde[POLYNOMIAL_DEGREE];
-    intt_reference(transformed_out_tilde, out_tilde);
-    print_array("out_tilde", out_tilde, POLYNOMIAL_DEGREE);
-
-    for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
-        output[i] = (E_INV_POWERS_LUT[i] * out_tilde[i]) % q;
-    }
-}
-
 // void polynomial_multiplication_reference(data_t* input1, data_t* input2, data_t* output) {
 //     data_t n = POLYNOMIAL_DEGREE;
 //     data_t n_inv = INVERSE_POLYNOMIAL_DEGREE;
@@ -117,19 +81,55 @@ void polynomial_multiplication_reference(data_t* input1, data_t* input2, data_t*
 //     data_t w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
 //     data_t w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
 
-//     // data_t temp[POLYNOMIAL_DEGREE];
-//     for (int i = 0; i < n; i++) {
-//         int pos = 0;
-//         for (int j = 0; j <= i; j++) {
-//             pos += (input1[j] * input2[i - j]) % q;
-//         }
-//         int neg = 0;
-//         for (int j = i + 1; j < n; j++) {
-//             neg += (input1[j] * input2[n + i - j]) % q;
-//         }
-//         output[i] = (((pos - neg) % q) + q) % q;
+//     data_t in1_tilde[POLYNOMIAL_DEGREE];
+//     data_t in2_tilde[POLYNOMIAL_DEGREE];
+//     for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+//         in1_tilde[i] = (E_POWERS_LUT[i] * input1[i]) % q;
+//         in2_tilde[i] = (E_POWERS_LUT[i] * input2[i]) % q;
+//     }
+//     print_array("in1_tilde", in1_tilde, POLYNOMIAL_DEGREE);
+
+//     data_t transformed_in1_tilde[POLYNOMIAL_DEGREE];
+//     data_t transformed_in2_tilde[POLYNOMIAL_DEGREE];
+//     ntt_reference(in1_tilde, transformed_in1_tilde);
+//     ntt_reference(in2_tilde, transformed_in2_tilde);
+//     print_array("transformed_in1_tilde", transformed_in1_tilde, POLYNOMIAL_DEGREE);
+
+//     data_t transformed_out_tilde[POLYNOMIAL_DEGREE];
+//     for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+//         transformed_out_tilde[i] = (transformed_in1_tilde[i] * transformed_in2_tilde[i]) % q;
+//     }
+//     print_array("transformed_out_tilde", transformed_out_tilde, POLYNOMIAL_DEGREE);
+
+//     data_t out_tilde[POLYNOMIAL_DEGREE];
+//     intt_reference(transformed_out_tilde, out_tilde);
+//     print_array("out_tilde", out_tilde, POLYNOMIAL_DEGREE);
+
+//     for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+//         output[i] = (E_INV_POWERS_LUT[i] * out_tilde[i]) % q;
 //     }
 // }
+
+void polynomial_multiplication_reference(data_t* input1, data_t* input2, data_t* output) {
+    data_t n = POLYNOMIAL_DEGREE;
+    data_t n_inv = INVERSE_POLYNOMIAL_DEGREE;
+    data_t q = CIPHERTEXT_MODULUS;
+    data_t w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
+    data_t w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
+
+    // data_t temp[POLYNOMIAL_DEGREE];
+    for (int i = 0; i < n; i++) {
+        int pos = 0;
+        for (int j = 0; j <= i; j++) {
+            pos += (input1[j] * input2[i - j]) % q;
+        }
+        int neg = 0;
+        for (int j = i + 1; j < n; j++) {
+            neg += (input1[j] * input2[n + i - j]) % q;
+        }
+        output[i] = (((pos - neg) % q) + q) % q;
+    }
+}
 
 // Function to print the lookup table
 void printBitReverseLUT() {
@@ -206,8 +206,8 @@ int main() {
     
     // Fill input with sample values
     for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
-        input1[i] = i % CIPHERTEXT_MODULUS; // Simple pattern
-        input2[i] = i % CIPHERTEXT_MODULUS; // Simple pattern
+        input1[i] = i % CIPHERTEXT_MODULUS + 1; // Simple pattern
+        input2[i] = i % CIPHERTEXT_MODULUS + 1; // Simple pattern
     }
     
     std::cout << "Testing NTT transform with parameters:" << std::endl;

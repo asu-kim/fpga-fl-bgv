@@ -2,7 +2,7 @@ open_project -reset compiled/test_conv2d
 set_top conv2d
 
 # lib
-add_files ../include/conv2d.h
+add_files ../include/lenet5/conv2d.h
 add_files ../test/test_utils.h
 
 # tb

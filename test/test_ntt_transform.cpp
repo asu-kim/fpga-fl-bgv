@@ -78,7 +78,7 @@ Lattice-Based Cryptography */
 
 // Reference implementation for INNT verification
 void intt_reference(data_t* input, data_t* output, int n, int q, int w_inv, int n_inv) {
-    /* Corrected implementation */
+    // /* Corrected implementation */
     
     // Make a copy of input with bit-reversal
     data_t temp[n];
@@ -140,6 +140,7 @@ void printBitReverseLUT() {
 // Test function
 int main() {
     // Initialize test data
+    // data_t input[POLYNOMIAL_DEGREE] = {1, 12, 108, 141, 214, 143, 37, 116};
     data_t input[POLYNOMIAL_DEGREE];
     data_t output_hls[POLYNOMIAL_DEGREE];
     data_t output_ref[POLYNOMIAL_DEGREE];
@@ -171,7 +172,7 @@ int main() {
     // Call reference INNT implementation for verification
     intt_reference(output_ref, output_innt_ref, POLYNOMIAL_DEGREE, CIPHERTEXT_MODULUS, INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY, INVERSE_POLYNOMIAL_DEGREE);
     
-    printBitReverseLUT();
+    // printBitReverseLUT();
 
     // Print both outputs
     print_array("HLS Output", output_hls, POLYNOMIAL_DEGREE);

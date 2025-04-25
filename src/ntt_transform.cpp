@@ -2,6 +2,7 @@
 #include "hls_stream.h"
 #include "ntt_transform.hpp"
 #include "constants.hpp"
+#include "modulo_reduction.hpp"
 #include <stdio.h>
 
 // Forward NTT for polynomial multiplication
@@ -37,8 +38,10 @@ void ntt_transform(data_t* coeffs, data_t* result) {
             for (int i = j; i < n; i += 2 * m) {
                 data_t butterfly1 = local_coeffs[i] + local_coeffs[i + m];
                 data_t butterfly2 = w_m * (local_coeffs[i] - local_coeffs[i + m]);
-                local_coeffs[i] = hls::remainder((data_t) butterfly1, q);
-                local_coeffs[i + m] = hls::remainder((data_t) butterfly2, q);
+                // local_coeffs[i] = hls::remainder((data_t) butterfly1, q);
+                // local_coeffs[i + m] = hls::remainder((data_t) butterfly2, q);
+                local_coeffs[i] = modulo_reduction(butterfly1, q);
+                local_coeffs[i + m] = modulo_reduction(butterfly2, q);
             }
         }
     }
@@ -83,18 +86,14 @@ void intt_transform(data_t* coeffs, data_t* result) {
             data_t w_m_inv = W_INV_POWERS_HALF_LUT[exponent];
             
             for (int i = j; i < n; i += 2 * m) {
-                // data_t u = local_coeffs[i];
-                // data_t v = local_coeffs[i + m];
-                // local_coeffs[i] = hls::remainder((data_t)(u + v), q);
                 // // For INTT, we compute (u - v) * w_m_inv
-                // // Ensure the subtraction doesn't go negative
-                // // data_t diff = (u >= v) ? (u - v) : (u + q - v);
-                // local_coeffs[i + m] = hls::remainder((data_t)((u - v) * w_m_inv), q);
 
                 data_t butterfly1 = local_coeffs[i] + local_coeffs[i + m];
                 data_t butterfly2 = w_m_inv * (local_coeffs[i] - local_coeffs[i + m]);
-                local_coeffs[i] = hls::remainder((data_t) butterfly1, q);
-                local_coeffs[i + m] = hls::remainder((data_t) butterfly2, q);
+                // local_coeffs[i] = hls::remainder((data_t) butterfly1, q);
+                // local_coeffs[i + m] = hls::remainder((data_t) butterfly2, q);
+                local_coeffs[i] = modulo_reduction(butterfly1, q);
+                local_coeffs[i + m] = modulo_reduction(butterfly2, q);
             }
         }
     }
@@ -102,6 +101,7 @@ void intt_transform(data_t* coeffs, data_t* result) {
     // Multiply by n^(-1) and copy result back
     for (int i = 0; i < n; i++) {
         #pragma HLS PIPELINE II=1
-        result[BIT_REVERSE_LUT[i]] = hls::remainder((data_t)(local_coeffs[i] * n_inv), q);
+        // result[BIT_REVERSE_LUT[i]] = hls::remainder((data_t)(local_coeffs[i] * n_inv), q);
+        result[BIT_REVERSE_LUT[i]] = modulo_reduction(local_coeffs[i] * n_inv, q);
     }
 }
