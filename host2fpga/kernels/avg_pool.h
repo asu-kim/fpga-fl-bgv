@@ -19,37 +19,32 @@ void avg_pool(
     const int POOLED_COLS = IN_WIDTH / POOL_SIZE;
     const int divisor = POOL_SIZE * POOL_SIZE;
 
-    for(int channel=0; channel<IN_C; ++channel) {
-        data_t line_buffer[IN_HEIGHT][IN_WIDTH];
-        #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=0
+    static data_t plane[IN_C][IN_HEIGHT][IN_WIDTH]; // scartch pad
+#pragma HLS ARRAY_PARTITION variable=plane complete dim=1
 
-        // load channel input
-        for(int r=0; r<IN_HEIGHT; ++r) {
+    for(int r=0; r<IN_HEIGHT; ++r) {
+        for(int ch=0; ch<IN_C; ++ch) {
             for(int c=0; c<IN_WIDTH; ++c) {
-                #pragma HLS PIPELINE II=1
-                line_buffer[r][c] = in_stream.read();
+#pragma HLS PIPELINE II=1
+                plane[ch][r][c] = in_stream.read();
             }
         }
+    }
 
-        // compute avg pool
-        for(int pr=0; pr<POOLED_ROWS; pr+=STRIDE) {
-            for(int pc=0; pc<POOLED_COLS; pc+=STRIDE) {
-                #pragma HLS PIPELINE II=1
-                data_t sum = 0; // we need a wider bitwidth for accumulation
+    for(int ch=0; ch<IN_C; ++ch) {
+        for(int pr=0; pr<POOLED_ROWS; pr += STRIDE) {
+            for(int pc=0; pc<POOLED_COLS; pc += STRIDE) {
+                ap_int<64> sum = 0;
 
                 for(int i=0; i<POOL_SIZE; ++i) {
                     for(int j=0; j<POOL_SIZE; ++j) {
-                        sum += line_buffer[pr*POOL_SIZE+i][pc*POOL_SIZE+j];
+                        sum += plane[ch][pr*POOL_SIZE + i][pc*POOL_SIZE + j];
                     }
                 }
-                float avg = (((float)sum + ((float)divisor / 2)) / (float)divisor);
-                float avg_rounded = (avg >= 0.0f) ? (floorf(avg + 0.5f)) : (floorf(avg - 0.5f));
-                data_t sat;
-                if (avg_rounded > (float)INT32_MAX) sat = INT32_MAX;
-                else if (avg_rounded < (float)INT32_MIN) sat = INT32_MIN;
-                else sat = (data_t)avg_rounded;
-
-                out_stream.write((data_t)sat);
+                float sum_val = (float)sum / divisor;
+                float sum_rounded = (sum_val >= 0.0f) ? floorf(sum_val + 0.5f) : floorf(sum_val - 0.5f);
+                data_t sat = (sum_rounded > INT32_MAX) ? (data_t)INT32_MAX : (sum_rounded < INT32_MIN) ? (data_t)INT32_MIN : (data_t)sum_rounded;
+                out_stream.write(sat);
             }
         }
     }
