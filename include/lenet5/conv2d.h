@@ -7,11 +7,10 @@
 
 template<int OUT_C, int IN_C, int KERNEL_SIZE, int ROW, int COL>
 void conv2d(
-        data_t in_data[IN_C * ROW * COL],
-        data_t out_data[OUT_C * (ROW - KERNEL_SIZE + 1) * (COL - KERNEL_SIZE + 1)],
-        const data_t weight[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE],
-        const data_t bias[OUT_C],
-        float act_out_scale=1, int act_out_zp=0
+        float in_data[IN_C * ROW * COL],
+        float out_data[OUT_C * (ROW - KERNEL_SIZE + 1) * (COL - KERNEL_SIZE + 1)],
+        const float weight[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE],
+        const float bias[OUT_C]
         ) {
     #pragma HLS INLINE OFF
     
@@ -22,10 +21,10 @@ void conv2d(
     // Process each output channel sequentially to avoid resource conflicts
     for (int oc = 0; oc < OUT_C; oc++) {
         // Create line buffer with better partitioning
-        data_t line_buffer[IN_C][KERNEL_SIZE][COL];
+        float line_buffer[IN_C][KERNEL_SIZE][COL];
         #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=1
         #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=2
-        
+
         // Initialize buffer
         for (int ic = 0; ic < IN_C; ic++) {
             for (int kr = 0; kr < KERNEL_SIZE; kr++) {
@@ -60,15 +59,15 @@ void conv2d(
                     }
                     
                     // Initialize accumulation
-                    data_t sum = bias[oc];
+                    float sum = bias[oc];
                     
                     // Compute convolution at this position
                     for (int ic = 0; ic < IN_C; ic++) {
                         for (int kr = 0; kr < KERNEL_SIZE; kr++) {
                             for (int kc = 0; kc < KERNEL_SIZE; kc++) {
                                 #pragma HLS PIPELINE II=1
-                                data_t in_val = line_buffer[ic][kr_indices[kr]][c+kc];
-                                data_t w_val = weight[oc*IN_C*KERNEL_SIZE*KERNEL_SIZE + 
+                                float in_val = line_buffer[ic][kr_indices[kr]][c+kc];
+                                float w_val = weight[oc*IN_C*KERNEL_SIZE*KERNEL_SIZE + 
                                                      ic*KERNEL_SIZE*KERNEL_SIZE + 
                                                      kr*KERNEL_SIZE + kc];
                                 sum += in_val * w_val;
@@ -76,16 +75,16 @@ void conv2d(
                         }
                     }
                     
-                    // Quantize output
-                    float sum_float = float(sum);
-                    float sum_scaled = sum_float * act_out_scale + (float)act_out_zp;
-                    float sum_rounded = hls::floor(sum_scaled + 0.5f);
-                    data_t sum_quant = (data_t)sum_rounded;
-                    sum_quant = hls::max(MIN_VAL, hls::min(MAX_VAL, sum_quant));
+                    // // Quantize output
+                    // float sum_float = float(sum);
+                    // float sum_scaled = sum_float * act_out_scale + (float)act_out_zp;
+                    // float sum_rounded = hls::floor(sum_scaled + 0.5f);
+                    // float sum_quant = (float)sum_rounded;
+                    // sum_quant = hls::max(MIN_VAL, hls::min(MAX_VAL, sum_quant));
                     
                     // Store output
                     int out_row = r - (KERNEL_SIZE - 1);
-                    out_data[oc*OUT_H*OUT_W + out_row*OUT_W + c] = sum_quant;
+                    out_data[oc*OUT_H*OUT_W + out_row*OUT_W + c] = sum;
                 }
             }
             

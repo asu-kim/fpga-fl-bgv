@@ -46,16 +46,14 @@ std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
 #define OUT_ROWS (IN_ROWS - KERNEL_SIZE + 1)
 #define OUT_COLS (IN_COLS - KERNEL_SIZE + 1)
 void conv1_golden(
-    const data_t in_flatten[IN_C*IN_ROWS*IN_COLS],
-    data_t out_data[OUT_C * OUT_ROWS * OUT_COLS],
-    const data_t weights_flatten[128],
-    const data_t bias_flatten[128],
-    float act_out_scale = 1.0f, 
-    int act_out_zp = 0
+    const float in_flatten[IN_C*IN_ROWS*IN_COLS],
+    float out_data[OUT_C * OUT_ROWS * OUT_COLS],
+    const float weights_flatten[128],
+    const float bias_flatten[128]
 ) {
-    data_t in_data[IN_C][IN_ROWS][IN_COLS];
-    data_t weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE];
-    data_t bias[OUT_C];
+    float in_data[IN_C][IN_ROWS][IN_COLS];
+    float weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE];
+    float bias[OUT_C];
     for(int i = 0; i < IN_C; i++) {
         for(int j = 0; j < IN_ROWS; j++) {
             for(int k = 0; k < IN_COLS; k++) {
@@ -87,7 +85,7 @@ void conv1_golden(
                 // printf("--------------------------------\n");
                 // printf("output index = %d\n", idx);
                 // Initialize accumulator with bias
-                ap_int<128> acc = bias[oc];
+                float acc = bias[oc];
                 
                 // Calculate convolution for current output position
                 for (int ic = 0; ic < IN_C; ic++) {
@@ -98,9 +96,9 @@ void conv1_golden(
                             int iw = ow + kw;
                             
                             // Accumulate weighted input
-                            data_t in_val = in_data[ic][ih][iw];
-                            data_t w_val = weights[oc][ic][kh][kw];
-                            acc += (ap_int<64>)in_val * (ap_int<64>)w_val;
+                            float in_val = in_data[ic][ih][iw];
+                            float w_val = weights[oc][ic][kh][kw];
+                            acc += in_val * w_val;
                             // printf("in_data[%d][%d][%d] = %d\n", ic, ih, iw, in_val);
                             // printf("w_data[%d][%d][%d][%d] = %d\n", oc, ic, kh, kw, w_val);
                         }
@@ -108,20 +106,20 @@ void conv1_golden(
                 }
 
                 // Quantize output
-                float acc_float = float(acc);
-                float scaled = acc_float * act_out_scale + (float)act_out_zp;
-                float rounded = floor(scaled + 0.5f);
+                // float acc_float = float(acc);
+                // float scaled = acc_float * act_out_scale + (float)act_out_zp;
+                // float rounded = floor(scaled + 0.5f);
                 
-                // Clip to data type range
-                data_t result = (data_t)rounded;
-                result = hls::max(hls::numeric_limits<data_t>::min(), 
-                            hls::min(hls::numeric_limits<data_t>::max(), result));
+                // // Clip to data type range
+                // float result = (float)rounded;
+                // result = hls::max(hls::numeric_limits<float>::min(), 
+                //             hls::min(hls::numeric_limits<float>::max(), result));
                 
                 // Calculate output index and store result
                 int out_idx = oc * OUT_ROWS * OUT_COLS
                             + oh * OUT_COLS
                             + ow;
-                out_data[out_idx] = result;
+                out_data[out_idx] = acc;
                 // printf("out[%d] = %d\n", out_idx, result);
             }
         }
@@ -144,17 +142,17 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    std::vector<data_t> in_data(IN_ROWS*IN_COLS);
-    std::vector<data_t> out_data(OUT_C * OUT_ROWS * OUT_COLS);
+    std::vector<float> in_data(IN_ROWS*IN_COLS);
+    std::vector<float> out_data(OUT_C * OUT_ROWS * OUT_COLS);
 
     std::cout << "Open the device " << device_index << std::endl;
     auto device = xrt::device(device_index);
     std::cout << "Load the xclbin " << binaryFile << std::endl;
     auto uuid = device.load_xclbin(binaryFile);
 
-    size_t vector_size_bytes = sizeof(data_t) * DATA_SIZE;
-    size_t in_size_bytes = sizeof(data_t) * IN_ROWS * IN_COLS;
-    size_t out_size_bytes = sizeof(data_t) * OUT_C * OUT_ROWS * OUT_COLS;
+    size_t vector_size_bytes = sizeof(float) * DATA_SIZE;
+    size_t in_size_bytes = sizeof(float) * IN_ROWS * IN_COLS;
+    size_t out_size_bytes = sizeof(float) * OUT_C * OUT_ROWS * OUT_COLS;
 
     // Create kernels
     auto conv1_krnl = xrt::kernel(device, uuid, "conv1");
@@ -170,10 +168,10 @@ int main(int argc, char **argv)
     auto bo_bias = xrt::bo(device, vector_size_bytes, conv1_krnl.group_id(3));
 
     // Map buffers to host memory
-    auto bo_in_data_map = bo_in_data.map<data_t *>();
-    auto bo_out_data_map = bo_out_data.map<data_t *>();
-    auto bo_weights_map = bo_weights.map<data_t *>();
-    auto bo_bias_map = bo_bias.map<data_t *>();
+    auto bo_in_data_map = bo_in_data.map<float *>();
+    auto bo_out_data_map = bo_out_data.map<float *>();
+    auto bo_weights_map = bo_weights.map<float *>();
+    auto bo_bias_map = bo_bias.map<float *>();
 
     std::cout << "Initialize buffers\n";
     // Initialize buffers
@@ -253,7 +251,7 @@ int main(int argc, char **argv)
     // Read output from stream
     bo_out_data.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
-    data_t bo_out_data_golden[OUT_C * OUT_ROWS * OUT_COLS];
+    float bo_out_data_golden[OUT_C * OUT_ROWS * OUT_COLS];
     conv1_golden(bo_in_data_map, bo_out_data_golden, bo_weights_map, bo_bias_map);
     // Print results
     std::cout << "Convolution results:\n";

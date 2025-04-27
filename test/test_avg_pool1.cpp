@@ -1,16 +1,17 @@
 #include <iostream>
 #include <cmath>
 #include "hls_math.h"
-#include "weights_bias.h"
-#include "data_type.hpp"
-#include "lenet5/avg_pool1.h"
+// #include "weights_bias.h"
+// #include "data_type.hpp"
+#include "lenet5/avg_pool1.h" // Using the updated avg_pool function
 
 #define IN_CHANNELS 6
 #define IN_ROWS 24
 #define IN_COLS 24
-#define OUT_ROWS (IN_ROWS / POOL_SIZE)
-#define OUT_COLS (IN_COLS / POOL_SIZE)
 #define POOL_SIZE 2
+#define STRIDE 2
+#define OUT_ROWS ((IN_ROWS - POOL_SIZE) / STRIDE + 1)
+#define OUT_COLS ((IN_COLS - POOL_SIZE) / STRIDE + 1)
 
 int main() {
     // Allocate memory for input and output data
@@ -22,9 +23,6 @@ int main() {
     for(int ch=0; ch < IN_CHANNELS; ch++) {
         for(int i=0; i < IN_ROWS; i++) {
             for(int j=0; j < IN_COLS; j++) {
-                // Use a different value for each channel to verify channel independence
-                // Also use position-dependent values to verify proper pooling regions
-                // in_data[ch + IN_CHANNELS*(i*IN_COLS + j)] = ch*100 + i + j;
                 in_data[ch*IN_ROWS*IN_COLS + i*IN_COLS + j] = ch*100 + i + j;
             }
         }
@@ -32,26 +30,27 @@ int main() {
 
     // Calculate reference output (ground truth)
     for(int ch=0; ch < IN_CHANNELS; ch++) {
-        for(int pr=0; pr < OUT_ROWS; pr++) {
-            for(int pc=0; pc < OUT_COLS; pc++) {
-                float sum = 0;
+        for(int out_r=0; out_r < OUT_ROWS; out_r++) {
+            for(int out_c=0; out_c < OUT_COLS; out_c++) {
+                float sum = 0.0f;
                 for(int i=0; i < POOL_SIZE; i++) {
                     for(int j=0; j < POOL_SIZE; j++) {
-                        // sum += in_data[ch + IN_CHANNELS*((pr*POOL_SIZE+i)*IN_COLS + (pc*POOL_SIZE+j))];
-                        sum += in_data[ch*IN_ROWS*IN_COLS + (pr*POOL_SIZE+i)*IN_COLS + (pc*POOL_SIZE+j)];
+                        int r = out_r * STRIDE + i;
+                        int c = out_c * STRIDE + j;
+                        sum += in_data[ch*IN_ROWS*IN_COLS + r*IN_COLS + c];
                     }
                 }
-                // Calculate average with rounding
-                float avg = sum / (POOL_SIZE*POOL_SIZE);
-                out_data_ref[ch*OUT_ROWS*OUT_COLS + pr*OUT_COLS + pc] = avg;
+                // Calculate average
+                float avg = sum / (POOL_SIZE * POOL_SIZE);
+                out_data_ref[ch*OUT_ROWS*OUT_COLS + out_r*OUT_COLS + out_c] = avg;
             }
         }
     }
 
     // Print sample of input data for verification
     std::cout << "Sample input data (first channel, first 5x5):" << std::endl;
-    for(int i=0; i < IN_ROWS; i++) {
-        for(int j=0; j < IN_COLS; j++) {
+    for(int i=0; i < 5 && i < IN_ROWS; i++) {
+        for(int j=0; j < 5 && j < IN_COLS; j++) {
             std::cout << in_data[i*IN_COLS + j] << "\t";
         }
         std::cout << std::endl;
@@ -60,16 +59,26 @@ int main() {
     // Run the average pooling function
     avg_pool1(in_data, out_data);
     
-    // Print sample of input data for verification
+    // Print sample of output data for verification
     std::cout << "Sample output data (first channel, first 3x3):" << std::endl;
     for(int i=0; i < OUT_ROWS; i++) {
         for(int j=0; j < OUT_COLS; j++) {
-            std::cout << out_data[i*IN_COLS + j] << "\t";
+            std::cout << out_data[i*OUT_COLS + j] << "\t";
+        }
+        std::cout << std::endl;
+    }
+
+    // Print expected output for comparison
+    std::cout << "Expected output data (first channel, first 3x3):" << std::endl;
+    for(int i=0; i < OUT_ROWS; i++) {
+        for(int j=0; j < OUT_COLS; j++) {
+            std::cout << out_data_ref[i*OUT_COLS + j] << "\t";
         }
         std::cout << std::endl;
     }
 
     int errors = 0;
+    const float EPSILON = 1e-5f; // Allow for small floating-point differences
     
     // Check for errors
     std::cout << "\nChecking for errors..." << std::endl;
@@ -77,7 +86,8 @@ int main() {
         for(int i=0; i < OUT_ROWS; i++) {
             for(int j=0; j < OUT_COLS; j++) {
                 int idx = ch*OUT_ROWS*OUT_COLS + i*OUT_COLS + j;
-                if(out_data[idx] != out_data_ref[idx]) {
+                // Use epsilon comparison for floating point
+                if(std::abs(out_data[idx] - out_data_ref[idx]) > EPSILON) {
                     errors++;
                     if(errors <= 10) { // Limit output to first 10 errors
                         std::cout << "Error at ch=" << ch << ", row=" << i << ", col=" << j 

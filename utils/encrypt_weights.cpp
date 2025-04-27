@@ -255,14 +255,6 @@ int main(int argc, char** argv) {
     }
     encrypted_header << "\n};\n\n";
     
-    // Write CONV1_BIAS shape (unchanged)
-    encrypted_header << "static const int CONV1_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(CONV1_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << CONV1_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(CONV1_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-    
     // Process CONV1_WEIGHT_INT8_DATA
     int num_weight = 1;
     for(int i = 0; i < sizeof(CONV1_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
@@ -324,14 +316,6 @@ int main(int argc, char** argv) {
         encrypted_header << "\n};\n\n";
     }
     
-    // Write CONV1_WEIGHT shape (unchanged)
-    encrypted_header << "static const int CONV1_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(CONV1_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << CONV1_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(CONV1_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-    
     // Process CONV2_BIAS_INT8_DATA
     num_bias = 1;
     for(int i = 0; i < sizeof(CONV2_BIAS_INT8_SHAPE) / sizeof(int); i++) {
@@ -382,14 +366,6 @@ int main(int argc, char** argv) {
         if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
     }
     encrypted_header << "\n};\n\n";
-    
-    // Write CONV2_BIAS shape (unchanged)
-    encrypted_header << "static const int CONV2_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(CONV2_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << CONV2_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(CONV2_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
         
     // Process CONV2_WEIGHT_INT8_DATA
     num_weight = 1;
@@ -452,14 +428,6 @@ int main(int argc, char** argv) {
         encrypted_header << "\n};\n\n";
     }
 
-    // Write CONV2_WEIGHT shape
-    encrypted_header << "static const int CONV2_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(CONV2_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << CONV2_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(CONV2_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-
     // Process FC1_BIAS_INT8_DATA
     num_bias = 1;
     for(int i = 0; i < sizeof(FC1_BIAS_INT8_SHAPE) / sizeof(int); i++) {
@@ -510,14 +478,6 @@ int main(int argc, char** argv) {
         if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
     }
     encrypted_header << "\n};\n\n";
-
-    // Write FC1_BIAS shape
-    encrypted_header << "static const int FC1_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC1_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC1_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(FC1_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
 
     // Process FC1_WEIGHT_INT8_DATA
     num_weight = 1;
@@ -580,14 +540,6 @@ int main(int argc, char** argv) {
         encrypted_header << "\n};\n\n";
     }
 
-    // Write FC1_WEIGHT shape
-    encrypted_header << "static const int FC1_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC1_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC1_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(FC1_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-
     // Process FC2_BIAS_INT8_DATA
     num_bias = 1;
     for(int i = 0; i < sizeof(FC2_BIAS_INT8_SHAPE) / sizeof(int); i++) {
@@ -638,14 +590,6 @@ int main(int argc, char** argv) {
         if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
     }
     encrypted_header << "\n};\n\n";
-
-    // Write FC2_BIAS shape
-    encrypted_header << "static const int FC2_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC2_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC2_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(FC2_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
 
     // Process FC2_WEIGHT_INT8_DATA
     num_weight = 1;
@@ -708,14 +652,6 @@ int main(int argc, char** argv) {
         encrypted_header << "\n};\n\n";
     }
 
-    // Write FC2_WEIGHT shape
-    encrypted_header << "static const int FC2_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC2_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC2_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(FC2_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
-
     // Process FC3_BIAS_INT8_DATA
     num_bias = 1;
     for(int i = 0; i < sizeof(FC3_BIAS_INT8_SHAPE) / sizeof(int); i++) {
@@ -766,14 +702,6 @@ int main(int argc, char** argv) {
         if((i + 1) % 10 == 0 && i != n - 1) encrypted_header << "\n  ";
     }
     encrypted_header << "\n};\n\n";
-
-    // Write FC3_BIAS shape
-    encrypted_header << "static const int FC3_BIAS_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC3_BIAS_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC3_BIAS_INT8_SHAPE[i];
-        if(i < sizeof(FC3_BIAS_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
 
     // Process FC3_WEIGHT_INT8_DATA
     num_weight = 1;
@@ -835,14 +763,6 @@ int main(int argc, char** argv) {
         }
         encrypted_header << "\n};\n\n";
     }
-
-    // Write FC3_WEIGHT shape
-    encrypted_header << "static const int FC3_WEIGHT_INT8_SHAPE[] = { ";
-    for(int i = 0; i < sizeof(FC3_WEIGHT_INT8_SHAPE) / sizeof(int); i++) {
-        encrypted_header << FC3_WEIGHT_INT8_SHAPE[i];
-        if(i < sizeof(FC3_WEIGHT_INT8_SHAPE) / sizeof(int) - 1) encrypted_header << ", ";
-    }
-    encrypted_header << " };\n\n";
     
     // Close the header with endif
     encrypted_header << "#endif // ENCRYPTED_WEIGHTS_BIAS_H\n";

@@ -1,18 +1,16 @@
 #include <iostream>
 #include <cmath>
-#include "hls_math.h"
-#include "lenet5/conv2d.h"
-#include "lenet5/conv1.h"
+// #include "hls_math.h"
+#include "lenet5/conv2.h"
 #include "weights_bias.h"
-#include "test_utils.h"
 
-#define IN_ROWS 28
-#define IN_COLS 28
+#define IN_ROWS 12
+#define IN_COLS 12
 #define KERNEL_SIZE 5
-#define IN_C 1
-#define OUT_C 6
+#define IN_C 6
+#define OUT_C 16
 
-void conv1_golden(
+void conv2_golden(
     const float in_data[IN_C][IN_ROWS][IN_COLS],
     float out_data[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)],
     const float weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE],
@@ -71,17 +69,20 @@ int main() {
     float out_data[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)];
     float out_data_ref[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)];
     float weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE];
-    float flatten_weights[128 * ((OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE + 127)/128)];
+    float flatten_weights[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
     float bias[OUT_C];
-    float flatten_bias[128 * ((OUT_C + 127)/128)];
+    float flatten_bias[OUT_C];
 
     for(int channel=0; channel<OUT_C; ++channel) {
+        bias[channel] = CONV2_BIAS_INT8_DATA[channel];
+        flatten_bias[channel] = CONV2_BIAS_INT8_DATA[channel];
         for(int ic=0; ic<IN_C; ++ic) {
-            bias[channel] = 0.0;
-            flatten_bias[channel] = 0.0;
+            // bias[channel] = 0.0;
+            // flatten_bias[channel] = 0.0;
             for(int i=0; i<KERNEL_SIZE; ++i) {
                 for(int j=0; j<KERNEL_SIZE; ++j) {
-                    float weight = CONV1_WEIGHT_INT8_DATA[channel*(IN_C*KERNEL_SIZE*KERNEL_SIZE) + ic*(KERNEL_SIZE*KERNEL_SIZE) + i*(KERNEL_SIZE) + j];
+                    float weight = CONV2_WEIGHT_INT8_DATA[channel*(IN_C*KERNEL_SIZE*KERNEL_SIZE) + ic*(KERNEL_SIZE*KERNEL_SIZE) + i*(KERNEL_SIZE) + j];
+                    // float weight = 1.0f;
                     weights[channel][ic][i][j] = weight;
                     flatten_weights[channel*(IN_C*KERNEL_SIZE*KERNEL_SIZE) + ic*(KERNEL_SIZE*KERNEL_SIZE) + i*(KERNEL_SIZE) + j] = weight;
                 }
@@ -100,30 +101,27 @@ int main() {
             }
         }
     }
-    std::cout << "]" << std::endl;
-
-    for(int i = 0; i < OUT_C; i++) {
-        bias[i] = CONV1_BIAS_INT8_DATA[i];
-        flatten_bias[i] = CONV1_BIAS_INT8_DATA[i];
-    }
+    std::cout << "]" << std::endl << std::endl;
 
     std::cout << "bias_golden = [";
     for(int i=0; i<OUT_C; i++) {
         std::cout << bias[i] << ", ";
     }
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl << std::endl;
 
-    for(int i=0; i<IN_ROWS; i++) {
-        for(int j = 0; j < IN_COLS; j++) {
-            in_data[i * IN_COLS + j] = 1;
-            in_data_ref[0][i][j] = 1;
+    for(int i = 0; i < IN_C; i++) {
+        for(int j=0; j<IN_ROWS; j++) {
+            for(int k = 0; k < IN_COLS; k++) {
+                in_data[i*IN_ROWS*IN_COLS + j*IN_COLS + k] = 1;
+                in_data_ref[i][j][k] = 1;
+            }
         }
     }
 
     // run conv2d
-    // conv1(in_stream, out_stream, flatten_weights, flatten_bias);
-    conv1(in_data, out_data, flatten_weights, flatten_bias);
-    conv1_golden(in_data_ref, out_data_ref, weights, bias);
+    // conv2(in_stream, out_stream, flatten_weights, flatten_bias);
+    conv2(in_data, out_data, flatten_weights, flatten_bias);
+    conv2_golden(in_data_ref, out_data_ref, weights, bias);
 
     int errors = 0;
     const int output_size = (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1) * OUT_C;
@@ -139,9 +137,9 @@ int main() {
     std::cout << "]" << std::endl << std::endl;
     std::cout << "Error indexes: ";
     for(int i=0; i<output_size; ++i) {
-        if(out_data[i] != out_data_ref[i]) {
+        if(std::abs(out_data[i] - out_data_ref[i]) > 1e-4) {
             errors = 1;
-            std::cout << i << ", ";
+            std::cout << i << ", out_data = " << out_data[i] << "out_data_ref = " << out_data_ref[i] << std::endl;
         }
     }
     std::cout << std::endl;

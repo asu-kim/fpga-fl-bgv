@@ -6,47 +6,52 @@
 #include <limits>
 #include <cmath>
 
-// typedef ap_int<32> data_t;
-
-template<int POOL_SIZE, int CHANNELS, int ROWS, int COLS>
+template<int POOL_SIZE, int STRIDE, int IN_C, int IN_ROWS, int IN_COLS>
 void avg_pool(
-        const data_t* in_data,  // Input data array of size CHANNELS*ROWS*COLS
-        data_t* out_data        // Output data array of size CHANNELS*(ROWS/POOL_SIZE)*(COLS/POOL_SIZE)
+        const float* in_data,  // Input data array of size IN_C*IN_ROWS*IN_COLS
+        float* out_data        // Output data array
         ) {
-    const int pooled_rows = ROWS / POOL_SIZE;
-    const int pooled_cols = COLS / POOL_SIZE;
-    const int divisor = POOL_SIZE * POOL_SIZE;
+    // Calculate output dimensions based on stride
+    const int OUT_ROWS = (IN_ROWS - POOL_SIZE) / STRIDE + 1;
+    const int OUT_COLS = (IN_COLS - POOL_SIZE) / STRIDE + 1;
+    const float pool_area = POOL_SIZE * POOL_SIZE;
 
-    for(int channel=0; channel<CHANNELS; ++channel) {
-        data_t line_buffer[ROWS*COLS];
-        #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=0
+    static float plane[IN_ROWS][IN_COLS]; // scratch pad
+    #pragma HLS ARRAY_PARTITION variable=plane cyclic factor=4 dim=1
 
-        // load channel input from pointer
-        for(int r=0; r<ROWS; ++r) {
-            for(int c=0; c<COLS; ++c) {
+    for(int channel = 0; channel < IN_C; channel++) {
+        // Process each channel
+        const int channel_offset = channel * IN_ROWS * IN_COLS;
+        const int out_channel_offset = channel * OUT_ROWS * OUT_COLS;
+
+        // Load channel data into scratch pad
+        for(int r = 0; r < IN_ROWS; ++r) {
+            for(int c = 0; c < IN_COLS; ++c) {
                 #pragma HLS PIPELINE II=1
-                // Access pattern for CHANNELS*ROWS*COLS layout
-                // line_buffer[r*COLS + c] = in_data[channel + CHANNELS*(r*COLS + c)];
-                line_buffer[r*COLS + c] = in_data[channel*ROWS*COLS + r*COLS + c];
+                plane[r][c] = in_data[channel_offset + r * IN_COLS + c];
             }
         }
-
-        // compute avg pool
-        for(int pr=0; pr<pooled_rows; ++pr) {
-            for(int pc=0; pc<pooled_cols; ++pc) {
+        
+        // Perform pooling with stride
+        for(int out_r = 0; out_r < OUT_ROWS; out_r++) {
+            for(int out_c = 0; out_c < OUT_COLS; out_c++) {
                 #pragma HLS PIPELINE II=1
-                data_t sum = 0; // we need a wider bitwidth for accumulation
+                float sum = 0.0f;
 
-                for(int i=0; i<POOL_SIZE; ++i) {
-                    for(int j=0; j<POOL_SIZE; ++j) {
-                        sum += line_buffer[(pr*POOL_SIZE+i)*(COLS)+pc*POOL_SIZE+j];
+                // Sum the values in the pooling window
+                for(int i = 0; i < POOL_SIZE; i++) {
+                    for(int j = 0; j < POOL_SIZE; j++) {
+                        int r = out_r * STRIDE + i;
+                        int c = out_c * STRIDE + j;
+                        sum += plane[r][c];
                     }
                 }
-                data_t avg = (data_t)((sum + (divisor / 2)) / divisor);
-                avg = hls::max(MIN_VAL, hls::min(MAX_VAL, avg));
-                // Write to output array with CHANNELS*(ROWS/POOL_SIZE)*(COLS/POOL_SIZE) layout
-                // out_data[channel + CHANNELS*(pr*pooled_cols + pc)] = avg;
-                out_data[channel*pooled_rows*pooled_cols + pr*pooled_cols + pc] = avg;
+                // printf("sum = %f\n", sum);
+                // Compute average
+                float avg = sum / pool_area;
+                
+                // Store result
+                out_data[out_channel_offset + out_r * OUT_COLS + out_c] = avg;
             }
         }
     }
