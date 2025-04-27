@@ -5,10 +5,22 @@
 
 #include <hls_stream.h>
 
+template<int N>
+void bias_update(
+        float bias[N],
+        float dB[N]
+        ) {
+#pragma HLS PIPELINE
+    for(int i=0; i<N; ++i) {
+#pragma HLS UNROLL
+        bias[i] -= lr * dB[i];
+    }
+}
+
 template<int M, int N>
 void general_update(
         float weight[M][N],
-        float dW[M][N],
+        float dW[M][N]
         ) {
 #pragma HLS PIPELINE
     for(int i=0; i<M; ++i) {
@@ -22,7 +34,7 @@ void general_update(
 template<int OUT_C, int IN_C, int K>
 void conv2d_update(
         float weight[OUT_C][IN_C][K][K],
-        float dW[OUT_C][IN_C][K][K],
+        float dW[OUT_C][IN_C][K][K]
         ) {
     for(int k=0; k<OUT_C; ++k) {
 #pragma HLS PIPELINE

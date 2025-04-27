@@ -5,7 +5,7 @@
 #include <ap_fixed.h>
 #include <math.h>
 
-typedef ap_int<32> data_t; // 8 bit fixed point as precision
+#define data_t float
 
 //--------
 // flatten 

@@ -3,7 +3,8 @@
 
 #include "aes_utils.h"
 
-typedef ap_int<32> data_t;
+#define data_t float
+#define aes_word_t float
 
 template<int OUT_C, int IN_C, int KH, int KW>
 void load_conv_params(const aes_word_t *enc_w,

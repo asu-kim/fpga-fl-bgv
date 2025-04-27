@@ -6,7 +6,7 @@
 #include <math.h>
 #include <stdint.h>
 
-typedef ap_int<32> data_t; // 8 bit fixed point as precision
+#define data_t float
 
 //----------------------
 // 5x5 kernel, 6 filters

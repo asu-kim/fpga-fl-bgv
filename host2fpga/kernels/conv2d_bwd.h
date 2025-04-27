@@ -109,8 +109,8 @@ void conv2d_backward(
         hls::stream<float> &grads, /* gradient pased from next layer (passing grads backward) */
         hls::stream<float> &out_stream, /* resulting gradients to be passed to prev layer */
         const float weight[OUT_C][IN_C][K][K],
-        float dB[OUT_C],
-        float dW[OUT_C][IN_C][K][K]
+        float dW[OUT_C][IN_C][K][K],
+        float dB[OUT_C]
         ) {
 #pragma HLS INLINE off
     static float x_pad[IN_C][K+H-1][K+W-1];
@@ -129,7 +129,7 @@ void conv2d_backward(
 
     // buffer the grads
     static float grad_buffer[OUT_C][H][W];
-#pragma HLS ARRAY_PARTITION variable grad_buffer complete dim=1
+#pragma HLS ARRAY_PARTITION variable=grad_buffer complete dim=1
     for(int k=0; k<OUT_C; ++k) {
         for(int r=0; r<H; ++r) {
             for(int c=0; c<W; ++c) {
