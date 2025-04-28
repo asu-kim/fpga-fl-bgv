@@ -33,8 +33,8 @@
 #include "experimental/xrt_device.h"
 #include "experimental/xrt_kernel.h"
 
-#define IN_DIM 256
-#define OUT_DIM 120
+#define IN_DIM 120
+#define OUT_DIM 84
 
 // Golden reference implementation for FC layer
 void fc_golden(
@@ -99,17 +99,17 @@ int main(int argc, char **argv)
     size_t bias_size_bytes = sizeof(float) * OUT_DIM;
 
     // Create kernels
-    auto fc1_krnl = xrt::kernel(device, uuid, "fc1");
+    auto fc2_krnl = xrt::kernel(device, uuid, "fc2");
 
     std::cout << "Allocate Buffer in Global Memory\n";
 
     // Allocate in and out for conv1
-    auto bo_in_data = xrt::bo(device, in_size_bytes, fc1_krnl.group_id(0));
-    auto bo_out_data = xrt::bo(device, out_size_bytes, fc1_krnl.group_id(1));
+    auto bo_in_data = xrt::bo(device, in_size_bytes, fc2_krnl.group_id(0));
+    auto bo_out_data = xrt::bo(device, out_size_bytes, fc2_krnl.group_id(1));
 
     // Allocate weights and biases for conv1
-    auto bo_weights = xrt::bo(device, weight_size_bytes, fc1_krnl.group_id(2));
-    auto bo_bias = xrt::bo(device, bias_size_bytes, fc1_krnl.group_id(3));
+    auto bo_weights = xrt::bo(device, weight_size_bytes, fc2_krnl.group_id(2));
+    auto bo_bias = xrt::bo(device, bias_size_bytes, fc2_krnl.group_id(3));
 
     // Map buffers to host memory
     auto bo_in_data_map = bo_in_data.map<float *>();
@@ -184,7 +184,7 @@ int main(int argc, char **argv)
 
     // Run FC layer with use_relu parameter
     std::cout << "Running fc\n";
-    auto run = fc1_krnl(bo_in_data, bo_out_data, bo_weights, bo_bias, use_relu);
+    auto run = fc2_krnl(bo_in_data, bo_out_data, bo_weights, bo_bias, use_relu);
     // auto state = run.wait(std::chrono::seconds(20)); // Add timeout
     // if (state != ERT_CMD_STATE_COMPLETED) {
     //     std::cout << "Kernel execution timed out or failed" << std::endl;
