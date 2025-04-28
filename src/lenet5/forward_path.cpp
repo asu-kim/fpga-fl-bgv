@@ -1,5 +1,3 @@
-#include <string.h>
-
 #include "lenet5/forward_path.h"
 #include "lenet5/conv2d.h"
 #include "lenet5/avg_pool.h"
@@ -7,54 +5,58 @@
 
 extern "C" {
 void forward_path(
-        float* in_data,
-        float* conv1_out,
-        float* pool1_out,
-        float* conv2_out,
-        float* pool2_out,
-        float* fc1_out,
-        float* fc2_out,
-        float* fc3_out,
-        float* conv1_weight,
-        float* conv1_bias,
-        float* conv2_weight,
-        float* conv2_bias,
-        float* fc1_weight,
-        float* fc1_bias,
-        float* fc2_weight,
-        float* fc2_bias,
-        float* fc3_weight,
-        float* fc3_bias
+    float* in_data,
+    float* conv1_weight,
+    float* conv1_bias,
+    float* conv1_out,
+    float* pool1_out,
+    float* conv2_weight,
+    float* conv2_bias,
+    float* conv2_out,
+    float* pool2_out,
+    float* fc1_weight,
+    float* fc1_bias,
+    float* fc1_out,
+    float* fc2_weight,
+    float* fc2_bias,
+    float* fc2_out,  
+    float* fc3_weight,
+    float* fc3_bias,
+    float* fc3_out
     ) {
-    // Input
-    #pragma HLS INTERFACE m_axi port=in_data bundle=gmem0 depth=784 // 1*28*28
+    // Input data
+    #pragma HLS INTERFACE m_axi port=in_data bundle=gmem0 depth=784
 
-    // Intermediate feature maps (outputs of layers)
-    #pragma HLS INTERFACE m_axi port=conv1_out bundle=gmem1 depth=3456 // 6*24*24
-    #pragma HLS INTERFACE m_axi port=pool1_out bundle=gmem2 depth=864  // 6*12*12
-    #pragma HLS INTERFACE m_axi port=conv2_out bundle=gmem3 depth=1024 // 16*8*8
-    #pragma HLS INTERFACE m_axi port=pool2_out bundle=gmem4 depth=256  // 16*4*4
+    // Layer 1: Conv1
+    #pragma HLS INTERFACE m_axi port=conv1_weight bundle=gmem1 depth=150
+    #pragma HLS INTERFACE m_axi port=conv1_bias bundle=gmem2 depth=6
+    #pragma HLS INTERFACE m_axi port=conv1_out bundle=gmem3 depth=3456
 
-    // Fully connected layer outputs
-    #pragma HLS INTERFACE m_axi port=fc1_out bundle=gmem5 depth=120
-    #pragma HLS INTERFACE m_axi port=fc2_out bundle=gmem6 depth=84
-    #pragma HLS INTERFACE m_axi port=fc3_out bundle=gmem7 depth=10
+    // Layer 2: Pool1
+    #pragma HLS INTERFACE m_axi port=pool1_out bundle=gmem4 depth=864
 
-    // Weights and Biases
-    #pragma HLS INTERFACE m_axi port=conv1_weight bundle=gmem8 depth=150 // 6*5*5
-    #pragma HLS INTERFACE m_axi port=conv1_bias bundle=gmem9 depth=6
+    // Layer 3: Conv2
+    #pragma HLS INTERFACE m_axi port=conv2_weight bundle=gmem5 depth=2400
+    #pragma HLS INTERFACE m_axi port=conv2_bias bundle=gmem6 depth=16
+    #pragma HLS INTERFACE m_axi port=conv2_out bundle=gmem7 depth=1024
 
-    #pragma HLS INTERFACE m_axi port=conv2_weight bundle=gmem10 depth=2400 // 16*5*5
-    #pragma HLS INTERFACE m_axi port=conv2_bias bundle=gmem11 depth=16
+    // Layer 4: Pool2
+    #pragma HLS INTERFACE m_axi port=pool2_out bundle=gmem8 depth=256
 
-    #pragma HLS INTERFACE m_axi port=fc1_weight bundle=gmem12 depth=30720 // 256*120
-    #pragma HLS INTERFACE m_axi port=fc1_bias bundle=gmem13 depth=120
+    // Layer 5: FC1
+    #pragma HLS INTERFACE m_axi port=fc1_weight bundle=gmem9 depth=30720
+    #pragma HLS INTERFACE m_axi port=fc1_bias bundle=gmem10 depth=120
+    #pragma HLS INTERFACE m_axi port=fc1_out bundle=gmem11 depth=120
 
-    #pragma HLS INTERFACE m_axi port=fc2_weight bundle=gmem14 depth=10080 // 120*84
-    #pragma HLS INTERFACE m_axi port=fc2_bias bundle=gmem15 depth=84
+    // Layer 6: FC2
+    #pragma HLS INTERFACE m_axi port=fc2_weight bundle=gmem12 depth=10080
+    #pragma HLS INTERFACE m_axi port=fc2_bias bundle=gmem13 depth=84
+    #pragma HLS INTERFACE m_axi port=fc2_out bundle=gmem14 depth=84
 
-    #pragma HLS INTERFACE m_axi port=fc3_weight bundle=gmem16 depth=840 // 84*10
-    #pragma HLS INTERFACE m_axi port=fc3_bias bundle=gmem17 depth=10
+    // Layer 7: FC3
+    #pragma HLS INTERFACE m_axi port=fc3_weight bundle=gmem15 depth=840
+    #pragma HLS INTERFACE m_axi port=fc3_bias bundle=gmem16 depth=10
+    #pragma HLS INTERFACE m_axi port=fc3_out bundle=gmem17 depth=10
 
     // Controls
     #pragma HLS INTERFACE s_axilite port=in_data bundle=control
@@ -101,40 +103,108 @@ void forward_path(
     float local_fc3_bias[10];
     
     // Copy input data to local memory
-    memcpy(local_in_data, in_data, sizeof(float)*784);
+    for(int i = 0; i < 784; i++) {
+        #pragma HLS PIPELINE II=1
+        local_in_data[i] = in_data[i];
+    }
     
-    // Copy weights and biases to local memory
-    memcpy(local_conv1_weight, conv1_weight, sizeof(float)*6*1*5*5);
-    memcpy(local_conv1_bias, conv1_bias, sizeof(float)*6);
-    memcpy(local_conv2_weight, conv2_weight, sizeof(float)*16*6*5*5);
-    memcpy(local_conv2_bias, conv2_bias, sizeof(float)*16);
-    memcpy(local_fc1_weight, fc1_weight, sizeof(float)*256*120);
-    memcpy(local_fc1_bias, fc1_bias, sizeof(float)*120);
-    memcpy(local_fc2_weight, fc2_weight, sizeof(float)*120*84);
-    memcpy(local_fc2_bias, fc2_bias, sizeof(float)*84);
-    memcpy(local_fc3_weight, fc3_weight, sizeof(float)*84*10);
-    memcpy(local_fc3_bias, fc3_bias, sizeof(float)*10);
-    
-    // Execute the network with local memory
+    // Copy Conv1's weights and biases to local memory
+    for(int i = 0; i < 150; i++) {
+        #pragma HLS PIPELINE II=1
+        local_conv1_weight[i] = conv1_weight[i];
+    }
+    for(int i = 0; i < 6; i++) {
+        #pragma HLS PIPELINE II=1
+        local_conv1_bias[i] = conv1_bias[i];
+    }
+
     conv2d<6, 1, 5, 28, 28>(local_in_data, local_conv1_out, local_conv1_weight, local_conv1_bias);
-    memcpy(conv1_out, local_conv1_out, sizeof(float)*6*24*24);
+    for(int i = 0; i < 3456; i++) {
+        #pragma HLS PIPELINE II=1
+        conv1_out[i] = local_conv1_out[i];
+        // conv1_out[i] = 0;
+    }
 
     avg_pool<2, 2, 6, 24, 24>(local_conv1_out, local_pool1_out);
-    memcpy(pool1_out, local_pool1_out, sizeof(float)*6*12*12);
+    for(int i = 0; i < 864; i++) {
+        #pragma HLS PIPELINE II=1
+        pool1_out[i] = local_pool1_out[i];
+        // pool1_out[i] = 0;
+    }
+    
+    // Copy Conv2's weights and biases to local memory
+    for(int i = 0; i < 2400; i++) {
+        #pragma HLS PIPELINE II=1
+        local_conv2_weight[i] = conv2_weight[i];
+    }
+    for(int i = 0; i < 16; i++) {
+        #pragma HLS PIPELINE II=1
+        local_conv2_bias[i] = conv2_bias[i];
+    }
 
     conv2d<16, 6, 5, 12, 12>(local_pool1_out, local_conv2_out, local_conv2_weight, local_conv2_bias);
-    memcpy(conv2_out, local_conv2_out, sizeof(float)*16*8*8);
+    for(int i = 0; i < 1024; i++) {
+        #pragma HLS PIPELINE II=1
+        conv2_out[i] = local_conv2_out[i];
+        // conv2_out[i] = 0;
+    }
 
     avg_pool<2, 2, 16, 8, 8>(local_conv2_out, local_pool2_out);
-    memcpy(pool2_out, local_pool2_out, sizeof(float)*16*4*4);
+    for(int i = 0; i < 256; i++) {
+        #pragma HLS PIPELINE II=1
+        pool2_out[i] = local_pool2_out[i];
+        // pool2_out[i] = 0;
+    }
+    
+    // Copy FC1's weights and biases to local memory
+    for(int i = 0; i < 30720; i++) {
+        #pragma HLS PIPELINE II=1
+        local_fc1_weight[i] = fc1_weight[i];
+    }
+    for(int i = 0; i < 120; i++) {
+        #pragma HLS PIPELINE II=1
+        local_fc1_bias[i] = fc1_bias[i];
+    }
 
     fc<256, 120>(local_pool2_out, local_fc1_out, local_fc1_weight, local_fc1_bias);
-    memcpy(fc1_out, local_fc1_out, sizeof(float)*120);
+    for(int i = 0; i < 120; i++) {
+        #pragma HLS PIPELINE II=1
+        fc1_out[i] = local_fc1_out[i];
+        // fc1_out[i] = 0;
+    }
+    
+    // Copy FC2's weights and biases to local memory
+    for(int i = 0; i < 10080; i++) {
+        #pragma HLS PIPELINE II=1
+        local_fc2_weight[i] = fc2_weight[i];
+    }
+    for(int i = 0; i < 84; i++) {
+        #pragma HLS PIPELINE II=1
+        local_fc2_bias[i] = fc2_bias[i];
+    }
 
     fc<120, 84>(local_fc1_out, local_fc2_out, local_fc2_weight, local_fc2_bias);
-    memcpy(fc2_out, local_fc2_out, sizeof(float)*84);
+    for(int i = 0; i < 84; i++) {
+        #pragma HLS PIPELINE II=1
+        fc2_out[i] = local_fc2_out[i];
+        // fc2_out[i] = 0;
+    }
+    
+    // Copy FC3's weights and biases to local memory
+    for(int i = 0; i < 840; i++) {
+        #pragma HLS PIPELINE II=1
+        local_fc3_weight[i] = fc3_weight[i];
+    }
+    for(int i = 0; i < 10; i++) {
+        #pragma HLS PIPELINE II=1
+        local_fc3_bias[i] = fc3_bias[i];
+    }
 
     fc<84, 10>(local_fc2_out, local_fc3_out, local_fc3_weight, local_fc3_bias);
-    memcpy(fc3_out, local_fc3_out, sizeof(float)*10);
+    for(int i = 0; i < 10; i++) {
+        #pragma HLS PIPELINE II=1
+        fc3_out[i] = local_fc3_out[i];
+        // fc3_out[i] = 0;
+    }
 }
 }

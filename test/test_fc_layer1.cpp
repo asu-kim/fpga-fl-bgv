@@ -3,8 +3,8 @@
 #include <vector>
 #include "lenet5/fc1.h" // Make sure this matches your FC implementation header file
 
-#define IN_DIM 120
-#define OUT_DIM 84
+#define IN_DIM 256
+#define OUT_DIM 120
 
 // Golden reference implementation for FC layer
 void fc_golden(
