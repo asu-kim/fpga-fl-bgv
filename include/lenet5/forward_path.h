@@ -20,7 +20,8 @@ void forward_path(
     float* fc2_weight,
     float* fc2_bias,
     float* fc3_weight,
-    float* fc3_bias
+    float* fc3_bias,
+    float* probs
 );
 }
 #endif

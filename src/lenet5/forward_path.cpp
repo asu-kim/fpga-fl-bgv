@@ -2,6 +2,7 @@
 #include "lenet5/conv2d.h"
 #include "lenet5/avg_pool.h"
 #include "lenet5/fc_layer.h"
+#include "lenet5/softmax.h"
 
 extern "C" {
 void forward_path(
@@ -22,7 +23,8 @@ void forward_path(
     float* fc2_out,  
     float* fc3_weight,
     float* fc3_bias,
-    float* fc3_out
+    float* fc3_out,
+    float* probs
     ) {
     // Input data
     #pragma HLS INTERFACE m_axi port=in_data bundle=gmem0 depth=784
@@ -58,6 +60,9 @@ void forward_path(
     #pragma HLS INTERFACE m_axi port=fc3_bias bundle=gmem16 depth=10
     #pragma HLS INTERFACE m_axi port=fc3_out bundle=gmem17 depth=10
 
+    // probability after softmax
+    #pragma HLS INTERFACE m_axi port=probs bundle=gmem17 depth=10
+
     // Controls
     #pragma HLS INTERFACE s_axilite port=in_data bundle=control
     #pragma HLS INTERFACE s_axilite port=conv1_out bundle=control
@@ -67,6 +72,8 @@ void forward_path(
     #pragma HLS INTERFACE s_axilite port=fc1_out bundle=control
     #pragma HLS INTERFACE s_axilite port=fc2_out bundle=control
     #pragma HLS INTERFACE s_axilite port=fc3_out bundle=control
+    #pragma HLS INTERFACE s_axilite port=probs bundle=control
+
     #pragma HLS INTERFACE s_axilite port=conv1_weight bundle=control
     #pragma HLS INTERFACE s_axilite port=conv1_bias bundle=control
     #pragma HLS INTERFACE s_axilite port=conv2_weight bundle=control
@@ -206,5 +213,7 @@ void forward_path(
         fc3_out[i] = local_fc3_out[i];
         // fc3_out[i] = 0;
     }
+
+    softmax<10>(local_fc3_out, probs);
 }
 }
