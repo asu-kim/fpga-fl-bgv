@@ -4,27 +4,18 @@
 #include <hls_stream.h>
 #include <stdint.h>
 
-template<int POOL_SIZE, int STRIDE, int H, int W, int C>
+template<int P, int S, int H, int W, int C>
 void avg_pool_backward(
-        hls::stream<float> &grads,
-        hls::stream<float> &out_stream
+        const float grads[C][(H-P)/S+1][(W-P)/S+1],
+        float dX[C*H*W]
         ) {
-    const int PH = H / POOL_SIZE;
-    const int PW = W / POOL_SIZE;
-    const float inverse = 1.0 / (POOL_SIZE * POOL_SIZE);
+#pragma HLS INLINE off
 
-    static float grads_buffer[C][PH][PW];
-#pragma HLS ARRAY_PARTITION variable=grads_buffer complete dim=1
-    for(int r=0; r<PH; ++r) {
-        for(int c=0; c<PW; ++c) {
-            for(int ch=0; ch<C; ++ch) {
-#pragma HLS PIPELINE II=1
-                grads_buffer[ch][r][c] = grads.read();
-            }
-        }
-    }
+    constexpr int PH = (H-P)/S+1;
+    constexpr int PW = (W-P)/S+1;
+    const float inverse = 1.0f / (float)(P*P);
 
-    static float x_buffer[C][H][W];
+    float x_buffer[C][H][W];
 #pragma HLS ARRAY_PARTITION variable=x_buffer complete dim=1
     for(int ch=0; ch<C; ++ch) {
         for(int r=0; r<H; ++r) {
@@ -34,30 +25,30 @@ void avg_pool_backward(
         }
     }
 
-    for(int r=0; r<PH; ++r) {
-        for(int c=0; c<PW; ++c) {
-            for(int ch=0; ch<C; ++ch) {
-                float val = grads_buffer[ch][r][c] * inverse;
-                for(int i=0; i<POOL_SIZE; ++i) {
-                    for(int j=0; j<POOL_SIZE; ++j) {
+    for(int k=0; k<C; ++k) {
+        for(int r=0; r<PH; ++r) {
+            for(int c=0; c<PW; ++c) {
+                float grad = grads[k][r][c] * inverse;
+
+                for(int pr=0; pr<P; ++pr) {
+                    for(int pc=0; pc<P; ++pc) {
 #pragma HLS PIPELINE II=1
-                        x_buffer[ch][r*POOL_SIZE + i][c*POOL_SIZE + j] += val;
-                    }
+                        x_buffer[k][r*S+pr][c*S+pc] += grad;
+                    } 
                 }
             }
         }
     }
 
-
-    for(int r=0; r<H; ++r) {
-        for(int c=0; c<W; ++c) {
-            for(int ch=0; ch<C; ++ch) {
+    for(int k=0; k<C; ++k) {
+        for(int r=0; r<H; ++r) {
+            for(int c=0; c<W; ++c) {
 #pragma HLS PIPELINE II=1
-               out_stream.write(x_buffer[ch][r][c]); 
+                int idx = k * (H*W) + r*W + c;
+                dX[idx] = x_buffer[k][r][c];
             }
         }
     }
-
 
 }
 

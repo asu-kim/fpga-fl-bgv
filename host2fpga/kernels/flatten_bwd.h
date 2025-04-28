@@ -5,11 +5,14 @@
 #include <stdint.h>
 
 // just pass back whatever we get from next layer to the previous one
-template<int... DIMs>
-void flatten_backward(hls::stream<float>&grads, hls::stream<float>& out_stream) {
-    const int flat_dims = (1 * ... * DIMs);
-    for(int i=0; i<flat_dims; ++i) {
-        out_stream.write(grads.read());
+template<int OC, int IC, int H, int W>
+void flatten_backward(
+        const float grads[OC*IC*H*W],
+        float dX[OC*IC*H*W]
+        ) {
+    int dim = OC * IC * H * W;
+    for(int i=0; i<dim; ++i) {
+        dX[i] = grads[i];
     }
 }
 
