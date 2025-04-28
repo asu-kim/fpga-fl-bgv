@@ -10,24 +10,24 @@
  */
 template<int N>
 void mse_loss(
-        hls::stream<float> &y_pred,
-        hls::stream<float> &y_true,
-        hls::stream<float> &loss,
-        hls::stream<float> &grads
+        const float y_pred[N],
+        const float y_true[N],
+        float &loss,
+        float grads[N]
         ) {
 #pragma HLS PIPELINE
     float acc_loss = 0.0f;
 
     for(int i=0; i<N; ++i) {
 #pragma HLS PIPELINE II=1
-        float p = y_pred.read();
-        float t = y_true.read();
+        float p = y_pred[i];
+        float t = y_true[i];
         float diff = t - p;
         acc_loss += diff * diff;
-        grads.write((2.0f * diff) / N);
+        grads[i] = (2.0f * diff) / N;
     }
 
-    loss.write(acc_loss / N);
+    loss = (acc_loss / N);
 }
 
 #endif

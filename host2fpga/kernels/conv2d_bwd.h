@@ -116,7 +116,7 @@ void conv2d_backward(
         const float in_activation[IN_C * H * W],
         const float grads[OUT_C * (H-K+1) * (W-K+1)],
         float out_grads[IN_C * H * W],
-        const float weight[OUT_C][IN_C][K][K],
+        const float in_weight[OUT_C*IN_C*K*K],
         float dW[OUT_C][IN_C][K][K],
         float dB[OUT_C]
         ) {
@@ -133,6 +133,20 @@ void conv2d_backward(
             for(int c=0; c<W; ++c) {
                 int idx = i*(H*W) + r*W + c;
                 x_pad[i][r][c] = in_activation[idx];
+            }
+        }
+    }
+    
+    // buffer in_weight
+    float weight[OUT_C][IN_C][K][K];
+#pragma HLS ARRAY_PARTITION variable=weight complete dim=1
+    for(int oc=0; oc<OUT_C; ++oc) {
+        for(int ic=0; ic<IN_C; ++ic) {
+            for(int kr=0; kr<K; ++kr) {
+                for(int kc=0; kc<K; ++kc) {
+                    int idx = oc * (IN_C*K*K) + ic *(K*K) + kr *K + kc;
+                    weight[oc][ic][kr][kc] = in_weight[idx];
+                }
             }
         }
     }
