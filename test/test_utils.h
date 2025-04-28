@@ -173,6 +173,36 @@ void pool_golden(
     }
 }
 
+template<int IN_DIM, int OUT_DIM>
+void fc_golden(
+    const float in_data[IN_DIM],
+    float out_data[OUT_DIM],
+    const float weight[IN_DIM*OUT_DIM],
+    const float bias[OUT_DIM],
+    bool use_relu
+) {
+    // Initialize with bias
+    for(int j=0; j<OUT_DIM; j++) {
+        out_data[j] = bias[j];
+    }
+    
+    // Matrix multiplication
+    for(int i=0; i<IN_DIM; i++) {
+        for(int j=0; j<OUT_DIM; j++) {
+            out_data[j] += in_data[i] * weight[i*OUT_DIM + j];
+        }
+    }
+    
+    // Apply ReLU if needed
+    if(use_relu) {
+        for(int j=0; j<OUT_DIM; j++) {
+            if(out_data[j] < 0) {
+                out_data[j] = 0;
+            }
+        }
+    }
+}
+
 // template<int OC, int IC, int KERNEL_SIZE>
 // void load_conv2d_weight(
 //         const char* filename,

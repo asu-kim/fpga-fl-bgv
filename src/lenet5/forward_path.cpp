@@ -166,7 +166,7 @@ void forward_path(
         local_fc1_bias[i] = fc1_bias[i];
     }
 
-    fc<256, 120>(local_pool2_out, local_fc1_out, local_fc1_weight, local_fc1_bias);
+    fc<256, 120>(local_pool2_out, local_fc1_out, local_fc1_weight, local_fc1_bias, true);
     for(int i = 0; i < 120; i++) {
         #pragma HLS PIPELINE II=1
         fc1_out[i] = local_fc1_out[i];
@@ -183,7 +183,7 @@ void forward_path(
         local_fc2_bias[i] = fc2_bias[i];
     }
 
-    fc<120, 84>(local_fc1_out, local_fc2_out, local_fc2_weight, local_fc2_bias);
+    fc<120, 84>(local_fc1_out, local_fc2_out, local_fc2_weight, local_fc2_bias, true);
     for(int i = 0; i < 84; i++) {
         #pragma HLS PIPELINE II=1
         fc2_out[i] = local_fc2_out[i];
@@ -200,7 +200,7 @@ void forward_path(
         local_fc3_bias[i] = fc3_bias[i];
     }
 
-    fc<84, 10>(local_fc2_out, local_fc3_out, local_fc3_weight, local_fc3_bias);
+    fc<84, 10>(local_fc2_out, local_fc3_out, local_fc3_weight, local_fc3_bias, false);
     for(int i = 0; i < 10; i++) {
         #pragma HLS PIPELINE II=1
         fc3_out[i] = local_fc3_out[i];

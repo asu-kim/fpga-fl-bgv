@@ -274,6 +274,9 @@ int main(int argc, char **argv)
     bo_pool1_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
     bo_conv2_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
     bo_pool2_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
+    bo_fc1_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
+    bo_fc2_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
+    bo_fc3_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
     float conv1_out_golden[conv1_out_size];
     conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(bo_in_data_map, conv1_out_golden, bo_conv1_weight_map, bo_conv1_bias_map);
@@ -402,7 +405,92 @@ int main(int argc, char **argv)
     global_errors += errors;
     std::cout << std::endl << std::endl;
 
+    // FC1 Test
     float fc1_out_golden[fc1_out_size];
+    fc_golden<FC1_IN_DIM, FC1_OUT_DIM>(pool2_out_golden, fc1_out_golden, bo_fc1_weight_map, bo_fc1_bias_map, true);
+    errors = 0;
+    max_diff = 0.0f;
+
+    std::cout << "Sample fc1_out (10): " << std::endl;
+    for(int i=0; i<10; i++) {
+        std::cout << bo_fc1_out_map[i] << ", ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "FC1 error indexes: ";
+    for(int i=0; i<fc1_out_size; i++) {
+        float diff = std::fabs(bo_fc1_out_map[i] - fc1_out_golden[i]);
+        max_diff = std::max(max_diff, diff);
+        
+        if (diff > 0.1f) {
+            errors++;
+            if (errors < 10) { // Limit error reporting to avoid flooding console
+                std::cout << "Error at output " << i << ": got " << bo_fc1_out_map[i] 
+                          << ", expected " << fc1_out_golden[i] 
+                          << ", diff = " << diff << std::endl;
+            }
+        }
+    }
+    global_errors += errors;
+    std::cout << std::endl << std::endl;
+
+    // FC2 Test
+    float fc2_out_golden[fc2_out_size];
+    fc_golden<FC2_IN_DIM, FC2_OUT_DIM>(fc1_out_golden, fc2_out_golden, bo_fc2_weight_map, bo_fc2_bias_map, true);
+    errors = 0;
+    max_diff = 0.0f;
+
+    std::cout << "Sample fc2_out (10): " << std::endl;
+    for(int i=0; i<10; i++) {
+        std::cout << bo_fc2_out_map[i] << ", ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "FC2 error indexes: ";
+    for(int i=0; i<fc2_out_size; i++) {
+        float diff = std::fabs(bo_fc2_out_map[i] - fc2_out_golden[i]);
+        max_diff = std::max(max_diff, diff);
+        
+        if (diff > 0.1f) {
+            errors++;
+            if (errors < 10) { // Limit error reporting to avoid flooding console
+                std::cout << "Error at output " << i << ": got " << bo_fc2_out_map[i] 
+                          << ", expected " << fc2_out_golden[i] 
+                          << ", diff = " << diff << std::endl;
+            }
+        }
+    }
+    global_errors += errors;
+    std::cout << std::endl << std::endl;
+
+    // FC3 Test
+    float fc3_out_golden[fc3_out_size];
+    fc_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out_golden, fc3_out_golden, bo_fc3_weight_map, bo_fc3_bias_map, false);
+    errors = 0;
+    max_diff = 0.0f;
+
+    std::cout << "fc3_out = [";
+    for(int i=0; i<10; i++) {
+        std::cout << bo_fc3_out_map[i] << ", ";
+    }
+    std::cout << "]" << std::endl;
+
+    std::cout << "FC3 error indexes: ";
+    for(int i=0; i<fc3_out_size; i++) {
+        float diff = std::fabs(bo_fc3_out_map[i] - fc3_out_golden[i]);
+        max_diff = std::max(max_diff, diff);
+        
+        if (diff > 0.1f) {
+            errors++;
+            if (errors < 10) { // Limit error reporting to avoid flooding console
+                std::cout << "Error at output " << i << ": got " << bo_fc3_out_map[i] 
+                          << ", expected " << fc3_out_golden[i] 
+                          << ", diff = " << diff << std::endl;
+            }
+        }
+    }
+    global_errors += errors;
+    std::cout << std::endl << std::endl;
 
     std::cout << "Total errors: " << global_errors << std::endl;
 

@@ -5,26 +5,6 @@
 #include "weights_bias_float.h"
 #include "test_utils.h"
 
-// #define CONV1_OUT_CH 6
-// #define CONV1_IN_CH 1
-// #define KERNEL_SIZE 5
-// #define CONV1_IN_ROWS 28
-// #define CONV1_IN_COLS 28
-
-// #define CONV2_OUT_CH 16
-// #define CONV2_IN_CH 6
-// #define CONV2_IN_ROWS 12
-// #define CONV2_IN_COLS 12
-
-// #define FC1_IN_DIM 256
-// #define FC1_OUT_DIM 120
-
-// #define FC2_IN_DIM 120
-// #define FC2_OUT_DIM 84
-
-// #define FC3_IN_DIM 84
-// #define FC3_OUT_DIM 10
-
 int main() {
     float in_data[784];
     float conv1_out[CONV1_OUT_CH * (CONV1_IN_ROWS - KERNEL_SIZE + 1) * (CONV1_IN_COLS - KERNEL_SIZE + 1)];
@@ -122,22 +102,14 @@ int main() {
         fc3_out
     );
 
+    // Conv1 Test
     conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(in_data, conv1_out_ref, conv1_weight, conv1_bias);
 
     int global_errors = 0;
     int errors = 0;
     float max_diff = 0.0f;
     const int conv1_output_size = (CONV1_IN_ROWS - KERNEL_SIZE + 1) * (CONV1_IN_COLS - KERNEL_SIZE + 1) * CONV1_OUT_CH;
-    // std::cout << "conv1_out_ref = [";
-    // for(int i=0; i<conv1_output_size; ++i) {
-    //     std::cout << conv1_out_ref[i] << ", ";
-    // }
-    // std::cout << "]" << std::endl << std::endl;
-    // std::cout << "conv1_out = [";
-    // for(int i=0; i<conv1_output_size; ++i) {
-    //     std::cout << conv1_out[i] << ", ";
-    // }
-    // std::cout << "]" << std::endl << std::endl;
+
     std::cout << "conv1_out = [" << std::endl;
     for(int i=0; i<6; i++) {
         for(int j = 0; j < 6; j++) {
@@ -163,21 +135,11 @@ int main() {
     global_errors += errors;
     std::cout << std::endl;
 
+    // Pool1 Test
     pool_golden<2, 2, CONV1_OUT_CH, CONV1_OUT_ROWS, CONV1_OUT_COLS>(conv1_out_ref, pool1_out_ref);
     errors = 0;
     max_diff = 0.0f;
     const int pool1_output_size = CONV2_IN_CH * CONV2_IN_ROWS * CONV2_IN_COLS;
-
-    // std::cout << "pool1_out_ref = [";
-    // for(int i=0; i<pool1_output_size; ++i) {
-    //     std::cout << pool1_out_ref[i] << ", ";
-    // }
-    // std::cout << "]" << std::endl << std::endl;
-    // std::cout << "pool1_out = [";
-    // for(int i=0; i<pool1_output_size; ++i) {
-    //     std::cout << pool1_out[i] << ", ";
-    // }
-    // std::cout << "]" << std::endl << std::endl;
 
     std::cout << "pool1_out = [" << std::endl;
     for(int i=0; i<3; i++) {
@@ -186,6 +148,7 @@ int main() {
         }
         std::cout << std::endl;
     }
+    std::cout << "]" << std::endl << std::endl;
 
     std::cout << "Pool1 error indexes: ";
     for(int i=0; i<pool1_output_size; i++) {
@@ -204,5 +167,158 @@ int main() {
     global_errors += errors;
     std::cout << std::endl;
 
+    // Conv2 Test
+    conv_golden<CONV2_OUT_CH, CONV2_IN_CH, KERNEL_SIZE, CONV2_IN_ROWS, CONV2_IN_COLS>(pool1_out_ref, conv2_out_ref, conv2_weight, conv2_bias);
+    errors = 0;
+    max_diff = 0.0f;
+    const int conv2_output_size = (CONV2_IN_ROWS - KERNEL_SIZE + 1) * (CONV2_IN_COLS - KERNEL_SIZE + 1) * CONV2_OUT_CH;
+
+    std::cout << "conv2_out = [" << std::endl;
+    for(int i=0; i<6; i++) {
+        for(int j = 0; j < 6; j++) {
+            std::cout << conv2_out[i * (CONV2_IN_COLS - KERNEL_SIZE + 1) + j] << ", ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << "]" << std::endl << std::endl;
+
+    std::cout << "Conv2 error indexes: ";
+    for(int i=0; i<conv2_output_size; i++) {
+        float diff = std::fabs(conv2_out[i] - conv2_out_ref[i]);
+        max_diff = std::max(max_diff, diff);
+        
+        if (diff > 0.1f) {
+            errors++;
+            if (errors < 10) { // Limit error reporting to avoid flooding console
+                std::cout << "Error at output " << i << ": got " << conv2_out[i] 
+                          << ", expected " << conv2_out_ref[i] 
+                          << ", diff = " << diff << std::endl;
+            }
+        }
+    }
+    global_errors += errors;
+    std::cout << std::endl;
+
+    // Pool2 Test
+    pool_golden<2, 2, CONV2_OUT_CH, CONV2_OUT_ROWS, CONV2_OUT_COLS>(conv2_out_ref, pool2_out_ref);
+    errors = 0;
+    max_diff = 0.0f;
+    const int pool2_output_size = FC1_IN_DIM;
+
+    std::cout << "pool2_out = [" << std::endl;
+    for(int i=0; i<4; i++) {
+        for(int j = 0; j < 4; j++) {
+            std::cout << pool2_out[i * (CONV2_OUT_COLS/2) + j] << ", ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << "]" << std::endl << std::endl;
+
+    std::cout << "Pool2 error indexes: ";
+    for(int i=0; i<pool2_output_size; i++) {
+        float diff = std::fabs(pool2_out[i] - pool2_out_ref[i]);
+        max_diff = std::max(max_diff, diff);
+        
+        if (diff > 0.1f) {
+            errors++;
+            if (errors < 10) { // Limit error reporting to avoid flooding console
+                std::cout << "Error at output " << i << ": got " << pool2_out[i] 
+                          << ", expected " << pool2_out_ref[i] 
+                          << ", diff = " << diff << std::endl;
+            }
+        }
+    }
+    global_errors += errors;
+    std::cout << std::endl;
+
+    // FC1 Test
+    fc_golden<FC1_IN_DIM, FC1_OUT_DIM>(pool2_out_ref, fc1_out_ref, fc1_weight, fc1_bias, true);
+    errors = 0;
+    max_diff = 0.0f;
+    const int fc1_output_size = FC1_OUT_DIM;
+
+    std::cout << "fc1_out = [";
+    for(int i=0; i<10; i++) {
+        std::cout << fc1_out[i] << ", ";
+    }
+    std::cout << "]" << std::endl << std::endl;
+
+    std::cout << "FC1 error indexes: ";
+    for(int i=0; i<fc1_output_size; i++) {
+        float diff = std::fabs(fc1_out[i] - fc1_out_ref[i]);
+        max_diff = std::max(max_diff, diff);
+        
+        if (diff > 0.1f) {
+            errors++;
+            if (errors < 10) { // Limit error reporting to avoid flooding console
+                std::cout << "Error at output " << i << ": got " << fc1_out[i] 
+                          << ", expected " << fc1_out_ref[i] 
+                          << ", diff = " << diff << std::endl;
+            }
+        }
+    }
+    global_errors += errors;
+    std::cout << std::endl;
+
+    // FC2 Test
+    fc_golden<FC2_IN_DIM, FC2_OUT_DIM>(fc1_out_ref, fc2_out_ref, fc2_weight, fc2_bias, true);
+    errors = 0;
+    max_diff = 0.0f;
+    const int fc2_output_size = FC2_OUT_DIM;
+
+    std::cout << "fc2_out = [";
+    for(int i=0; i<10; i++) {
+        std::cout << fc2_out[i] << ", ";
+    }
+    std::cout << "]" << std::endl << std::endl;
+
+    std::cout << "FC2 error indexes: ";
+    for(int i=0; i<fc2_output_size; i++) {
+        float diff = std::fabs(fc2_out[i] - fc2_out_ref[i]);
+        max_diff = std::max(max_diff, diff);
+        
+        if (diff > 0.1f) {
+            errors++;
+            if (errors < 10) { // Limit error reporting to avoid flooding console
+                std::cout << "Error at output " << i << ": got " << fc2_out[i] 
+                          << ", expected " << fc2_out_ref[i] 
+                          << ", diff = " << diff << std::endl;
+            }
+        }
+    }
+    global_errors += errors;
+    std::cout << std::endl;
+
+    // FC3 Test
+    fc_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out_ref, fc3_out_ref, fc3_weight, fc3_bias, false);
+    errors = 0;
+    max_diff = 0.0f;
+    const int fc3_output_size = FC3_OUT_DIM;
+
+    std::cout << "fc3_out = [";
+    for(int i=0; i<10; i++) {
+        std::cout << fc3_out[i] << ", ";
+    }
+    std::cout << "]" << std::endl << std::endl;
+
+    std::cout << "FC3 error indexes: ";
+    for(int i=0; i<fc3_output_size; i++) {
+        float diff = std::fabs(fc3_out[i] - fc3_out_ref[i]);
+        max_diff = std::max(max_diff, diff);
+        
+        if (diff > 0.1f) {
+            errors++;
+            if (errors < 10) { // Limit error reporting to avoid flooding console
+                std::cout << "Error at output " << i << ": got " << fc3_out[i] 
+                          << ", expected " << fc3_out_ref[i] 
+                          << ", diff = " << diff << std::endl;
+            }
+        }
+    }
+    global_errors += errors;
+    std::cout << std::endl;
+
+    std::cout << "Total errors: " << global_errors << std::endl;
+    std::cout << "Test completed\n";
     return global_errors;
 }
