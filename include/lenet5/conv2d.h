@@ -58,7 +58,7 @@ void conv2d(
                         // Pre-compute kernel row indices
                         int kr_indices[KERNEL_SIZE];
                         for (int kr = 0; kr < KERNEL_SIZE; kr++) {
-                            kr_indices[kr] = (current_buf_row + KERNEL_SIZE - kr) % KERNEL_SIZE;
+                            kr_indices[kr] = (current_buf_row + 1 + kr) % KERNEL_SIZE;
                         }
                         
                         // Compute partial convolution for current input channel
