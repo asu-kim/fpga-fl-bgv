@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include "hls_math.h"
-#include "polynomial_multiplication.hpp"
+#include "BGV/polynomial_multiplication.hpp"
 
 // Helper function to print array
 void print_array(const char* name, data_t* arr, int size) {

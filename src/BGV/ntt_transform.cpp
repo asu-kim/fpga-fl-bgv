@@ -1,8 +1,7 @@
 #include "hls_math.h"
-#include "hls_stream.h"
-#include "ntt_transform.hpp"
+#include "BGV/ntt_transform.hpp"
 #include "constants.hpp"
-#include "modulo_reduction.hpp"
+#include "BGV/modulo_reduction.hpp"
 #include <stdio.h>
 
 // Forward NTT for polynomial multiplication

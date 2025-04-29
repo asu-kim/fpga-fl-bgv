@@ -1,9 +1,8 @@
 #include "constants.hpp"
 #include "hls_math.h"
-#include "hls_stream.h"
-#include "modulo_reduction.hpp"
-#include "ntt_transform.hpp"
-#include "polynomial_multiplication.hpp"
+#include "BGV/modulo_reduction.hpp"
+#include "BGV/ntt_transform.hpp"
+#include "BGV/polynomial_multiplication.hpp"
 
 void polynomial_multiplication(data_t* in1, data_t* in2, data_t* out) {
     #pragma HLS INTERFACE m_axi port=in1 bundle=gmem2 depth=POLYNOMIAL_DEGREE

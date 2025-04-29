@@ -7,8 +7,7 @@
 #include <ctime>
 // #include "hls_stream.h"
 #include "hls_math.h"
-#include "encryption.hpp"
-#include "polynomial_multiplication.hpp"
+#include "BGV/encryption.hpp"
 #include "keys.h"
 #include "weights_bias.h"
 #include "encrypted_weights_bias.h"
@@ -250,8 +249,6 @@ int main() {
         decryption_reference(private_key, ciphertext1_ref, ciphertext2_ref, decrypted_ref);
 
         data_t mult_test[n];
-        polynomial_multiplication(ciphertext2_hls, private_key, mult_test);
-        print_array("mult_test", mult_test, POLYNOMIAL_DEGREE);
     
         print_array("decrypted_hls", decrypted_hls, POLYNOMIAL_DEGREE);
         print_array("decrypted_ref", decrypted_ref, POLYNOMIAL_DEGREE);

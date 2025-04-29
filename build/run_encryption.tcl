@@ -18,10 +18,10 @@
 open_project -reset FPGA_FL_CLIENT
 
 # Add design files
-add_files ../src/modulo_reduction.cpp -cflags "-I../include"
-add_files ../src/ntt_transform.cpp -cflags "-I../include" 
-add_files ../src/polynomial_multiplication.cpp -cflags "-I../include"
-add_files ../src/encryption.cpp -cflags "-I../include"
+add_files ../src/BGV/modulo_reduction.cpp -cflags "-I../include"
+add_files ../src/BGV/ntt_transform.cpp -cflags "-I../include" 
+add_files ../src/BGV/polynomial_multiplication.cpp -cflags "-I../include"
+add_files ../src/BGV/encryption.cpp -cflags "-I../include"
 # Add test bench & files
 add_files -tb ../test/test_encryption.cpp -cflags "-I../include -I../data"
 

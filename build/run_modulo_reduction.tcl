@@ -18,7 +18,7 @@
 open_project -reset FPGA_FL_CLIENT
 
 # Add design files
-add_files ../src/modulo_reduction.cpp -cflags "-I../include"
+add_files ../src/BGV/modulo_reduction.cpp -cflags "-I../include"
 # Add test bench & files
 add_files -tb ../test/test_modulo_reduction.cpp -cflags "-I../include"
 

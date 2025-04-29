@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include "hls_math.h"
-#include "modulo_reduction.hpp"
+#include "BGV/modulo_reduction.hpp"
 #include "constants.hpp"
 
 // Test function

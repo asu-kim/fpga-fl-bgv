@@ -1,8 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include "hls_math.h"
-#include "ap_int.h"
-#include "ntt_transform.hpp"
+#include "BGV/ntt_transform.hpp"
 #include "constants.hpp"
 
 // Reference implementation for verification
