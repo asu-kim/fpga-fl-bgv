@@ -1,0 +1,317 @@
+{
+  "0": {
+    "basicblocks": 4,
+    "calls": "11 14 15 7 8 2 5 17 20 4 10 13 6 1 18 9 3 12",
+    "file": "train.cpp",
+    "fileloc": 43,
+    "instructions": 2875,
+    "loads": {
+      "L": 429
+    },
+    "name": "train_lenet5_top",
+    "stores": {
+      "L": 1
+    },
+    "total_instructions": 621247
+  },
+  "1": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 9,
+    "instructions": 1321,
+    "loads": {
+      "L": 15
+    },
+    "name": "bias_update<120>",
+    "stores": {
+      "L": 120
+    },
+    "total_instructions": 1321
+  },
+  "10": {
+    "basicblocks": 160,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 48,
+    "instructions": 2137,
+    "loads": {
+      "L": 300
+    },
+    "name": "conv2d_update<16, 6, 5>",
+    "stores": {
+      "L": 300
+    },
+    "total_instructions": 2137
+  },
+  "11": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "mse_loss.h",
+    "fileloc": 12,
+    "instructions": 132,
+    "loads": {
+      "L": 2
+    },
+    "name": "mse_loss<10>",
+    "stores": {
+      "L": 11
+    },
+    "total_instructions": 132
+  },
+  "12": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 9,
+    "instructions": 96,
+    "loads": {
+      "L": 1
+    },
+    "name": "bias_update<10>",
+    "stores": {
+      "L": 10
+    },
+    "total_instructions": 96
+  },
+  "13": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 9,
+    "instructions": 164,
+    "loads": {
+      "L": 17
+    },
+    "name": "bias_update<16>",
+    "stores": {
+      "L": 16
+    },
+    "total_instructions": 164
+  },
+  "14": {
+    "basicblocks": 141,
+    "calls": "",
+    "file": "fc_bwd.h",
+    "fileloc": 8,
+    "instructions": 553,
+    "loads": {
+      "L": 12
+    },
+    "name": "fc_backward<84, 10>",
+    "stores": {
+      "L": 114
+    },
+    "total_instructions": 553
+  },
+  "15": {
+    "basicblocks": 401,
+    "calls": "",
+    "file": "fc_bwd.h",
+    "fileloc": 8,
+    "instructions": 2090,
+    "loads": {
+      "L": 87
+    },
+    "name": "fc_backward<120, 84>",
+    "stores": {
+      "L": 372
+    },
+    "total_instructions": 2090
+  },
+  "16": {
+    "basicblocks": 88,
+    "calls": "",
+    "file": "conv2d_bwd.h",
+    "fileloc": 78,
+    "instructions": 2676,
+    "loads": {
+      "L": 781
+    },
+    "name": "input_grad<6, 1, 5, 24, 24>",
+    "stores": {
+      "L": 650
+    },
+    "total_instructions": 2676
+  },
+  "17": {
+    "basicblocks": 163,
+    "calls": "16",
+    "file": "conv2d_bwd.h",
+    "fileloc": 115,
+    "instructions": 2692,
+    "loads": {
+      "L": 695
+    },
+    "name": "conv2d_backward<6, 1, 5, 24, 24>",
+    "stores": {
+      "L": 100
+    },
+    "total_instructions": 5368
+  },
+  "18": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 27,
+    "instructions": 141125,
+    "loads": {
+      "L": 20160
+    },
+    "name": "general_update<120, 84>",
+    "stores": {
+      "L": 20160
+    },
+    "total_instructions": 141125
+  },
+  "19": {
+    "basicblocks": 537,
+    "calls": "",
+    "file": "conv2d_bwd.h",
+    "fileloc": 78,
+    "instructions": 10679,
+    "loads": {
+      "L": 2800
+    },
+    "name": "input_grad<16, 6, 5, 8, 8>",
+    "stores": {
+      "L": 2784
+    },
+    "total_instructions": 10679
+  },
+  "2": {
+    "basicblocks": 859,
+    "calls": "19",
+    "file": "conv2d_bwd.h",
+    "fileloc": 115,
+    "instructions": 7221,
+    "loads": {
+      "L": 968
+    },
+    "name": "conv2d_backward<16, 6, 5, 8, 8>",
+    "stores": {
+      "L": 749
+    },
+    "total_instructions": 17900
+  },
+  "20": {
+    "basicblocks": 35,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 48,
+    "instructions": 394,
+    "loads": {
+      "L": 51
+    },
+    "name": "conv2d_update<6, 1, 5>",
+    "stores": {
+      "L": 50
+    },
+    "total_instructions": 394
+  },
+  "3": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 27,
+    "instructions": 12601,
+    "loads": {
+      "L": 1785
+    },
+    "name": "general_update<84, 10>",
+    "stores": {
+      "L": 1680
+    },
+    "total_instructions": 12601
+  },
+  "4": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 9,
+    "instructions": 66,
+    "loads": {
+      "L": 7
+    },
+    "name": "bias_update<6>",
+    "stores": {
+      "L": 6
+    },
+    "total_instructions": 66
+  },
+  "5": {
+    "basicblocks": 64,
+    "calls": "",
+    "file": "avg_pool_bwd.h",
+    "fileloc": 8,
+    "instructions": 322,
+    "loads": {
+      "L": 19
+    },
+    "name": "avg_pool_backward<2, 2, 24, 24, 6>",
+    "stores": {
+      "L": 19
+    },
+    "total_instructions": 322
+  },
+  "6": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 27,
+    "instructions": 430085,
+    "loads": {
+      "L": 61440
+    },
+    "name": "general_update<256, 120>",
+    "stores": {
+      "L": 61440
+    },
+    "total_instructions": 430085
+  },
+  "7": {
+    "basicblocks": 388,
+    "calls": "",
+    "file": "fc_bwd.h",
+    "fileloc": 8,
+    "instructions": 2397,
+    "loads": {
+      "L": 121
+    },
+    "name": "fc_backward<256, 120>",
+    "stores": {
+      "L": 361
+    },
+    "total_instructions": 2397
+  },
+  "8": {
+    "basicblocks": 94,
+    "calls": "",
+    "file": "avg_pool_bwd.h",
+    "fileloc": 8,
+    "instructions": 612,
+    "loads": {
+      "L": 49
+    },
+    "name": "avg_pool_backward<2, 2, 8, 8, 16>",
+    "stores": {
+      "L": 49
+    },
+    "total_instructions": 612
+  },
+  "9": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "update.h",
+    "fileloc": 9,
+    "instructions": 1009,
+    "loads": {
+      "L": 21
+    },
+    "name": "bias_update<84>",
+    "stores": {
+      "L": 84
+    },
+    "total_instructions": 1009
+  }
+}

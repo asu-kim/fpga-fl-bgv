@@ -1,0 +1,76 @@
+================================================================
+== Design Size Report
+================================================================
+
+* Total Instructions per Compilation Phase
++---------------+-----------------------------+--------------+----------------------------------------------------------------------------------------+
+| Phase         | Step                        | Instructions | Description                                                                            |
++---------------+-----------------------------+--------------+----------------------------------------------------------------------------------------+
+| Compile/Link  |                             |     2,572    | After all functions are compiled and linked into a single design                       |
+|               |                             |              |                                                                                        |
+| Unroll/Inline |                             |              | After user unroll and inline pragmas are applied                                       |
+|               | (1) unroll                  |   594,838 *  | user unroll pragmas are applied                                                        |
+|               | (2) simplification          |   550,997 *  | simplification of applied user unroll pragmas                                          |
+|               | (3) inline                  |   551,002 *  | user inline pragmas are applied                                                        |
+|               | (4) simplification          |   551,002 *  | simplification of applied user inline pragmas                                          |
+|               |                             |              |                                                                                        |
+| Array/Struct  |                             |              | After user array partition and struct aggregate/disaggregate pragmas are applied       |
+|               | (1) array partition         | 5,084,118 *  | user array partition pragmas are applied                                               |
+|               | (2) simplification          |   561,718 *  | simplification of applied user array partition & struct aggregate/disaggregate pragmas |
+|               | (3) aggregate/disaggregate  |   561,718 *  | user struct aggregate/disaggregate pragmas are applied                                 |
+|               | (4) array reshape           |   561,718 *  | apply array reshape pragmas                                                            |
+|               | (5) access patterns         |   604,370 *  | array access pattern optmizations                                                      |
+|               |                             |              |                                                                                        |
+| Performance   |                             |              | After transformations are applied to meet performance pragma targets                   |
+|               | (1) loop simplification     |   604,143 *  | loop and instruction simplification                                                    |
+|               | (2) parallelization         |   603,789 *  | loops are unrolled or pipelined to meet performance targets                            |
+|               | (3) array partition         |   713,106 *  | arrays are partitioned to meet performance targets                                     |
+|               | (4) simplification          |   621,134 *  | simplification of design after performance transformations                             |
+|               |                             |              |                                                                                        |
+| HW Transforms |                             |              | After hardware transfomations                                                          |
+|               | (1) lowering                |   622,321 *  | initial conversion to HW specific instructions                                         |
+|               | (2) optimizations           |   621,247 *  | high level synthesis optimizations                                                     |
++---------------+-----------------------------+--------------+----------------------------------------------------------------------------------------+
+    * - Exceeded design size warning message threshold
+
+* Instructions per Function for each Compilation Phase
++-------------------------------------+------------------+--------------+---------------+--------------+-------------+---------------+
+| Function                            | Location         | Compile/Link | Unroll/Inline | Array/Struct | Performance | HW Transforms |
++-------------------------------------+------------------+--------------+---------------+--------------+-------------+---------------+
+| + train_lenet5_top                  | train.cpp:43     | 2,572        | 551,002 *     | 604,370 *    | 621,134 *   | 621,247 *     |
+|    mse_loss<10>                     | mse_loss.h:12    |   27         |    110        |    137       |    127      |    132        |
+|    fc_backward<84, 10>              | fc_bwd.h:8       |  126         |    111        |    536       |    518      |    553        |
+|    fc_backward<120, 84>             | fc_bwd.h:8       |  126         |    560        |  2,212       |  2,048      |  2,090        |
+|    fc_backward<256, 120>            | fc_bwd.h:8       |  126         |    776        |  2,607       |  2,371      |  2,397        |
+|    flatten_backward<4, 4, 16>       | flatten_bwd.h:9  |   16         |               |              |             |               |
+|    avg_pool_backward<2, 2, 8, 8...  | avg_pool_bwd.h:8 |  195         |    107        |    613       |    613      |    612        |
+|  + conv2d_backward<16, 6, 5, 8,...  | conv2d_bwd.h:115 |  511         |  2,636        |  8,102       | 19,058      | 17,900        |
+|     bias_grad<16, 4, 4>             | conv2d_bwd.h:20  |   52         |               |              |             |               |
+|     weight_grad<16, 6, 5, 8, 8>     | conv2d_bwd.h:39  |  128         |               |              |             |               |
+|     input_grad<16, 6, 5, 8, 8>      | conv2d_bwd.h:78  |  121         |  1,091        |  5,772       | 10,662      | 10,679        |
+|    avg_pool_backward<2, 2, 24, ...  | avg_pool_bwd.h:8 |  195         |    107        |    293       |    293      |    322        |
+|  + conv2d_backward<6, 1, 5, 24,...  | conv2d_bwd.h:115 |  511         |    605        |  1,101       |  5,387      |  5,368        |
+|     bias_grad<6, 20, 20>            | conv2d_bwd.h:20  |   52         |               |              |             |               |
+|     weight_grad<6, 1, 5, 24, 24>... | conv2d_bwd.h:39  |  128         |               |              |             |               |
+|     input_grad<6, 1, 5, 24, 24>     | conv2d_bwd.h:78  |  121         |    211        |    497       |  2,657      |  2,676        |
+|    conv2d_update<6, 1, 5>           | update.h:48      |   76         |    290        |    301       |    380      |    394        |
+|    bias_update<6>                   | update.h:9       |   37         |     64        |     79       |     63      |     66        |
+|    conv2d_update<16, 6, 5>          | update.h:48      |   76         |  1,665        |  1,676       |  2,130      |  2,137        |
+|    bias_update<16>                  | update.h:9       |   37         |    174        |    195       |    162      |    164        |
+|    general_update<256, 120>         | update.h:27      |   50         | 399,359       | 430,085      | 430,084     | 430,085       |
+|    bias_update<120>                 | update.h:9       |   37         |  1,318        |  1,325       |  1,204      |  1,321        |
+|    general_update<120, 84>          | update.h:27      |   50         | 131,039       | 141,125      | 141,124     | 141,125       |
+|    bias_update<84>                  | update.h:9       |   37         |    922        |    929       |    844      |  1,009        |
+|    general_update<84, 10>           | update.h:27      |   50         | 10,919        | 11,765       | 11,764      | 12,601        |
+|    bias_update<10>                  | update.h:9       |   37         |    108        |    119       |     93      |     96        |
++-------------------------------------+------------------+--------------+---------------+--------------+-------------+---------------+
+    * - Exceeded design size warning message threshold
+
+* Design Size Message Settings
++---------------------------------------------+--------+------------------------------------------------------------------+
+| Message Setting                             | Value  | Description                                                      |
++---------------------------------------------+--------+------------------------------------------------------------------+
+| config_compile -design_size_maximum_warning | 100000 | Show a warning when total design instructions exceeds this value |
++---------------------------------------------+--------+------------------------------------------------------------------+
+
+

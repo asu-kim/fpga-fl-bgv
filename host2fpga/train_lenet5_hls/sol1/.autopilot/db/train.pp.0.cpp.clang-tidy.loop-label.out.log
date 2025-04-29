@@ -1,0 +1,1268 @@
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:1446:7: warning: Added loop label VITIS_LOOP_1223_1:   [xilinx-label-all-loops]
+      for (i = 0; i < __N - 1; ++i) {
+      ^~~
+      VITIS_LOOP_1223_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:1446:7: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:2420:5: warning: Added loop label VITIS_LOOP_676_1:   [xilinx-label-all-loops]
+    for (unsigned i = low; i != high; ++i) {
+    ^~~
+    VITIS_LOOP_676_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:2420:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:2434:5: warning: Added loop label VITIS_LOOP_690_1:   [xilinx-label-all-loops]
+    for (unsigned i = low; i != high; ++i) {
+    ^~~
+    VITIS_LOOP_690_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:2434:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:2448:5: warning: Added loop label VITIS_LOOP_704_1:   [xilinx-label-all-loops]
+    for (unsigned i = low; i != high; ++i) {
+    ^~~
+    VITIS_LOOP_704_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:2448:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:4077:7: warning: Added loop label VITIS_LOOP_1247_1:   [xilinx-label-all-loops]
+      for (i = 0; i < __N - 1; ++i) {
+      ^~~
+      VITIS_LOOP_1247_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:4077:7: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6115:5: warning: Added loop label VITIS_LOOP_14_1:   [xilinx-label-all-loops]
+    for(int oc=0; oc<OUT_C; ++oc) {
+    ^~~
+    VITIS_LOOP_14_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6115:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6116:9: warning: Added loop label VITIS_LOOP_15_2:   [xilinx-label-all-loops]
+        for(int ic=0; ic<IN_C; ++ic) {
+        ^~~
+        VITIS_LOOP_15_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6116:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6117:13: warning: Added loop label VITIS_LOOP_16_3:   [xilinx-label-all-loops]
+            for(int r=0; r<KH; ++r) {
+            ^~~
+            VITIS_LOOP_16_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6117:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6118:17: warning: Added loop label VITIS_LOOP_17_4:   [xilinx-label-all-loops]
+                for(int c=0; c<KW; ++c) {
+                ^~~
+                VITIS_LOOP_17_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6118:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6126:5: warning: Added loop label VITIS_LOOP_25_5:   [xilinx-label-all-loops]
+    for(int i=0; i<OUT_C; ++i) {
+    ^~~
+    VITIS_LOOP_25_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6126:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6140:5: warning: Added loop label VITIS_LOOP_39_1:   [xilinx-label-all-loops]
+    for(int oc=0; oc<OUT_DIM; ++oc) {
+    ^~~
+    VITIS_LOOP_39_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6140:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6141:9: warning: Added loop label VITIS_LOOP_40_2:   [xilinx-label-all-loops]
+        for(int ic=0; ic<IN_DIM; ++ic) {
+        ^~~
+        VITIS_LOOP_40_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6141:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6146:5: warning: Added loop label VITIS_LOOP_45_3:   [xilinx-label-all-loops]
+    for(int i=0; i<OUT_DIM; ++i) {
+    ^~~
+    VITIS_LOOP_45_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6146:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6166:2: warning: Added loop label VITIS_LOOP_13_1:   [xilinx-label-all-loops]
+ for(int i=0; i<N; ++i) {
+ ^~~
+ VITIS_LOOP_13_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6166:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6195:2: warning: Added loop label VITIS_LOOP_42_1:   [xilinx-label-all-loops]
+ while(!in_stream.empty()) {
+ ^~~~~
+ VITIS_LOOP_42_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:6195:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15937:72: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_cos_K0 type=ROM_1P impl=LUTRAM
+                                                                       ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15938:72: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_cos_K1 type=ROM_1P impl=LUTRAM
+                                                                       ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15939:72: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_cos_K2 type=ROM_1P impl=LUTRAM
+                                                                       ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15940:72: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_cos_K3 type=ROM_1P impl=LUTRAM
+                                                                       ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15941:72: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_cos_K4 type=ROM_1P impl=LUTRAM
+                                                                       ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15971:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::cos_K0 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15972:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::cos_K1 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15973:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::cos_K2 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15974:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::cos_K3 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15975:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::cos_K4 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15976:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_K0 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15977:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_K1 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15978:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_K2 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15979:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_K3 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:15980:68: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=fourth_order_double::sin_K4 type=ROM_1P impl=LUTRAM
+                                                                   ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16030:71: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=second_order_float::sin_cos_K0 type=ROM_1P impl=LUTRAM
+                                                                      ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16031:71: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=second_order_float::sin_cos_K1 type=ROM_1P impl=LUTRAM
+                                                                      ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16032:71: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=second_order_float::sin_cos_K2 type=ROM_1P impl=LUTRAM
+                                                                      ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16059:67: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=second_order_float::cos_K0 type=ROM_1P impl=LUTRAM
+                                                                  ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16060:67: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=second_order_float::cos_K1 type=ROM_1P impl=LUTRAM
+                                                                  ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16061:67: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=second_order_float::cos_K2 type=ROM_1P impl=LUTRAM
+                                                                  ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16062:67: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=second_order_float::sin_K0 type=ROM_1P impl=LUTRAM
+                                                                  ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16063:67: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=second_order_float::sin_K1 type=ROM_1P impl=LUTRAM
+                                                                  ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16064:67: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=second_order_float::sin_K2 type=ROM_1P impl=LUTRAM
+                                                                  ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16100:73: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=first_order_fixed_16::sin_cos_K0 type=ROM_1P impl=LUTRAM
+                                                                        ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16101:73: error: Invalid Directive: for current device, ROM_1P + LUTRAM is invalid combination for BIND_STORAGE's option 'type + impl' [clang-diagnostic-error]
+#pragma HLS BIND_STORAGE variable=first_order_fixed_16::sin_cos_K1 type=ROM_1P impl=LUTRAM
+                                                                        ^
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16375:5: warning: Added loop label VITIS_LOOP_61_1:   [xilinx-label-all-loops]
+    for (int n=0; n<Nmax; n++){
+    ^~~
+    VITIS_LOOP_61_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16375:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16421:5: warning: Added loop label VITIS_LOOP_117_1:   [xilinx-label-all-loops]
+    for (int n=0; n<Nmax; n++){
+    ^~~
+    VITIS_LOOP_117_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16421:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16584:9: warning: Added loop label VITIS_LOOP_289_1:   [xilinx-label-all-loops]
+        for(int i=0;i<W-1;i++){
+        ^~~
+        VITIS_LOOP_289_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16584:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16736:9: warning: Added loop label VITIS_LOOP_449_1:   [xilinx-label-all-loops]
+        for(int i=0;i<W-1;i++){
+        ^~~
+        VITIS_LOOP_449_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16736:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16916:5: warning: Added loop label VITIS_LOOP_629_1:   [xilinx-label-all-loops]
+    for(int i=0;i<W+1;i++){
+    ^~~
+    VITIS_LOOP_629_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16916:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16920:5: warning: Added loop label VITIS_LOOP_633_2:   [xilinx-label-all-loops]
+    for(int i=0;i<W+1;i++){
+    ^~~
+    VITIS_LOOP_633_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:16920:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17030:5: warning: Added loop label VITIS_LOOP_743_1:   [xilinx-label-all-loops]
+    for (int n=0; n<Nmax; n++){
+    ^~~
+    VITIS_LOOP_743_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17030:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17120:7: warning: Added loop label VITIS_LOOP_840_1:   [xilinx-label-all-loops]
+      for(int i=0;i<W-1;i++){
+      ^~~
+      VITIS_LOOP_840_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17120:7: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17139:7: warning: Added loop label VITIS_LOOP_859_2:   [xilinx-label-all-loops]
+      for(int i=0;i<W-1;i++){
+      ^~~
+      VITIS_LOOP_859_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17139:7: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17429:5: warning: Added loop label VITIS_LOOP_1173_1:   [xilinx-label-all-loops]
+    for(int i=0; i<Nmax; i++) {
+    ^~~
+    VITIS_LOOP_1173_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17429:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17512:5: warning: Added loop label VITIS_LOOP_1256_1:   [xilinx-label-all-loops]
+    for(int i=0; i<Nmax; i++) {
+    ^~~
+    VITIS_LOOP_1256_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17512:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17918:13: warning: Added loop label VITIS_LOOP_68_1:   [xilinx-label-all-loops]
+            for (int j = 3; j >= I_+1; j--) {
+            ^~~
+            VITIS_LOOP_68_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17918:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17924:17: warning: Added loop label VITIS_LOOP_74_2:   [xilinx-label-all-loops]
+                for (int j = 3; j >= I_+1; j--){
+                ^~~
+                VITIS_LOOP_74_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17924:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17928:17: warning: Added loop label VITIS_LOOP_78_3:   [xilinx-label-all-loops]
+                for (int j = I_; j >= 0; j--){
+                ^~~
+                VITIS_LOOP_78_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17928:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17976:13: warning: Added loop label VITIS_LOOP_145_4:   [xilinx-label-all-loops]
+            for (int j = 9; j >= I_+4; j--) {
+            ^~~
+            VITIS_LOOP_145_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17976:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17982:17: warning: Added loop label VITIS_LOOP_151_5:   [xilinx-label-all-loops]
+                for (int j = 9; j >= I_+4; j--){
+                ^~~
+                VITIS_LOOP_151_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17982:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17986:17: warning: Added loop label VITIS_LOOP_155_6:   [xilinx-label-all-loops]
+                for (int j = I_+3; j >= 0; j--){
+                ^~~
+                VITIS_LOOP_155_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:17986:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18001:9: warning: Added loop label VITIS_LOOP_170_7:   [xilinx-label-all-loops]
+        for (int j = 14; j < 22; j++){
+        ^~~
+        VITIS_LOOP_170_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18001:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18009:17: warning: Added loop label VITIS_LOOP_178_8:   [xilinx-label-all-loops]
+                for (int j = 0; j < 22; j++){
+                ^~~
+                VITIS_LOOP_178_8: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18009:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18074:13: warning: Added loop label VITIS_LOOP_243_9:   [xilinx-label-all-loops]
+            for (int j = 21; j >= I_+10; j--) {
+            ^~~
+            VITIS_LOOP_243_9: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18074:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18080:17: warning: Added loop label VITIS_LOOP_249_10:   [xilinx-label-all-loops]
+                for (int j = 21; j >= I_+10; j--) {
+                ^~~
+                VITIS_LOOP_249_10: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18080:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18084:17: warning: Added loop label VITIS_LOOP_253_11:   [xilinx-label-all-loops]
+                for (int j = I_+9; j >= 0; j--) {
+                ^~~
+                VITIS_LOOP_253_11: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18084:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18099:9: warning: Added loop label VITIS_LOOP_268_12:   [xilinx-label-all-loops]
+        for (int j = 27; j < 46; j++){
+        ^~~
+        VITIS_LOOP_268_12: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18099:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18107:17: warning: Added loop label VITIS_LOOP_276_13:   [xilinx-label-all-loops]
+                for (int j = 0; j < 46; j++) {
+                ^~~
+                VITIS_LOOP_276_13: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18107:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18336:13: warning: Added loop label VITIS_LOOP_505_14:   [xilinx-label-all-loops]
+            for (int j = 45; j >= I_+22; j--) {
+            ^~~
+            VITIS_LOOP_505_14: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18336:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18342:17: warning: Added loop label VITIS_LOOP_511_15:   [xilinx-label-all-loops]
+                for (int j = 45; j >= I_+22; j--){
+                ^~~
+                VITIS_LOOP_511_15: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18342:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18346:17: warning: Added loop label VITIS_LOOP_515_16:   [xilinx-label-all-loops]
+                for (int j = I_+21; j >= 0; j--) {
+                ^~~
+                VITIS_LOOP_515_16: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18346:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18356:9: warning: Added loop label VITIS_LOOP_525_17:   [xilinx-label-all-loops]
+        for (int j = 32-F_; j < 32+I_; j++){
+        ^~~
+        VITIS_LOOP_525_17: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18356:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18360:9: warning: Added loop label VITIS_LOOP_529_18:   [xilinx-label-all-loops]
+        for (int j = 32+I_; j <= 64; j++){
+        ^~~
+        VITIS_LOOP_529_18: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18360:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18370:9: warning: Added loop label VITIS_LOOP_539_19:   [xilinx-label-all-loops]
+        for (int j = 37; j < 64; j++) {
+        ^~~
+        VITIS_LOOP_539_19: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18370:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18378:17: warning: Added loop label VITIS_LOOP_547_20:   [xilinx-label-all-loops]
+                for (int j = 0; j < 64; j++){
+                ^~~
+                VITIS_LOOP_547_20: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18378:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18739:13: warning: Added loop label VITIS_LOOP_908_21:   [xilinx-label-all-loops]
+            for (int j = 63; j >= I_+31; j--) {
+            ^~~
+            VITIS_LOOP_908_21: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18739:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18745:17: warning: Added loop label VITIS_LOOP_914_22:   [xilinx-label-all-loops]
+                for (int j = 63; j >= I_+31; j--) {
+                ^~~
+                VITIS_LOOP_914_22: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18745:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18749:17: warning: Added loop label VITIS_LOOP_918_23:   [xilinx-label-all-loops]
+                for (int j = I_+30; j >= 0; j--) {
+                ^~~
+                VITIS_LOOP_918_23: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18749:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18865:13: warning: Added loop label VITIS_LOOP_1034_1:   [xilinx-label-all-loops]
+            for (int j = 4; j >= I_+1; j--) {
+            ^~~
+            VITIS_LOOP_1034_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18865:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18871:17: warning: Added loop label VITIS_LOOP_1040_2:   [xilinx-label-all-loops]
+                for (int j = 4; j >= I_+1; j--) {
+                ^~~
+                VITIS_LOOP_1040_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18871:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18875:17: warning: Added loop label VITIS_LOOP_1044_3:   [xilinx-label-all-loops]
+                for (int j = I_; j >= 0; j--) {
+                ^~~
+                VITIS_LOOP_1044_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18875:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18962:13: warning: Added loop label VITIS_LOOP_1131_4:   [xilinx-label-all-loops]
+            for (int j = 10; j >= I_+4; j--) {
+            ^~~
+            VITIS_LOOP_1131_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18962:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18968:17: warning: Added loop label VITIS_LOOP_1137_5:   [xilinx-label-all-loops]
+                for (int j = 10; j >= I_+4; j--) {
+                ^~~
+                VITIS_LOOP_1137_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18968:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18972:17: warning: Added loop label VITIS_LOOP_1141_6:   [xilinx-label-all-loops]
+                for (int j = I_+3; j >= 0; j--) {
+                ^~~
+                VITIS_LOOP_1141_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18972:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18991:9: warning: Added loop label VITIS_LOOP_1160_7:   [xilinx-label-all-loops]
+        for (int j = wf+3; j < w-1; j++) {
+        ^~~
+        VITIS_LOOP_1160_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18991:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18998:17: warning: Added loop label VITIS_LOOP_1167_8:   [xilinx-label-all-loops]
+                for (int j = 0; j < 22; j++) {
+                ^~~
+                VITIS_LOOP_1167_8: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:18998:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19114:13: warning: Added loop label VITIS_LOOP_1283_9:   [xilinx-label-all-loops]
+            for (int j = 22; j >= I_+10; j--) {
+            ^~~
+            VITIS_LOOP_1283_9: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19114:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19120:17: warning: Added loop label VITIS_LOOP_1289_10:   [xilinx-label-all-loops]
+                for (int j = 22; j >= I_+10; j--){
+                ^~~
+                VITIS_LOOP_1289_10: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19120:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19124:17: warning: Added loop label VITIS_LOOP_1293_11:   [xilinx-label-all-loops]
+                for (int j = I_+9; j >= 0; j--) {
+                ^~~
+                VITIS_LOOP_1293_11: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19124:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19144:9: warning: Added loop label VITIS_LOOP_1313_12:   [xilinx-label-all-loops]
+        for (int j = wf+4; j < w-1; j++){
+        ^~~
+        VITIS_LOOP_1313_12: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19144:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19151:17: warning: Added loop label VITIS_LOOP_1320_13:   [xilinx-label-all-loops]
+                for (int j = 0; j < 46; j++) {
+                ^~~
+                VITIS_LOOP_1320_13: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19151:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19413:13: warning: Added loop label VITIS_LOOP_1582_14:   [xilinx-label-all-loops]
+            for (int j = 46; j >= I_+22; j--) {
+            ^~~
+            VITIS_LOOP_1582_14: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19413:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19419:17: warning: Added loop label VITIS_LOOP_1588_15:   [xilinx-label-all-loops]
+                for (int j = 46; j >= I_+22; j--) {
+                ^~~
+                VITIS_LOOP_1588_15: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19419:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19423:17: warning: Added loop label VITIS_LOOP_1592_16:   [xilinx-label-all-loops]
+                for (int j = I_+21; j >= 0; j--) {
+                ^~~
+                VITIS_LOOP_1592_16: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19423:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19447:9: warning: Added loop label VITIS_LOOP_1616_17:   [xilinx-label-all-loops]
+        for (int j = wf+5; j < w-1; j++){
+        ^~~
+        VITIS_LOOP_1616_17: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19447:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19454:17: warning: Added loop label VITIS_LOOP_1623_18:   [xilinx-label-all-loops]
+                for (int j = 0; j < 64; j++) {
+                ^~~
+                VITIS_LOOP_1623_18: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19454:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19884:13: warning: Added loop label VITIS_LOOP_2053_19:   [xilinx-label-all-loops]
+            for (int j = 64; j >= I_+31; j--) {
+            ^~~
+            VITIS_LOOP_2053_19: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19884:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19890:17: warning: Added loop label VITIS_LOOP_2059_20:   [xilinx-label-all-loops]
+                for (int j = 64; j >= I_+31; j--) {
+                ^~~
+                VITIS_LOOP_2059_20: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19890:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19894:17: warning: Added loop label VITIS_LOOP_2063_21:   [xilinx-label-all-loops]
+                for (int j = I_+30; j >= 0; j--) {
+                ^~~
+                VITIS_LOOP_2063_21: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:19894:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20024:13: warning: Added loop label VITIS_LOOP_2193_1:   [xilinx-label-all-loops]
+            for(int j=3; j>=I+1; j--) {
+            ^~~
+            VITIS_LOOP_2193_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20024:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20031:17: warning: Added loop label VITIS_LOOP_2200_2:   [xilinx-label-all-loops]
+                for(int j=3; j>=I+1; j--) {
+                ^~~
+                VITIS_LOOP_2200_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20031:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20035:17: warning: Added loop label VITIS_LOOP_2204_3:   [xilinx-label-all-loops]
+                for(int j=I; j>=0; j--) {
+                ^~~
+                VITIS_LOOP_2204_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20035:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20082:13: warning: Added loop label VITIS_LOOP_2251_4:   [xilinx-label-all-loops]
+            for(int j=7; j>=3+I; j--) {
+            ^~~
+            VITIS_LOOP_2251_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20082:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20089:17: warning: Added loop label VITIS_LOOP_2258_5:   [xilinx-label-all-loops]
+                for(int j=7; j>=3+I; j--) {
+                ^~~
+                VITIS_LOOP_2258_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20089:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20093:17: warning: Added loop label VITIS_LOOP_2262_6:   [xilinx-label-all-loops]
+                for(int j=I+2; j>=0; j--) {
+                ^~~
+                VITIS_LOOP_2262_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20093:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20111:9: warning: Added loop label VITIS_LOOP_2280_7:   [xilinx-label-all-loops]
+        for(int j=11; j<16; j++) {
+        ^~~
+        VITIS_LOOP_2280_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20111:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20166:13: warning: Added loop label VITIS_LOOP_2335_8:   [xilinx-label-all-loops]
+            for(int j=15; j>=7+I; j--) {
+            ^~~
+            VITIS_LOOP_2335_8: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20166:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20173:17: warning: Added loop label VITIS_LOOP_2342_9:   [xilinx-label-all-loops]
+                for(int j=15; j>=7+I; j--) {
+                ^~~
+                VITIS_LOOP_2342_9: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20173:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20177:17: warning: Added loop label VITIS_LOOP_2346_10:   [xilinx-label-all-loops]
+                for(int j=6+I; j>=0; j--) {
+                ^~~
+                VITIS_LOOP_2346_10: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20177:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20195:9: warning: Added loop label VITIS_LOOP_2364_11:   [xilinx-label-all-loops]
+        for(int j=20; j<32; j++) {
+        ^~~
+        VITIS_LOOP_2364_11: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20195:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20284:13: warning: Added loop label VITIS_LOOP_2453_12:   [xilinx-label-all-loops]
+            for(int j=31; j>=I+15; j--) {
+            ^~~
+            VITIS_LOOP_2453_12: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20284:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20291:17: warning: Added loop label VITIS_LOOP_2460_13:   [xilinx-label-all-loops]
+                for(int j=31; j>=I+15; j--) {
+                ^~~
+                VITIS_LOOP_2460_13: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20291:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20295:17: warning: Added loop label VITIS_LOOP_2464_14:   [xilinx-label-all-loops]
+                for(int j=I+14; j>=0; j--) {
+                ^~~
+                VITIS_LOOP_2464_14: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20295:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20305:9: warning: Added loop label VITIS_LOOP_2474_15:   [xilinx-label-all-loops]
+        for(int j=32-F; j<32+I; j++) {
+        ^~~
+        VITIS_LOOP_2474_15: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20305:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20309:9: warning: Added loop label VITIS_LOOP_2478_16:   [xilinx-label-all-loops]
+        for(int j=32+I; j<=64; j++) {
+        ^~~
+        VITIS_LOOP_2478_16: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20309:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20320:9: warning: Added loop label VITIS_LOOP_2489_17:   [xilinx-label-all-loops]
+        for(int j=37; j<64; j++) {
+        ^~~
+        VITIS_LOOP_2489_17: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20320:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20328:17: warning: Added loop label VITIS_LOOP_2497_18:   [xilinx-label-all-loops]
+                for(int j=0; j<64; j++) {
+                ^~~
+                VITIS_LOOP_2497_18: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20328:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20653:13: warning: Added loop label VITIS_LOOP_2822_19:   [xilinx-label-all-loops]
+            for(int j=63; j>=I+31; j--) {
+            ^~~
+            VITIS_LOOP_2822_19: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20653:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20660:17: warning: Added loop label VITIS_LOOP_2829_20:   [xilinx-label-all-loops]
+                for(int j=63; j>=I+31; j--) {
+                ^~~
+                VITIS_LOOP_2829_20: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20660:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20664:17: warning: Added loop label VITIS_LOOP_2833_21:   [xilinx-label-all-loops]
+                for(int j=I+30; j>=0; j--) {
+                ^~~
+                VITIS_LOOP_2833_21: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20664:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20752:4: warning: Added loop label VITIS_LOOP_2921_1:   [xilinx-label-all-loops]
+   for(int j = 5; j>=I_+2; j--) {
+   ^~~
+   VITIS_LOOP_2921_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20752:4: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20759:5: warning: Added loop label VITIS_LOOP_2928_2:   [xilinx-label-all-loops]
+    for(int j = 5; j>=I_+2; j--) {
+    ^~~
+    VITIS_LOOP_2928_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20759:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20763:5: warning: Added loop label VITIS_LOOP_2932_3:   [xilinx-label-all-loops]
+    for(int j = I_+1; j>=0; j--) {
+    ^~~
+    VITIS_LOOP_2932_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20763:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20778:3: warning: Added loop label VITIS_LOOP_2947_4:   [xilinx-label-all-loops]
+  for(int j = 11; j >=7; j--) {
+  ^~~
+  VITIS_LOOP_2947_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20778:3: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20810:4: warning: Added loop label VITIS_LOOP_2979_5:   [xilinx-label-all-loops]
+   for(int j = 11; j >= I_+5; j--) {
+   ^~~
+   VITIS_LOOP_2979_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20810:4: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20817:5: warning: Added loop label VITIS_LOOP_2986_6:   [xilinx-label-all-loops]
+    for(int j = 11; j>= I_+5; j--) {
+    ^~~
+    VITIS_LOOP_2986_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20817:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20821:5: warning: Added loop label VITIS_LOOP_2990_7:   [xilinx-label-all-loops]
+    for(int j = I_+4; j>=0; j--) {
+    ^~~
+    VITIS_LOOP_2990_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20821:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20836:3: warning: Added loop label VITIS_LOOP_3005_8:   [xilinx-label-all-loops]
+  for(int j = 25; j>=15; j--) {
+  ^~~
+  VITIS_LOOP_3005_8: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20836:3: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20886:4: warning: Added loop label VITIS_LOOP_3055_9:   [xilinx-label-all-loops]
+   for(int j = 25; j>= I_+12; j--) {
+   ^~~
+   VITIS_LOOP_3055_9: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20886:4: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20893:5: warning: Added loop label VITIS_LOOP_3062_10:   [xilinx-label-all-loops]
+    for(int j = 25; j>=I_+12; j--) {
+    ^~~
+    VITIS_LOOP_3062_10: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20893:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20897:5: warning: Added loop label VITIS_LOOP_3066_11:   [xilinx-label-all-loops]
+    for(int j = I_+11; j>=0; j--) {
+    ^~~
+    VITIS_LOOP_3066_11: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20897:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20912:3: warning: Added loop label VITIS_LOOP_3081_12:   [xilinx-label-all-loops]
+  for(int j = 51; j >= 29; j--) {
+  ^~~
+  VITIS_LOOP_3081_12: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:20912:3: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21049:4: warning: Added loop label VITIS_LOOP_3218_13:   [xilinx-label-all-loops]
+   for(int j = 51; j >= 25 + I_; j--) {
+   ^~~
+   VITIS_LOOP_3218_13: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21049:4: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21056:5: warning: Added loop label VITIS_LOOP_3225_14:   [xilinx-label-all-loops]
+    for(int j = 51; j>=25 + I_; j--) {
+    ^~~
+    VITIS_LOOP_3225_14: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21056:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21060:5: warning: Added loop label VITIS_LOOP_3229_15:   [xilinx-label-all-loops]
+    for(int j = 24 + I_; j >= 0; j--) {
+    ^~~
+    VITIS_LOOP_3229_15: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21060:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21075:3: warning: Added loop label VITIS_LOOP_3244_16:   [xilinx-label-all-loops]
+  for(int j = 63; j >= 36; j--) {
+  ^~~
+  VITIS_LOOP_3244_16: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21075:3: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21235:4: warning: Added loop label VITIS_LOOP_3404_17:   [xilinx-label-all-loops]
+   for(int j = 63; j >= 31 + I_; j--) {
+   ^~~
+   VITIS_LOOP_3404_17: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21235:4: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21242:5: warning: Added loop label VITIS_LOOP_3411_18:   [xilinx-label-all-loops]
+    for(int j = 63; j >= 31 + I_; j--) {
+    ^~~
+    VITIS_LOOP_3411_18: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21242:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21246:5: warning: Added loop label VITIS_LOOP_3415_19:   [xilinx-label-all-loops]
+    for(int j = 30 + I_; j >= 0; j--) {
+    ^~~
+    VITIS_LOOP_3415_19: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21246:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21961:13: warning: Added loop label VITIS_LOOP_703_1:   [xilinx-label-all-loops]
+            for (b_exp = I_-1; b_exp >= -F_; b_exp--) {
+            ^~~
+            VITIS_LOOP_703_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:21961:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:22179:13: warning: Added loop label VITIS_LOOP_921_1:   [xilinx-label-all-loops]
+            for (b_exp = I_-1; b_exp >= -F_; b_exp--) {
+            ^~~
+            VITIS_LOOP_921_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:22179:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:22596:13: warning: Added loop label VITIS_LOOP_1345_1:   [xilinx-label-all-loops]
+            for (b_exp = I_-1; b_exp >= -F_; b_exp--) {
+            ^~~
+            VITIS_LOOP_1345_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:22596:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:22916:9: warning: Added loop label VITIS_LOOP_240_1:   [xilinx-label-all-loops]
+        for ( int pos = msbr-1; pos >= 0; pos-- ) {
+        ^~~
+        VITIS_LOOP_240_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:22916:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:22944:9: warning: Added loop label VITIS_LOOP_268_2:   [xilinx-label-all-loops]
+        for ( int pos = -1; pos >= -F_-1; pos-- ) {
+        ^~~
+        VITIS_LOOP_268_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:22944:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23646:13: warning: Added loop label VITIS_LOOP_48_1:   [xilinx-label-all-loops]
+            for (int j = 0; j < W_-1; j++){
+            ^~~
+            VITIS_LOOP_48_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23646:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23699:5: warning: Added loop label VITIS_LOOP_109_2:   [xilinx-label-all-loops]
+    for (int j = F_l+F_+I_m-1; j < F_l+W_+5; j++){
+    ^~~
+    VITIS_LOOP_109_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23699:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23713:13: warning: Added loop label VITIS_LOOP_123_3:   [xilinx-label-all-loops]
+            for (int j = WO_m-1; j >= W_-1; j--) {
+            ^~~
+            VITIS_LOOP_123_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23713:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23743:13: warning: Added loop label VITIS_LOOP_153_4:   [xilinx-label-all-loops]
+            for (int j = W_-2; j >= 0; j--){
+            ^~~
+            VITIS_LOOP_153_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23743:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23828:12: warning: Added loop label VITIS_LOOP_281_1:   [xilinx-label-all-loops]
+           for(int i = wf_log+we_log-2; i > WI_e - 2; --i) {
+           ^~~
+           VITIS_LOOP_281_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23828:12: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23848:16: warning: Added loop label VITIS_LOOP_301_2:   [xilinx-label-all-loops]
+               for (int j = WO_e-1; j >= W_-1; j--) {
+               ^~~
+               VITIS_LOOP_301_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23848:16: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23862:20: warning: Added loop label VITIS_LOOP_315_3:   [xilinx-label-all-loops]
+                   for(int i = 0; i < W_-1; ++i) {
+                   ^~~
+                   VITIS_LOOP_315_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23862:20: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23955:12: warning: Added loop label VITIS_LOOP_433_1:   [xilinx-label-all-loops]
+           for (int j =WO_d-1; j >= W_-1; j--) {
+           ^~~
+           VITIS_LOOP_433_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23955:12: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23969:15: warning: Added loop label VITIS_LOOP_447_2:   [xilinx-label-all-loops]
+              for(int i = 0; i < W_-1; ++i) {
+              ^~~
+              VITIS_LOOP_447_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:23969:15: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24089:13: warning: Added loop label VITIS_LOOP_33_1:   [xilinx-label-all-loops]
+            for (int i = 0; i < W_-1; i++){
+            ^~~
+            VITIS_LOOP_33_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24089:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24213:13: warning: Added loop label VITIS_LOOP_183_1:   [xilinx-label-all-loops]
+            for (int i = 0; i < W_-1; i++){
+            ^~~
+            VITIS_LOOP_183_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24213:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24268:13: warning: Added loop label VITIS_LOOP_248_1:   [xilinx-label-all-loops]
+            for (int i = 0; i < W_-1; i++){
+            ^~~
+            VITIS_LOOP_248_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24268:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24787:2: warning: Added loop label VITIS_LOOP_16_1:   [xilinx-label-all-loops]
+ for (int i=0; i<W_;i++)
+ ^~~
+ VITIS_LOOP_16_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24787:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24798:2: warning: Added loop label VITIS_LOOP_27_1:   [xilinx-label-all-loops]
+ for (int i=0; i<W_;i++)
+ ^~~
+ VITIS_LOOP_27_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24798:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24809:2: warning: Added loop label VITIS_LOOP_38_1:   [xilinx-label-all-loops]
+ for (int i=0; i<I_;i++)
+ ^~~
+ VITIS_LOOP_38_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24809:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24820:2: warning: Added loop label VITIS_LOOP_49_1:   [xilinx-label-all-loops]
+ for (int i=0; i<I_;i++)
+ ^~~
+ VITIS_LOOP_49_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24820:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24831:2: warning: Added loop label VITIS_LOOP_60_1:   [xilinx-label-all-loops]
+ for (int i=0; i<W_;i++)
+ ^~~
+ VITIS_LOOP_60_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24831:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24842:2: warning: Added loop label VITIS_LOOP_71_1:   [xilinx-label-all-loops]
+ for (int i=0; i<W_;i++)
+ ^~~
+ VITIS_LOOP_71_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24842:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24853:2: warning: Added loop label VITIS_LOOP_82_1:   [xilinx-label-all-loops]
+ for (int i=0; i<I_;i++)
+ ^~~
+ VITIS_LOOP_82_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24853:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24864:2: warning: Added loop label VITIS_LOOP_93_1:   [xilinx-label-all-loops]
+ for (int i=0; i<I_;i++)
+ ^~~
+ VITIS_LOOP_93_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:24864:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27224:12: warning: Added loop label VITIS_LOOP_26_1:   [xilinx-label-all-loops]
+           for(int i = 0; i < W_-1; ++i) {
+           ^~~
+           VITIS_LOOP_26_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27224:12: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27288:7: warning: Added loop label VITIS_LOOP_40_1:   [xilinx-label-all-loops]
+      for(int pos = msbr - 1 ; pos >= -F-1; pos--) {
+      ^~~
+      VITIS_LOOP_40_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27288:7: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27405:9: warning: Added loop label VITIS_LOOP_49_1:   [xilinx-label-all-loops]
+        for(int pos = msbr - 1; pos >= 0; pos--) {
+        ^~~
+        VITIS_LOOP_49_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27405:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27430:5: warning: Added loop label VITIS_LOOP_81_2:   [xilinx-label-all-loops]
+    for(int pos = -1; pos >= -F-1; pos--) {
+    ^~~
+    VITIS_LOOP_81_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27430:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27500:8: warning: Added loop label VITIS_LOOP_169_3:   [xilinx-label-all-loops]
+       for(int i = 0; i < W - 1; ++i) {
+       ^~~
+       VITIS_LOOP_169_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:27500:8: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29736:5: warning: Added loop label VITIS_LOOP_21_1:   [xilinx-label-all-loops]
+    for (int oc = 0; oc < OUT_C; oc++) {
+    ^~~
+    VITIS_LOOP_21_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29736:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29737:9: warning: Added loop label VITIS_LOOP_22_2:   [xilinx-label-all-loops]
+        for (int oh = 0; oh < OUT_H; oh++) {
+        ^~~
+        VITIS_LOOP_22_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29737:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29738:13: warning: Added loop label VITIS_LOOP_23_3:   [xilinx-label-all-loops]
+            for (int ow = 0; ow < OUT_W; ow++) {
+            ^~~
+            VITIS_LOOP_23_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29738:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29745:5: warning: Added loop label VITIS_LOOP_30_4:   [xilinx-label-all-loops]
+    for (int oc = 0; oc < OUT_C; oc++) {
+    ^~~
+    VITIS_LOOP_30_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29745:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29746:9: warning: Added loop label VITIS_LOOP_31_5:   [xilinx-label-all-loops]
+        for (int ic = 0; ic < IN_C; ic++) {
+        ^~~
+        VITIS_LOOP_31_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29746:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29752:2: warning: Added loop label VITIS_LOOP_37_6:   [xilinx-label-all-loops]
+ for (int kr = 0; kr < KERNEL_SIZE; kr++) {
+ ^~~
+ VITIS_LOOP_37_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29752:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29753:17: warning: Added loop label VITIS_LOOP_38_7:   [xilinx-label-all-loops]
+                for (int c = 0; c < COL; c++) {
+                ^~~
+                VITIS_LOOP_38_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29753:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29760:13: warning: Added loop label VITIS_LOOP_45_8:   [xilinx-label-all-loops]
+            for (int r = 0; r < ROW; r++) {
+            ^~~
+            VITIS_LOOP_45_8: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29760:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29765:17: warning: Added loop label VITIS_LOOP_50_9:   [xilinx-label-all-loops]
+                for (int c = 0; c < COL; c++) {
+                ^~~
+                VITIS_LOOP_50_9: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29765:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29772:21: warning: Added loop label VITIS_LOOP_57_10:   [xilinx-label-all-loops]
+                    for (int c = 0; c <= COL-KERNEL_SIZE; c++) {
+                    ^~~
+                    VITIS_LOOP_57_10: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29772:21: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29775:25: warning: Added loop label VITIS_LOOP_60_11:   [xilinx-label-all-loops]
+                        for (int kr = 0; kr < KERNEL_SIZE; kr++) {
+                        ^~~
+                        VITIS_LOOP_60_11: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29775:25: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29783:25: warning: Added loop label VITIS_LOOP_68_12:   [xilinx-label-all-loops]
+                        for (int kr = 0; kr < KERNEL_SIZE; kr++) {
+                        ^~~
+                        VITIS_LOOP_68_12: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29783:25: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29784:29: warning: Added loop label VITIS_LOOP_69_13:   [xilinx-label-all-loops]
+                            for (int kc = 0; kc < KERNEL_SIZE; kc++) {
+                            ^~~
+                            VITIS_LOOP_69_13: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29784:29: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29830:2: warning: Added loop label VITIS_LOOP_22_1:   [xilinx-label-all-loops]
+ for(int channel = 0; channel < IN_C; channel++) {
+ ^~~
+ VITIS_LOOP_22_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29830:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29836:9: warning: Added loop label VITIS_LOOP_28_2:   [xilinx-label-all-loops]
+        for(int r = 0; r < IN_ROWS; ++r) {
+        ^~~
+        VITIS_LOOP_28_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29836:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29837:13: warning: Added loop label VITIS_LOOP_29_3:   [xilinx-label-all-loops]
+            for(int c = 0; c < IN_COLS; ++c) {
+            ^~~
+            VITIS_LOOP_29_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29837:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29844:9: warning: Added loop label VITIS_LOOP_36_4:   [xilinx-label-all-loops]
+        for(int out_r = 0; out_r < OUT_ROWS; out_r++) {
+        ^~~
+        VITIS_LOOP_36_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29844:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29845:13: warning: Added loop label VITIS_LOOP_37_5:   [xilinx-label-all-loops]
+            for(int out_c = 0; out_c < OUT_COLS; out_c++) {
+            ^~~
+            VITIS_LOOP_37_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29845:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29850:17: warning: Added loop label VITIS_LOOP_42_6:   [xilinx-label-all-loops]
+                for(int i = 0; i < POOL_SIZE; i++) {
+                ^~~
+                VITIS_LOOP_42_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29850:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29851:21: warning: Added loop label VITIS_LOOP_43_7:   [xilinx-label-all-loops]
+                    for(int j = 0; j < POOL_SIZE; j++) {
+                    ^~~
+                    VITIS_LOOP_43_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29851:21: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29884:5: warning: Added loop label VITIS_LOOP_16_1:   [xilinx-label-all-loops]
+    for(int i=0; i<flat_dim; ++i) {
+    ^~~
+    VITIS_LOOP_16_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29884:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29911:5: warning: Added loop label VITIS_LOOP_22_1:   [xilinx-label-all-loops]
+    for(int j=0; j<OUT_DIM; ++j) {
+    ^~~
+    VITIS_LOOP_22_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29911:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29916:5: warning: Added loop label VITIS_LOOP_27_2:   [xilinx-label-all-loops]
+    for(int i=0; i<IN_DIM; ++i) {
+    ^~~
+    VITIS_LOOP_27_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29916:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29918:9: warning: Added loop label VITIS_LOOP_29_3:   [xilinx-label-all-loops]
+        for(int j=0; j<OUT_DIM; ++j) {
+        ^~~
+        VITIS_LOOP_29_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29918:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29925:5: warning: Added loop label VITIS_LOOP_36_4:   [xilinx-label-all-loops]
+    for(int j=0; j<OUT_DIM; ++j) {
+    ^~~
+    VITIS_LOOP_36_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29925:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29941:2: warning: Added loop label VITIS_LOOP_25_1:   [xilinx-label-all-loops]
+ for(int k=0; k<OUT_C; ++k) dB[k] = 0;
+ ^~~
+ VITIS_LOOP_25_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29941:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29943:5: warning: Added loop label VITIS_LOOP_27_2:   [xilinx-label-all-loops]
+    for(int k=0; k<OUT_C; ++k) {
+    ^~~
+    VITIS_LOOP_27_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29943:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29944:9: warning: Added loop label VITIS_LOOP_28_3:   [xilinx-label-all-loops]
+        for(int r=0; r<OUT_H; ++r) {
+        ^~~
+        VITIS_LOOP_28_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29944:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29945:13: warning: Added loop label VITIS_LOOP_29_4:   [xilinx-label-all-loops]
+            for(int c=0; c<OUT_W; ++c) {
+            ^~~
+            VITIS_LOOP_29_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29945:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29961:2: warning: Added loop label VITIS_LOOP_45_1:   [xilinx-label-all-loops]
+ for(int k=0; k<OUT_C; ++k) {
+ ^~~
+ VITIS_LOOP_45_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29961:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29962:9: warning: Added loop label VITIS_LOOP_46_2:   [xilinx-label-all-loops]
+        for(int i=0; i<IN_C; ++i) {
+        ^~~
+        VITIS_LOOP_46_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29962:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29963:13: warning: Added loop label VITIS_LOOP_47_3:   [xilinx-label-all-loops]
+            for(int r=0; r<K; ++r) {
+            ^~~
+            VITIS_LOOP_47_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29963:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29964:17: warning: Added loop label VITIS_LOOP_48_4:   [xilinx-label-all-loops]
+                for(int c=0; c<K; ++c) {
+                ^~~
+                VITIS_LOOP_48_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29964:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29974:5: warning: Added loop label VITIS_LOOP_58_5:   [xilinx-label-all-loops]
+    for(int k=0; k<OUT_C; ++k) {
+    ^~~
+    VITIS_LOOP_58_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29974:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29975:9: warning: Added loop label VITIS_LOOP_59_6:   [xilinx-label-all-loops]
+        for(int r=0; r<OUT_H; ++r) {
+        ^~~
+        VITIS_LOOP_59_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29975:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29976:13: warning: Added loop label VITIS_LOOP_60_7:   [xilinx-label-all-loops]
+            for(int c=0; c<OUT_W; ++c) {
+            ^~~
+            VITIS_LOOP_60_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29976:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29980:17: warning: Added loop label VITIS_LOOP_64_8:   [xilinx-label-all-loops]
+                for(int i=0; i<IN_C; ++i) {
+                ^~~
+                VITIS_LOOP_64_8: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29980:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29981:21: warning: Added loop label VITIS_LOOP_65_9:   [xilinx-label-all-loops]
+                    for(int kr=0; kr<K; ++kr) {
+                    ^~~
+                    VITIS_LOOP_65_9: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29981:21: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29982:25: warning: Added loop label VITIS_LOOP_66_10:   [xilinx-label-all-loops]
+                        for(int kc=0; kc<K; ++kc) {
+                        ^~~
+                        VITIS_LOOP_66_10: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:29982:25: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30000:2: warning: Added loop label VITIS_LOOP_84_1:   [xilinx-label-all-loops]
+ for(int i=0; i<IN_C; ++i) {
+ ^~~
+ VITIS_LOOP_84_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30000:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30001:9: warning: Added loop label VITIS_LOOP_85_2:   [xilinx-label-all-loops]
+        for(int r=0; r<H; ++r) {
+        ^~~
+        VITIS_LOOP_85_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30001:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30002:13: warning: Added loop label VITIS_LOOP_86_3:   [xilinx-label-all-loops]
+            for(int c=0; c<W; ++c) {
+            ^~~
+            VITIS_LOOP_86_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30002:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30011:5: warning: Added loop label VITIS_LOOP_95_4:   [xilinx-label-all-loops]
+    for(int k=0; k<OUT_C; ++k) {
+    ^~~
+    VITIS_LOOP_95_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30011:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30012:9: warning: Added loop label VITIS_LOOP_96_5:   [xilinx-label-all-loops]
+        for(int r=0; r<OUT_H; ++r) {
+        ^~~
+        VITIS_LOOP_96_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30012:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30013:13: warning: Added loop label VITIS_LOOP_97_6:   [xilinx-label-all-loops]
+            for(int c=0; c<OUT_W; ++c) {
+            ^~~
+            VITIS_LOOP_97_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30013:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30017:17: warning: Added loop label VITIS_LOOP_101_7:   [xilinx-label-all-loops]
+                for(int i=0; i<IN_C; ++i) {
+                ^~~
+                VITIS_LOOP_101_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30017:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30018:21: warning: Added loop label VITIS_LOOP_102_8:   [xilinx-label-all-loops]
+                    for(int kr=0; kr<K; ++kr) {
+                    ^~~
+                    VITIS_LOOP_102_8: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30018:21: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30019:25: warning: Added loop label VITIS_LOOP_103_9:   [xilinx-label-all-loops]
+                        for(int kc=0; kc<K; ++kc) {
+                        ^~~
+                        VITIS_LOOP_103_9: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30019:25: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30047:2: warning: Added loop label VITIS_LOOP_131_1:   [xilinx-label-all-loops]
+ for(int i=0; i<IN_C; ++i) {
+ ^~~
+ VITIS_LOOP_131_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30047:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30048:9: warning: Added loop label VITIS_LOOP_132_2:   [xilinx-label-all-loops]
+        for(int r=0; r<H; ++r) {
+        ^~~
+        VITIS_LOOP_132_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30048:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30049:13: warning: Added loop label VITIS_LOOP_133_3:   [xilinx-label-all-loops]
+            for(int c=0; c<W; ++c) {
+            ^~~
+            VITIS_LOOP_133_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30049:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30059:2: warning: Added loop label VITIS_LOOP_143_4:   [xilinx-label-all-loops]
+ for(int oc=0; oc<OUT_C; ++oc) {
+ ^~~
+ VITIS_LOOP_143_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30059:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30060:9: warning: Added loop label VITIS_LOOP_144_5:   [xilinx-label-all-loops]
+        for(int ic=0; ic<IN_C; ++ic) {
+        ^~~
+        VITIS_LOOP_144_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30060:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30061:13: warning: Added loop label VITIS_LOOP_145_6:   [xilinx-label-all-loops]
+            for(int kr=0; kr<K; ++kr) {
+            ^~~
+            VITIS_LOOP_145_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30061:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30062:17: warning: Added loop label VITIS_LOOP_146_7:   [xilinx-label-all-loops]
+                for(int kc=0; kc<K; ++kc) {
+                ^~~
+                VITIS_LOOP_146_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30062:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30073:2: warning: Added loop label VITIS_LOOP_157_8:   [xilinx-label-all-loops]
+ for(int k=0; k<OUT_C; ++k) {
+ ^~~
+ VITIS_LOOP_157_8: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30073:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30074:9: warning: Added loop label VITIS_LOOP_158_9:   [xilinx-label-all-loops]
+        for(int r=0; r<OUT_H; ++r) {
+        ^~~
+        VITIS_LOOP_158_9: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30074:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30075:13: warning: Added loop label VITIS_LOOP_159_10:   [xilinx-label-all-loops]
+            for(int c=0; c<OUT_W; ++c) {
+            ^~~
+            VITIS_LOOP_159_10: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30075:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30087:5: warning: Added loop label VITIS_LOOP_171_11:   [xilinx-label-all-loops]
+    for(int i=0; i<IN_C; ++i) {
+    ^~~
+    VITIS_LOOP_171_11: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30087:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30088:9: warning: Added loop label VITIS_LOOP_172_12:   [xilinx-label-all-loops]
+        for(int r=0; r<H; ++r) {
+        ^~~
+        VITIS_LOOP_172_12: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30088:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30089:13: warning: Added loop label VITIS_LOOP_173_13:   [xilinx-label-all-loops]
+            for(int c=0; c<W; ++c) {
+            ^~~
+            VITIS_LOOP_173_13: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30089:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30119:2: warning: Added loop label VITIS_LOOP_21_1:   [xilinx-label-all-loops]
+ for(int ch=0; ch<C; ++ch) {
+ ^~~
+ VITIS_LOOP_21_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30119:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30120:9: warning: Added loop label VITIS_LOOP_22_2:   [xilinx-label-all-loops]
+        for(int r=0; r<PH; ++r) {
+        ^~~
+        VITIS_LOOP_22_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30120:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30121:13: warning: Added loop label VITIS_LOOP_23_3:   [xilinx-label-all-loops]
+            for(int c=0; c<PW; ++c) {
+            ^~~
+            VITIS_LOOP_23_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30121:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30130:2: warning: Added loop label VITIS_LOOP_32_4:   [xilinx-label-all-loops]
+ for(int ch=0; ch<C; ++ch) {
+ ^~~
+ VITIS_LOOP_32_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30130:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30131:9: warning: Added loop label VITIS_LOOP_33_5:   [xilinx-label-all-loops]
+        for(int r=0; r<H; ++r) {
+        ^~~
+        VITIS_LOOP_33_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30131:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30132:13: warning: Added loop label VITIS_LOOP_34_6:   [xilinx-label-all-loops]
+            for(int c=0; c<W; ++c) {
+            ^~~
+            VITIS_LOOP_34_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30132:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30138:5: warning: Added loop label VITIS_LOOP_40_7:   [xilinx-label-all-loops]
+    for(int k=0; k<C; ++k) {
+    ^~~
+    VITIS_LOOP_40_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30138:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30139:9: warning: Added loop label VITIS_LOOP_41_8:   [xilinx-label-all-loops]
+        for(int r=0; r<PH; ++r) {
+        ^~~
+        VITIS_LOOP_41_8: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30139:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30140:13: warning: Added loop label VITIS_LOOP_42_9:   [xilinx-label-all-loops]
+            for(int c=0; c<PW; ++c) {
+            ^~~
+            VITIS_LOOP_42_9: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30140:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30143:17: warning: Added loop label VITIS_LOOP_45_10:   [xilinx-label-all-loops]
+                for(int pr=0; pr<P; ++pr) {
+                ^~~
+                VITIS_LOOP_45_10: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30143:17: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30144:21: warning: Added loop label VITIS_LOOP_46_11:   [xilinx-label-all-loops]
+                    for(int pc=0; pc<P; ++pc) {
+                    ^~~
+                    VITIS_LOOP_46_11: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30144:21: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30153:5: warning: Added loop label VITIS_LOOP_55_12:   [xilinx-label-all-loops]
+    for(int k=0; k<C; ++k) {
+    ^~~
+    VITIS_LOOP_55_12: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30153:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30154:9: warning: Added loop label VITIS_LOOP_56_13:   [xilinx-label-all-loops]
+        for(int r=0; r<H; ++r) {
+        ^~~
+        VITIS_LOOP_56_13: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30154:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30155:13: warning: Added loop label VITIS_LOOP_57_14:   [xilinx-label-all-loops]
+            for(int c=0; c<W; ++c) {
+            ^~~
+            VITIS_LOOP_57_14: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30155:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30179:5: warning: Added loop label VITIS_LOOP_14_1:   [xilinx-label-all-loops]
+    for(int i=0; i<dim; ++i) {
+    ^~~
+    VITIS_LOOP_14_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30179:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30210:2: warning: Added loop label VITIS_LOOP_26_1:   [xilinx-label-all-loops]
+ for(int i=0; i<IN_DIM; ++i) {
+ ^~~
+ VITIS_LOOP_26_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30210:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30211:9: warning: Added loop label VITIS_LOOP_27_2:   [xilinx-label-all-loops]
+        for(int k=0; k<OUT_DIM; ++k) {
+        ^~~
+        VITIS_LOOP_27_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30211:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30218:5: warning: Added loop label VITIS_LOOP_34_3:   [xilinx-label-all-loops]
+    for(int j=0; j<OUT_DIM; ++j) {
+    ^~~
+    VITIS_LOOP_34_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30218:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30224:5: warning: Added loop label VITIS_LOOP_40_4:   [xilinx-label-all-loops]
+    for(int i=0; i<IN_DIM; ++i) {
+    ^~~
+    VITIS_LOOP_40_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30224:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30225:9: warning: Added loop label VITIS_LOOP_41_5:   [xilinx-label-all-loops]
+        for(int j=0; j<OUT_DIM; ++j) {
+        ^~~
+        VITIS_LOOP_41_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30225:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30232:5: warning: Added loop label VITIS_LOOP_48_6:   [xilinx-label-all-loops]
+    for(int i=0; i<IN_DIM; ++i) {
+    ^~~
+    VITIS_LOOP_48_6: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30232:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30235:9: warning: Added loop label VITIS_LOOP_51_7:   [xilinx-label-all-loops]
+        for(int j=0; j<OUT_DIM; ++j) {
+        ^~~
+        VITIS_LOOP_51_7: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30235:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30268:5: warning: Added loop label VITIS_LOOP_23_1:   [xilinx-label-all-loops]
+    for(int i=1; i<N; ++i) {
+    ^~~
+    VITIS_LOOP_23_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30268:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30275:5: warning: Added loop label VITIS_LOOP_30_2:   [xilinx-label-all-loops]
+    for(int i=0; i<N; ++i) {
+    ^~~
+    VITIS_LOOP_30_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30275:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30284:9: warning: Added loop label VITIS_LOOP_39_3:   [xilinx-label-all-loops]
+        for(int i=0; i<N; ++i) {
+        ^~~
+        VITIS_LOOP_39_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30284:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30288:9: warning: Added loop label VITIS_LOOP_43_4:   [xilinx-label-all-loops]
+        for(int i=0; i<N; ++i) {
+        ^~~
+        VITIS_LOOP_43_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30288:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30306:5: warning: Added loop label VITIS_LOOP_21_1:   [xilinx-label-all-loops]
+    for(int i=0; i<N; ++i) {
+    ^~~
+    VITIS_LOOP_21_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30306:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30333:2: warning: Added loop label VITIS_LOOP_15_1:   [xilinx-label-all-loops]
+ for(int i=0; i<N; ++i) {
+ ^~~
+ VITIS_LOOP_15_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30333:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30338:2: warning: Added loop label VITIS_LOOP_20_2:   [xilinx-label-all-loops]
+ for(int i=0; i<N; ++i) {
+ ^~~
+ VITIS_LOOP_20_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30338:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30351:2: warning: Added loop label VITIS_LOOP_33_1:   [xilinx-label-all-loops]
+ for(int i=0; i<M*N; ++i) {
+ ^~~
+ VITIS_LOOP_33_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30351:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30356:2: warning: Added loop label VITIS_LOOP_38_2:   [xilinx-label-all-loops]
+ for(int i=0; i<M; ++i) {
+ ^~~
+ VITIS_LOOP_38_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30356:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30357:9: warning: Added loop label VITIS_LOOP_39_3:   [xilinx-label-all-loops]
+        for(int j=0; j<N; ++j) {
+        ^~~
+        VITIS_LOOP_39_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30357:9: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30371:5: warning: Added loop label VITIS_LOOP_53_1:   [xilinx-label-all-loops]
+    for(int i=0; i<OUT_C * IN_C * K * K; ++i) {
+    ^~~
+    VITIS_LOOP_53_1: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30371:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30375:5: warning: Added loop label VITIS_LOOP_57_2:   [xilinx-label-all-loops]
+    for(int k=0; k<OUT_C; ++k) {
+    ^~~
+    VITIS_LOOP_57_2: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30375:5: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30377:2: warning: Added loop label VITIS_LOOP_59_3:   [xilinx-label-all-loops]
+ for(int i=0; i<IN_C; ++i) {
+ ^~~
+ VITIS_LOOP_59_3: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30377:2: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30378:13: warning: Added loop label VITIS_LOOP_60_4:   [xilinx-label-all-loops]
+            for(int r=0; r<K; ++r) {
+            ^~~
+            VITIS_LOOP_60_4: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30378:13: note: FIX-IT applied suggested code changes
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30379:17: warning: Added loop label VITIS_LOOP_61_5:   [xilinx-label-all-loops]
+                for(int c=0; c<K; ++c) {
+                ^~~
+                VITIS_LOOP_61_5: 
+/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp:30379:17: note: FIX-IT applied suggested code changes
