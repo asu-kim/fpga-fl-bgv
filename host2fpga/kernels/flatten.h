@@ -2,20 +2,19 @@
 #define FLATTEN_H
 
 #include <hls_stream.h>
-#include <ap_fixed.h>
-#include <math.h>
-
-typedef ap_int<32> data_t; // 8 bit fixed point as precision
 
 //--------
 // flatten 
 //--------
-template<int... DIMs>
-void flatten(hls::stream<data_t>& in_stream, hls::stream<data_t>& out_stream) {
+template<int H, int W, int C >
+void flatten(
+    const float *in,
+    float *out
+        ) {
 #pragma HLS PIPELINE II=1
-    const int flat_dim = (1 * ... * DIMs);
+    const int flat_dim = H*W*C;
     for(int i=0; i<flat_dim; ++i) {
-        out_stream.write(in_stream.read());
+        out[i] = in[i];
     }
 }
 

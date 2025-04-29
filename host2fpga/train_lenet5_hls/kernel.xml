@@ -1,0 +1,35 @@
+<root versionMajor = "1" versionMinor = "5">
+  <kernel name="train_lenet5_top" language="c" vlnv="xilinx.com:hls:train_lenet5_top:1.0" attributes="" hash="" preferredWorkGroupSizeMultiple="0" workGroupSize="1" debug="false" compileOptions="" profileType="none" hwControlProtocol="ap_ctrl_chain">
+    <ports>
+      <port name="M_AXI_HBM0" portType="addressable" mode="master" base="0x0" range="0xFFFFFFFF" dataWidth="256"/>
+      <port name="M_AXI_HBM1" portType="addressable" mode="master" base="0x0" range="0xFFFFFFFF" dataWidth="256"/>
+      <port name="M_AXI_HBM2" portType="addressable" mode="master" base="0x0" range="0xFFFFFFFF" dataWidth="512"/>
+      <port name="M_AXI_HBM3" portType="addressable" mode="master" base="0x0" range="0xFFFFFFFF" dataWidth="512"/>
+      <port name="M_AXI_HBM4" portType="addressable" mode="master" base="0x0" range="0xFFFFFFFF" dataWidth="512"/>
+      <port name="M_AXI_HBM5" portType="addressable" mode="master" base="0x0" range="0xFFFFFFFF" dataWidth="512"/>
+      <port name="M_AXI_HBM6" portType="addressable" mode="master" base="0x0" range="0xFFFFFFFF" dataWidth="512"/>
+      <port name="S_AXI_CONTROL" portType="addressable" mode="slave" base="0x0" range="0xDC" dataWidth="32"/>
+    </ports>
+    <args>
+      <arg id="0" name="image" addressQualifier="1" port="M_AXI_HBM0" hostOffset="0x0" hostSize="0x8" offset="0x10" size="0x8" type="void*"/>
+      <arg id="1" name="conv1_weight" addressQualifier="1" port="M_AXI_HBM1" hostOffset="0x0" hostSize="0x8" offset="0x1C" size="0x8" type="void*"/>
+      <arg id="2" name="conv1_bias" addressQualifier="1" port="M_AXI_HBM1" hostOffset="0x0" hostSize="0x8" offset="0x28" size="0x8" type="void*"/>
+      <arg id="3" name="conv2_in" addressQualifier="1" port="M_AXI_HBM2" hostOffset="0x0" hostSize="0x8" offset="0x34" size="0x8" type="void*"/>
+      <arg id="4" name="conv2_weight" addressQualifier="1" port="M_AXI_HBM2" hostOffset="0x0" hostSize="0x8" offset="0x40" size="0x8" type="void*"/>
+      <arg id="5" name="conv2_bias" addressQualifier="1" port="M_AXI_HBM2" hostOffset="0x0" hostSize="0x8" offset="0x4C" size="0x8" type="void*"/>
+      <arg id="6" name="fc1_in" addressQualifier="1" port="M_AXI_HBM3" hostOffset="0x0" hostSize="0x8" offset="0x58" size="0x8" type="void*"/>
+      <arg id="7" name="fc1_weight" addressQualifier="1" port="M_AXI_HBM3" hostOffset="0x0" hostSize="0x8" offset="0x64" size="0x8" type="void*"/>
+      <arg id="8" name="fc1_bias" addressQualifier="1" port="M_AXI_HBM3" hostOffset="0x0" hostSize="0x8" offset="0x70" size="0x8" type="void*"/>
+      <arg id="9" name="fc2_in" addressQualifier="1" port="M_AXI_HBM4" hostOffset="0x0" hostSize="0x8" offset="0x7C" size="0x8" type="void*"/>
+      <arg id="10" name="fc2_weight" addressQualifier="1" port="M_AXI_HBM4" hostOffset="0x0" hostSize="0x8" offset="0x88" size="0x8" type="void*"/>
+      <arg id="11" name="fc2_bias" addressQualifier="1" port="M_AXI_HBM4" hostOffset="0x0" hostSize="0x8" offset="0x94" size="0x8" type="void*"/>
+      <arg id="12" name="fc3_in" addressQualifier="1" port="M_AXI_HBM5" hostOffset="0x0" hostSize="0x8" offset="0xA0" size="0x8" type="void*"/>
+      <arg id="13" name="fc3_weight" addressQualifier="1" port="M_AXI_HBM5" hostOffset="0x0" hostSize="0x8" offset="0xAC" size="0x8" type="void*"/>
+      <arg id="14" name="fc3_bias" addressQualifier="1" port="M_AXI_HBM5" hostOffset="0x0" hostSize="0x8" offset="0xB8" size="0x8" type="void*"/>
+      <arg id="15" name="probs" addressQualifier="1" port="M_AXI_HBM6" hostOffset="0x0" hostSize="0x8" offset="0xC4" size="0x8" type="void*"/>
+      <arg id="16" name="label" addressQualifier="1" port="M_AXI_HBM6" hostOffset="0x0" hostSize="0x8" offset="0xD0" size="0x8" type="void*"/>
+    </args>
+    <compileWorkGroupSize x="1" y="1" z="1"/>
+    <maxWorkGroupSize x="1" y="1" z="1"/>
+  </kernel>
+</root>

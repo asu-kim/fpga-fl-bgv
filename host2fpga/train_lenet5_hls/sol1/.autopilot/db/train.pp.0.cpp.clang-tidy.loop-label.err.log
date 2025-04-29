@@ -1,0 +1,3 @@
+26 errors generated.
+Error while processing /home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/train_lenet5_hls/sol1/.autopilot/db/train.pp.0.cpp.
+clang-tidy applied 238 of 238 suggested fixes.

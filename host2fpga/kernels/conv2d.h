@@ -2,78 +2,89 @@
 #define CONV_2D_H
 
 #include <hls_stream.h>
-#include <ap_fixed.h>
-#include <math.h>
-#include <stdint.h>
+#include <hls_math.h>
 
-typedef ap_int<32> data_t; // 8 bit fixed point as precision
-
-//----------------------
-// 5x5 kernel, 6 filters
-//----------------------
-template<int OUT_C, int IN_C, int KERNEL_SIZE, int IN_DIM>
+template<int OUT_C, int IN_C, int KERNEL_SIZE, int ROW, int COL>
 void conv2d(
-        hls::stream<data_t>& in_stream,
-        hls::stream<data_t>& out_stream,
-        const data_t weight[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE],
-        const data_t bias[OUT_C],
-        float act_out_scale=1, int act_out_zp=0
+        const float in_data[IN_C * ROW * COL],
+        float out_data[OUT_C * (ROW - KERNEL_SIZE + 1) * (COL - KERNEL_SIZE + 1)],
+        const float weight[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE],
+        const float bias[OUT_C]
         ) {
     #pragma HLS INLINE OFF
-    #pragma HLS ARRAY_PARTITION variable=weight complete dim=1
-    #pragma HLS ARRAY_PARTITION variable=bias complete dim=1
-
-    data_t line_buffer[IN_C][KERNEL_SIZE][IN_DIM];
-    #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=1
-
-    int cur_row=0;
-    for(int r=0; r < IN_DIM+KERNEL_SIZE-1; ++r) {
-        for(int c=0; c < IN_DIM; ++c) {
-
-            #pragma HLS PIPELINE II=1
-            for(int ch=0; ch<IN_C; ++ch) {
-                #pragma HLS UNROLL
-                data_t pixel;
-                if(r < IN_DIM) {
-                    pixel = in_stream.read();
-                } else {
-                    pixel = data_t(0);
-                }
-                line_buffer[ch][cur_row][c] = pixel; // read rows across all input channel
+    
+    // Constants
+    const int OUT_H = ROW - KERNEL_SIZE + 1;
+    const int OUT_W = COL - KERNEL_SIZE + 1;
+    
+    // Initialize output array with bias values
+    for (int oc = 0; oc < OUT_C; oc++) {
+        for (int oh = 0; oh < OUT_H; oh++) {
+            for (int ow = 0; ow < OUT_W; ow++) {
+                out_data[oc*OUT_H*OUT_W + oh*OUT_W + ow] = bias[oc];
             }
         }
-
-        if(r >= KERNEL_SIZE-1) {
-            int row_start = (cur_row + 1) % KERNEL_SIZE;
-            for(int oc=0; oc<OUT_C; ++oc) {
-                ap_int<64> sum = bias[oc];
-                for(int c=KERNEL_SIZE-1; c<IN_DIM; ++c) {
-                    for(int ic=0; ic<IN_C; ++ic) {
-                        for(int kr=0; kr<KERNEL_SIZE; ++kr) {
-                            int kern_row = (row_start + kr) % KERNEL_SIZE;
-                            for(int kc=0; kc<KERNEL_SIZE; ++kc) {
-                                data_t in_val = line_buffer[ic][kern_row][c-KERNEL_SIZE+1+kc];
-                                data_t w_val = weight[oc][ic][kr][kc];
-                                sum += (ap_int<64>)in_val * (ap_int<64>)w_val;
+    }
+    
+    // Main computation with reordered loop pattern: out_channel -> in_channel -> row -> col
+    for (int oc = 0; oc < OUT_C; oc++) {
+        for (int ic = 0; ic < IN_C; ic++) {
+            // Create line buffer for current input channel only
+            float line_buffer[KERNEL_SIZE][COL];
+            #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=1
+            
+            // Initialize buffer
+            for (int kr = 0; kr < KERNEL_SIZE; kr++) {
+                for (int c = 0; c < COL; c++) {
+                    line_buffer[kr][c] = 0;
+                }
+            }
+            
+            int buf_row = 0;
+            
+            for (int r = 0; r < ROW; r++) {
+                // Current buffer row index
+                int current_buf_row = buf_row;
+                
+                // Load current row into line buffer
+                for (int c = 0; c < COL; c++) {
+                    #pragma HLS PIPELINE II=1
+                    line_buffer[current_buf_row][c] = in_data[ic*ROW*COL + r*COL + c];
+                }
+                
+                // Process output if we have enough rows
+                if (r >= KERNEL_SIZE-1) {
+                    for (int c = 0; c <= COL-KERNEL_SIZE; c++) {
+                        // Pre-compute kernel row indices
+                        int kr_indices[KERNEL_SIZE];
+                        for (int kr = 0; kr < KERNEL_SIZE; kr++) {
+                            kr_indices[kr] = (current_buf_row + 1 + kr) % KERNEL_SIZE;
+                        }
+                        
+                        // Compute partial convolution for current input channel
+                        int out_row = r - (KERNEL_SIZE - 1);
+                        float partial_sum = 0;
+                        
+                        for (int kr = 0; kr < KERNEL_SIZE; kr++) {
+                            for (int kc = 0; kc < KERNEL_SIZE; kc++) {
+                                #pragma HLS PIPELINE II=1
+                                float in_val = line_buffer[kr_indices[kr]][c+kc];
+                                float w_val = weight[oc*IN_C*KERNEL_SIZE*KERNEL_SIZE + 
+                                                     ic*KERNEL_SIZE*KERNEL_SIZE + 
+                                                     kr*KERNEL_SIZE + kc];
+                                partial_sum += in_val * w_val;
                             }
                         }
+                        
+                        // Accumulate partial sum into output
+                        out_data[oc*OUT_H*OUT_W + out_row*OUT_W + c] += partial_sum;
                     }
-                    
-                    // quant output activation
-                    float sum_float_val = float(sum);
-                    float sum_scaled = sum_float_val * act_out_scale + (float)act_out_zp;
-                    float sum_rounded = (sum_scaled >= 0.0f) ? (floorf(sum_scaled + 0.5f)) : (floorf(sum_scaled - 0.5f));
-                    data_t sat;
-                    if (sum_rounded > (float)INT32_MAX) sat = INT32_MAX;
-                    else if (sum_rounded < (float)INT32_MIN) sat = INT32_MIN;
-                    else sat = (data_t)sum_rounded;
-
-                    out_stream.write(sat);
                 }
+                
+                // Update buffer row index
+                buf_row = (buf_row + 1) % KERNEL_SIZE;
             }
         }
-        cur_row = (cur_row+1) % KERNEL_SIZE;
     }
 }
-
 #endif

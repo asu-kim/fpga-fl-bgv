@@ -1,0 +1,118 @@
+<pragmas>
+<pragma file="kernels/update.h" line="14" pragmaType="pipeline" parentfunction="bias_update" off="0" ii="-1" style=""/>
+<pragma file="kernels/update.h" line="21" pragmaType="unroll" parentfunction="bias_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/train.cpp" line="62" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="image" bundle="HBM0" offset="slave" name="" depth="784" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="64" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="conv1_weight" bundle="HBM1" offset="slave" name="" depth="150" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="65" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="conv1_bias" bundle="HBM1" offset="slave" name="" depth="6" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="67" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="conv2_in" bundle="HBM2" offset="slave" name="" depth="3456" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="68" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="conv2_weight" bundle="HBM2" offset="slave" name="" depth="2400" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="69" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="conv2_bias" bundle="HBM2" offset="slave" name="" depth="16" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="71" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="fc1_in" bundle="HBM3" offset="slave" name="" depth="256" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="72" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="fc1_weight" bundle="HBM3" offset="slave" name="" depth="30720" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="73" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="fc1_bias" bundle="HBM3" offset="slave" name="" depth="120" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="75" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="fc2_in" bundle="HBM4" offset="slave" name="" depth="120" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="76" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="fc2_weight" bundle="HBM4" offset="slave" name="" depth="10080" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="77" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="fc2_bias" bundle="HBM4" offset="slave" name="" depth="84" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="79" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="fc3_in" bundle="HBM5" offset="slave" name="" depth="84" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="80" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="fc3_weight" bundle="HBM5" offset="slave" name="" depth="840" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="81" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="fc3_bias" bundle="HBM5" offset="slave" name="" depth="10" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="83" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="probs" bundle="HBM6" offset="slave" name="" depth="-1" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="84" pragmaType="interface" parentfunction="train_lenet5_top" mode="m_axi" port="label" bundle="HBM6" offset="slave" name="" depth="-1" num_read_outstanding="-1" num_write_outstanding="-1" max_burst_read_length="-1" max_burst_write_length="-1" latency="-1" max_widen_bitwidth="-1" channel=""/>
+<pragma file="kernels/train.cpp" line="86" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="image" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="88" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="conv1_weight" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="89" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="conv1_bias" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="91" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="conv2_in" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="92" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="conv2_weight" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="93" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="conv2_bias" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="95" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="fc1_in" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="96" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="fc1_weight" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="97" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="fc1_bias" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="99" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="fc2_in" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="100" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="fc2_weight" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="101" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="fc2_bias" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="103" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="fc3_in" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="104" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="fc3_weight" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="105" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="fc3_bias" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="107" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="probs" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="108" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="label" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/train.cpp" line="110" pragmaType="interface" parentfunction="train_lenet5_top" mode="s_axilite" port="" bundle="control" offset="-1" name="" clock="" impl="" register="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="83" pragmaType="inline" parentfunction="input_grad" off="1" region="0" recursive="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="98" pragmaType="pipeline" parentfunction="input_grad" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/conv2d_bwd.h" line="24" pragmaType="inline" parentfunction="bias_grad" off="0" region="0" recursive="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="30" pragmaType="pipeline" parentfunction="bias_grad" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/conv2d_bwd.h" line="44" pragmaType="inline" parentfunction="weight_grad" off="0" region="0" recursive="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="61" pragmaType="pipeline" parentfunction="weight_grad" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/conv2d_bwd.h" line="24" pragmaType="inline" parentfunction="bias_grad" off="0" region="0" recursive="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="30" pragmaType="pipeline" parentfunction="bias_grad" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/conv2d_bwd.h" line="44" pragmaType="inline" parentfunction="weight_grad" off="0" region="0" recursive="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="61" pragmaType="pipeline" parentfunction="weight_grad" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/conv2d_bwd.h" line="83" pragmaType="inline" parentfunction="input_grad" off="1" region="0" recursive="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="98" pragmaType="pipeline" parentfunction="input_grad" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/update.h" line="32" pragmaType="pipeline" parentfunction="general_update" off="0" ii="-1" style=""/>
+<pragma file="kernels/update.h" line="41" pragmaType="unroll" parentfunction="general_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/update.h" line="14" pragmaType="pipeline" parentfunction="bias_update" off="0" ii="-1" style=""/>
+<pragma file="kernels/update.h" line="21" pragmaType="unroll" parentfunction="bias_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/update.h" line="32" pragmaType="pipeline" parentfunction="general_update" off="0" ii="-1" style=""/>
+<pragma file="kernels/update.h" line="41" pragmaType="unroll" parentfunction="general_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/update.h" line="14" pragmaType="pipeline" parentfunction="bias_update" off="0" ii="-1" style=""/>
+<pragma file="kernels/update.h" line="21" pragmaType="unroll" parentfunction="bias_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/update.h" line="32" pragmaType="pipeline" parentfunction="general_update" off="0" ii="-1" style=""/>
+<pragma file="kernels/update.h" line="41" pragmaType="unroll" parentfunction="general_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/update.h" line="14" pragmaType="pipeline" parentfunction="bias_update" off="0" ii="-1" style=""/>
+<pragma file="kernels/update.h" line="21" pragmaType="unroll" parentfunction="bias_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/update.h" line="58" pragmaType="pipeline" parentfunction="conv2d_update" off="0" ii="-1" rewind="0" style=""/>
+<pragma file="kernels/update.h" line="63" pragmaType="unroll" parentfunction="conv2d_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/update.h" line="14" pragmaType="pipeline" parentfunction="bias_update" off="0" ii="-1" style=""/>
+<pragma file="kernels/update.h" line="21" pragmaType="unroll" parentfunction="bias_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="123" pragmaType="inline" parentfunction="conv2d_backward" off="1" region="0" recursive="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="174" pragmaType="pipeline" parentfunction="conv2d_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/conv2d_bwd.h" line="130" pragmaType="array_partition" parentfunction="conv2d_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="x_pad"/>
+<pragma file="kernels/conv2d_bwd.h" line="142" pragmaType="array_partition" parentfunction="conv2d_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="weight"/>
+<pragma file="kernels/conv2d_bwd.h" line="156" pragmaType="array_partition" parentfunction="conv2d_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="grad_buffer"/>
+<pragma file="kernels/update.h" line="58" pragmaType="pipeline" parentfunction="conv2d_update" off="0" ii="-1" rewind="0" style=""/>
+<pragma file="kernels/update.h" line="63" pragmaType="unroll" parentfunction="conv2d_update" factor="-1" skip_exit_check="0"/>
+<pragma file="kernels/avg_pool_bwd.h" line="12" pragmaType="inline" parentfunction="avg_pool_backward" off="1" region="0" recursive="0"/>
+<pragma file="kernels/avg_pool_bwd.h" line="58" pragmaType="pipeline" parentfunction="avg_pool_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/avg_pool_bwd.h" line="47" pragmaType="pipeline" parentfunction="avg_pool_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/avg_pool_bwd.h" line="20" pragmaType="array_partition" parentfunction="avg_pool_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="grads_buffer"/>
+<pragma file="kernels/avg_pool_bwd.h" line="31" pragmaType="array_partition" parentfunction="avg_pool_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="x_buffer"/>
+<pragma file="kernels/conv2d_bwd.h" line="123" pragmaType="inline" parentfunction="conv2d_backward" off="1" region="0" recursive="0"/>
+<pragma file="kernels/conv2d_bwd.h" line="174" pragmaType="pipeline" parentfunction="conv2d_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/conv2d_bwd.h" line="130" pragmaType="array_partition" parentfunction="conv2d_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="x_pad"/>
+<pragma file="kernels/conv2d_bwd.h" line="142" pragmaType="array_partition" parentfunction="conv2d_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="weight"/>
+<pragma file="kernels/conv2d_bwd.h" line="156" pragmaType="array_partition" parentfunction="conv2d_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="grad_buffer"/>
+<pragma file="kernels/avg_pool_bwd.h" line="12" pragmaType="inline" parentfunction="avg_pool_backward" off="1" region="0" recursive="0"/>
+<pragma file="kernels/avg_pool_bwd.h" line="58" pragmaType="pipeline" parentfunction="avg_pool_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/avg_pool_bwd.h" line="47" pragmaType="pipeline" parentfunction="avg_pool_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/avg_pool_bwd.h" line="20" pragmaType="array_partition" parentfunction="avg_pool_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="grads_buffer"/>
+<pragma file="kernels/avg_pool_bwd.h" line="31" pragmaType="array_partition" parentfunction="avg_pool_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="x_buffer"/>
+<pragma file="kernels/mse_loss.h" line="18" pragmaType="pipeline" parentfunction="mse_loss" off="0" ii="-1" style=""/>
+<pragma file="kernels/mse_loss.h" line="22" pragmaType="pipeline" parentfunction="mse_loss" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="17" pragmaType="inline" parentfunction="fc_backward" off="1" region="0" recursive="0"/>
+<pragma file="kernels/fc_bwd.h" line="49" pragmaType="pipeline" parentfunction="fc_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="42" pragmaType="pipeline" parentfunction="fc_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="35" pragmaType="pipeline" parentfunction="fc_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="19" pragmaType="array_partition" parentfunction="fc_backward" dim="2" factor="0" mode="complete" dynamic="0" variable="in_weight"/>
+<pragma file="kernels/fc_bwd.h" line="20" pragmaType="array_partition" parentfunction="fc_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="grads"/>
+<pragma file="kernels/fc_bwd.h" line="21" pragmaType="array_partition" parentfunction="fc_backward" dim="2" factor="0" mode="complete" dynamic="0" variable="dW"/>
+<pragma file="kernels/fc_bwd.h" line="22" pragmaType="array_partition" parentfunction="fc_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="dB"/>
+<pragma file="kernels/fc_bwd.h" line="25" pragmaType="array_partition" parentfunction="fc_backward" dim="2" factor="0" mode="complete" dynamic="0" variable="weight"/>
+<pragma file="kernels/fc_bwd.h" line="17" pragmaType="inline" parentfunction="fc_backward" off="1" region="0" recursive="0"/>
+<pragma file="kernels/fc_bwd.h" line="49" pragmaType="pipeline" parentfunction="fc_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="42" pragmaType="pipeline" parentfunction="fc_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="35" pragmaType="pipeline" parentfunction="fc_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="19" pragmaType="array_partition" parentfunction="fc_backward" dim="2" factor="0" mode="complete" dynamic="0" variable="in_weight"/>
+<pragma file="kernels/fc_bwd.h" line="20" pragmaType="array_partition" parentfunction="fc_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="grads"/>
+<pragma file="kernels/fc_bwd.h" line="21" pragmaType="array_partition" parentfunction="fc_backward" dim="2" factor="0" mode="complete" dynamic="0" variable="dW"/>
+<pragma file="kernels/fc_bwd.h" line="22" pragmaType="array_partition" parentfunction="fc_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="dB"/>
+<pragma file="kernels/fc_bwd.h" line="25" pragmaType="array_partition" parentfunction="fc_backward" dim="2" factor="0" mode="complete" dynamic="0" variable="weight"/>
+<pragma file="kernels/fc_bwd.h" line="17" pragmaType="inline" parentfunction="fc_backward" off="1" region="0" recursive="0"/>
+<pragma file="kernels/fc_bwd.h" line="49" pragmaType="pipeline" parentfunction="fc_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="42" pragmaType="pipeline" parentfunction="fc_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="35" pragmaType="pipeline" parentfunction="fc_backward" off="0" ii="1" rewind="0" style=""/>
+<pragma file="kernels/fc_bwd.h" line="19" pragmaType="array_partition" parentfunction="fc_backward" dim="2" factor="0" mode="complete" dynamic="0" variable="in_weight"/>
+<pragma file="kernels/fc_bwd.h" line="20" pragmaType="array_partition" parentfunction="fc_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="grads"/>
+<pragma file="kernels/fc_bwd.h" line="21" pragmaType="array_partition" parentfunction="fc_backward" dim="2" factor="0" mode="complete" dynamic="0" variable="dW"/>
+<pragma file="kernels/fc_bwd.h" line="22" pragmaType="array_partition" parentfunction="fc_backward" dim="1" factor="0" mode="complete" dynamic="0" variable="dB"/>
+<pragma file="kernels/fc_bwd.h" line="25" pragmaType="array_partition" parentfunction="fc_backward" dim="2" factor="0" mode="complete" dynamic="0" variable="weight"/>
+</pragmas>

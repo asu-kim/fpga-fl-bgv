@@ -1,0 +1,23 @@
+[
+  {
+    "functionLabel": "",
+    "functionName": "train_lenet5_top",
+    "id": 0,
+    "ifcond": "",
+    "insert_position": "",
+    "label": "",
+    "pragma": {
+      "name": "TOP",
+      "option": [
+        {
+          "name": "name",
+          "value": "train_lenet5_top"
+        }
+      ]
+    },
+    "slx": false,
+    "sourceFile": "/home/megan/Vitis-AI/accelerator/fpga-fl-bgv/host2fpga/build/build_train_LeNet5.tcl",
+    "sourceLine": 33,
+    "success": true
+  }
+]
