@@ -18,11 +18,11 @@
 open_project -reset FPGA_FL_CLIENT
 
 # Add design files
-add_files ../src/lenet5/forward_path.cpp -cflags "-I../include"
+add_files ../src/lenet5/fc1_bwd.cpp -cflags "-I../include"
 # Add test bench & files
-add_files -tb ../test/test_forward_path.cpp -cflags "-I../include -I../data"
+add_files -tb ../test/test_fc1_bwd.cpp -cflags "-I../include -I../data"
 
-set top_name "forward_path"
+set top_name "fc1_bwd"
 
 # Set the top-level function
 set_top $top_name
@@ -37,7 +37,7 @@ create_clock -period 10
 config_export -format xo -output $top_name.xo
 
 # Set variable to select which steps to execute
-set hls_exec 1
+set hls_exec 3
 
 csim_design
 # Set any optimization directives

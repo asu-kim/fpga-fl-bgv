@@ -1,4 +1,3 @@
-// #include "hls_stream.h"
 #include "constants.hpp"
 #include "data_type.hpp"
 #include "lenet5/fc_layer.h"

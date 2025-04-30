@@ -203,6 +203,49 @@ void fc_golden(
     }
 }
 
+template<int IN_DIM, int OUT_DIM>
+void fc_bwd_golden(
+    const float in_activation[IN_DIM],
+    const float grads[OUT_DIM],
+    const float in_weight[IN_DIM*OUT_DIM],
+    float dX[IN_DIM],
+    float dW[IN_DIM*OUT_DIM],
+    float dB[OUT_DIM],
+    bool use_relu = true
+) {
+    // Reconstruct weights for easier access
+    float weight[IN_DIM][OUT_DIM];
+    for(int i=0; i<IN_DIM; ++i) {
+        for(int j=0; j<OUT_DIM; ++j) {
+            int idx = i * OUT_DIM + j;
+            weight[i][j] = in_weight[idx];
+        }
+    }
+    
+    // Bias gradients
+    for(int j=0; j<OUT_DIM; ++j) {
+        dB[j] = grads[j];
+    }
+
+    // Weight gradients
+    for(int i=0; i<IN_DIM; ++i) {
+        for(int j=0; j<OUT_DIM; ++j) {
+            int idx = i * OUT_DIM + j;
+            dW[idx] = in_activation[i] * grads[j];
+        }
+    }
+
+    // Input gradients
+    for(int i=0; i<IN_DIM; ++i) {
+        float acc = 0;
+        for(int j=0; j<OUT_DIM; ++j) {
+            acc += weight[i][j] * grads[j];
+        }
+        if(use_relu) acc *= (in_activation[i] > 0 ? 1.0f : 0.0f);
+        dX[i] = acc;
+    }
+}
+
 // template<int OC, int IC, int KERNEL_SIZE>
 // void load_conv2d_weight(
 //         const char* filename,
