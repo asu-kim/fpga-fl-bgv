@@ -14,65 +14,80 @@ void print_array(const char* name, data_t* arr, int size) {
     std::cout << "]" << std::endl;
 }
 
-// Reference implementation for verification
-void ntt_reference(data_t* input, data_t* output) {
-    data_t n = POLYNOMIAL_DEGREE;
-    // data_t n_inv = INVERSE_POLYNOMIAL_DEGREE;
-    data_t q = CIPHERTEXT_MODULUS;
-    data_t w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
-    // data_t w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
+// // Reference implementation for verification
+// void ntt_reference(data_t* input, data_t* output) {
+//     int n = POLYNOMIAL_DEGREE;
+//     int q = CIPHERTEXT_MODULUS;
+//     int w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
+//     // Make a copy of input
+//     data_t temp[POLYNOMIAL_DEGREE];
+//     for (int i = 0; i < n; i++) {
+//         temp[i] = input[i];
+//     }
 
-    for (int i = 0; i < n; i++) {
-        int temp = 0;
-        int w_i = hls::pow(w, i) % q;
-        
-        // Start with w_i^0 = 1
-        int current_power = 1;
-        
-        for (int j = 0; j < n; j++) {
-            // Use the current power value which is always within [0, q-1]
-            int product = (input[j] * current_power) % q;
-            temp = (temp + product) % q;
+//     // Perform NTT using the same algorithm
+//     for (int m = n / 2; m >= 1; m /= 2) {
+//         for (int j = 0; j < m; j++) {
+//             int exp = (j * n) / (2 * m);
+//             data_t w_m = 1;
+//             for (int k = 0; k < exp; k++) {
+//                 w_m = (w_m * w) % q;
+//             }
+//             printf("test w_m = %d\n", w_m);
+
+//             for (int i = j; i < n; i += 2 * m) {
+//                 data_t t1 = temp[i];
+//                 data_t t2 = temp[i + m];
+//                 temp[i] = (t1 + t2) % q;
+//                 temp[i + m] = (w_m * ((t1 - t2 + q) % q)) % q;
+//             }
+//         }
+//     }
+    
+//     // Apply bit reversal
+//     for (int i = 0; i < n; i++) {
+//         output[BIT_REVERSE_LUT[i]] = temp[i];
+//     }
+// }
+
+// // Reference implementation for INNT verification
+// void intt_reference(data_t* input, data_t* output) {
+//     int n = POLYNOMIAL_DEGREE;
+//     int q = CIPHERTEXT_MODULUS;
+//     int w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
+//     int n_inv = INVERSE_POLYNOMIAL_DEGREE;
+//     // Make a copy of input with bit-reversal
+//     data_t temp[n];
+//     for (int i = 0; i < n; i++) {
+//         temp[i] = input[i];
+//     }
+
+//     // INTT algorithm
+//     for (int m = n / 2; m >= 1; m /= 2) {
+//         for (int j = 0; j < m; j++) {
+//             int exp = (j * n) / (2 * m);
+//             data_t w_m = 1;
+//             for (int k = 0; k < exp; k++) {
+//                 w_m = (w_m * w_inv) % q;
+//             }
             
-            // Calculate next power by multiplying by w_i (mod q)
-            current_power = (current_power * w_i) % q;
-        }
-        
-        output[i] = ((temp % q) + q) % q;
-    }
-}
-
-// Reference implementation for INNT verification
-void intt_reference(data_t* input, data_t* output) {
-    data_t n = POLYNOMIAL_DEGREE;
-    data_t n_inv = INVERSE_POLYNOMIAL_DEGREE;
-    data_t q = CIPHERTEXT_MODULUS;
-    // data_t w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
-    data_t w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
-
-    for (int i = 0; i < n; i++) {
-        int temp = 0;
-        int w_inv_i = hls::pow(w_inv, i) % q;
-        
-        // Start with w_inv_i^0 = 1
-        int current_power = 1;
-        
-        for (int j = 0; j < n; j++) {
-            // Use the current power which is always within [0, q-1]
-            int product = (input[j] * current_power) % q;
-            temp = (temp + product) % q;
-            
-            // Calculate next power by multiplying by w_inv_i (mod q)
-            current_power = (current_power * w_inv_i) % q;
-        }
-        
-        // Apply the scaling factor n_inv
-        temp = (temp * n_inv) % q;
-        
-        // Ensure the result is positive
-        output[i] = (temp + q) % q;
-    }
-}
+//             for (int i = j; i < n; i += 2 * m) {
+//                 data_t t1 = temp[i];
+//                 data_t t2 = temp[i + m];
+//                 temp[i] = (t1 + t2) % q;
+                
+//                 // Correct computation for INTT
+//                 data_t diff = (t1 - t2 + q) % q;  // Ensure positive result
+//                 temp[i + m] = (diff * w_m) % q;
+//             }
+//         }
+//     }
+    
+//     // Apply scaling by n_inv
+//     for (int i = 0; i < n; i++) {
+//         output[BIT_REVERSE_LUT[i]] = (temp[i] * n_inv) % q;
+//     }
+// }
 
 // void polynomial_multiplication_reference(data_t* input1, data_t* input2, data_t* output) {
 //     data_t n = POLYNOMIAL_DEGREE;
