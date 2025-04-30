@@ -221,24 +221,6 @@ int main(int argc, char **argv)
     bo_fc3_weight.sync(XCL_BO_SYNC_BO_TO_DEVICE);
     bo_fc3_bias.sync(XCL_BO_SYNC_BO_TO_DEVICE);
 
-    // std::cout << "input = [";
-    // for(int i = 0; i < IN_C*IN_ROWS*IN_COLS; i++) {
-    //     std::cout << bo_in_data_map[i] << ", ";
-    // }
-    // std::cout << "]" << std::endl;
-
-    // std::cout << "weight = [";
-    // for(int i = 0; i < OUT_C * IN_C * KERNEL_SIZE * KERNEL_SIZE; i++) {
-    //     std::cout << bo_weights_map[i] << ", ";
-    // }
-    // std::cout << "]" << std::endl;
-
-    // std::cout << "bias = [";
-    // for(int i = 0; i < OUT_C; i++) {
-    //     std::cout << bo_bias_map[i] << ", ";
-    // }
-    // std::cout << "]" << std::endl;
-
     // Run forward path
     std::cout << "Running the kernel\n";
     auto run = forward_krnl(
@@ -279,7 +261,37 @@ int main(int argc, char **argv)
     bo_fc3_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
     float conv1_out_golden[conv1_out_size];
-    conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(bo_in_data_map, conv1_out_golden, bo_conv1_weight_map, bo_conv1_bias_map);
+    float pool1_out_golden[pool1_out_size];
+    float conv2_out_golden[conv2_out_size];
+    float pool2_out_golden[pool2_out_size];
+    float fc1_out_golden[fc1_out_size];
+    float fc2_out_golden[fc2_out_size];
+    float fc3_out_golden[fc3_out_size];
+
+    forward_golden(
+        bo_in_data_map,
+        bo_conv1_weight_map,
+        bo_conv1_bias_map,
+        conv1_out_golden,
+        pool1_out_golden,
+        bo_conv2_weight_map,
+        bo_conv2_bias_map,
+        conv2_out_golden,
+        pool2_out_golden,
+        bo_fc1_weight_map,
+        bo_fc1_bias_map,
+        fc1_out_golden,
+        bo_fc2_weight_map,
+        bo_fc2_bias_map,
+        fc2_out_golden,
+        bo_fc3_weight_map,
+        bo_fc3_bias_map,
+        fc3_out_golden
+    );
+
+
+    // float conv1_out_golden[conv1_out_size];
+    // conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(bo_in_data_map, conv1_out_golden, bo_conv1_weight_map, bo_conv1_bias_map);
     std::cout << "Sample of conv1_out (6x6): " << std::endl;
     for(int i=0; i<6; i++) {
         for(int j = 0; j < 6; j++) {
@@ -311,8 +323,8 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // Pool1 Test
-    float pool1_out_golden[pool1_out_size];
-    pool_golden<2, 2, CONV1_OUT_CH, CONV1_OUT_ROWS, CONV1_OUT_COLS>(conv1_out_golden, pool1_out_golden);
+    // float pool1_out_golden[pool1_out_size];
+    // pool_golden<2, 2, CONV1_OUT_CH, CONV1_OUT_ROWS, CONV1_OUT_COLS>(conv1_out_golden, pool1_out_golden);
     errors = 0;
     max_diff = 0.0f;
 
@@ -343,8 +355,8 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // Conv2 Test
-    float conv2_out_golden[conv2_out_size];
-    conv_golden<CONV2_OUT_CH, CONV2_IN_CH, KERNEL_SIZE, CONV2_IN_ROWS, CONV2_IN_COLS>(bo_pool1_out_map, conv2_out_golden, bo_conv2_weight_map, bo_conv2_bias_map);
+    // float conv2_out_golden[conv2_out_size];
+    // conv_golden<CONV2_OUT_CH, CONV2_IN_CH, KERNEL_SIZE, CONV2_IN_ROWS, CONV2_IN_COLS>(bo_pool1_out_map, conv2_out_golden, bo_conv2_weight_map, bo_conv2_bias_map);
     std::cout << "Sample of conv2_out (6x6): " << std::endl;
     for(int i=0; i<6; i++) {
         for(int j = 0; j < 6; j++) {
@@ -374,8 +386,8 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // Pool2 Test
-    float pool2_out_golden[pool2_out_size];
-    pool_golden<2, 2, CONV2_OUT_CH, CONV2_OUT_ROWS, CONV2_OUT_COLS>(conv2_out_golden, pool2_out_golden);
+    // float pool2_out_golden[pool2_out_size];
+    // pool_golden<2, 2, CONV2_OUT_CH, CONV2_OUT_ROWS, CONV2_OUT_COLS>(conv2_out_golden, pool2_out_golden);
     errors = 0;
     max_diff = 0.0f;
 
@@ -406,8 +418,8 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // FC1 Test
-    float fc1_out_golden[fc1_out_size];
-    fc_golden<FC1_IN_DIM, FC1_OUT_DIM>(pool2_out_golden, fc1_out_golden, bo_fc1_weight_map, bo_fc1_bias_map, true);
+    // float fc1_out_golden[fc1_out_size];
+    // fc_golden<FC1_IN_DIM, FC1_OUT_DIM>(pool2_out_golden, fc1_out_golden, bo_fc1_weight_map, bo_fc1_bias_map, true);
     errors = 0;
     max_diff = 0.0f;
 
@@ -435,8 +447,8 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // FC2 Test
-    float fc2_out_golden[fc2_out_size];
-    fc_golden<FC2_IN_DIM, FC2_OUT_DIM>(fc1_out_golden, fc2_out_golden, bo_fc2_weight_map, bo_fc2_bias_map, true);
+    // float fc2_out_golden[fc2_out_size];
+    // fc_golden<FC2_IN_DIM, FC2_OUT_DIM>(fc1_out_golden, fc2_out_golden, bo_fc2_weight_map, bo_fc2_bias_map, true);
     errors = 0;
     max_diff = 0.0f;
 
@@ -464,8 +476,8 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // FC3 Test
-    float fc3_out_golden[fc3_out_size];
-    fc_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out_golden, fc3_out_golden, bo_fc3_weight_map, bo_fc3_bias_map, false);
+    // float fc3_out_golden[fc3_out_size];
+    // fc_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out_golden, fc3_out_golden, bo_fc3_weight_map, bo_fc3_bias_map, false);
     errors = 0;
     max_diff = 0.0f;
 

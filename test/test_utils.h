@@ -56,6 +56,8 @@
 #define FC3_IN_DIM 84
 #define FC3_OUT_DIM 10
 
+#define lr 1e-3
+
 float SAMPLE_INPUT[784] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -202,6 +204,68 @@ void fc_golden(
     }
 }
 
+void forward_golden(
+    const float* in_data,
+    const float* conv1_weight,
+    const float* conv1_bias,
+    float* conv1_out,
+    float* pool1_out,
+    const float* conv2_weight,
+    const float* conv2_bias,
+    float* conv2_out,
+    float* pool2_out,
+    const float* fc1_weight,
+    const float* fc1_bias,
+    float* fc1_out,
+    const float* fc2_weight,
+    const float* fc2_bias,
+    float* fc2_out,  
+    const float* fc3_weight,
+    const float* fc3_bias,
+    float* fc3_out
+) {
+    // Conv1
+    conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(in_data, conv1_out, conv1_weight, conv1_bias);
+
+    // Pool1
+    pool_golden<2, 2, CONV1_OUT_CH, CONV1_OUT_ROWS, CONV1_OUT_COLS>(conv1_out, pool1_out);
+
+    // Conv2
+    conv_golden<CONV2_OUT_CH, CONV2_IN_CH, KERNEL_SIZE, CONV2_IN_ROWS, CONV2_IN_COLS>(pool1_out, conv2_out, conv2_weight, conv2_bias);
+
+    // Pool2
+    pool_golden<2, 2, CONV2_OUT_CH, CONV2_OUT_ROWS, CONV2_OUT_COLS>(conv2_out, pool2_out);
+
+    // FC1
+    fc_golden<FC1_IN_DIM, FC1_OUT_DIM>(pool2_out, fc1_out, fc1_weight, fc1_bias, true);
+
+    // FC2
+    fc_golden<FC2_IN_DIM, FC2_OUT_DIM>(fc1_out, fc2_out, fc2_weight, fc2_bias, true);
+
+    // FC3
+    fc_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out, fc3_out, fc3_weight, fc3_bias, false);
+}
+
+template<int N>
+void mse_loss_golden(
+        const float y_pred[N],
+        const float y_true[N],
+        float &loss,
+        float grads[N]
+        ) {
+    float acc_loss = 0.0f;
+
+    for(int i=0; i<N; ++i) {
+        float p = y_pred[i];
+        float t = y_true[i];
+        float diff = t - p;
+        acc_loss += diff * diff;
+        grads[i] = (2.0f * diff) / N;
+    }
+
+    loss = (acc_loss / N);
+}
+
 template<int IN_DIM, int OUT_DIM>
 void fc_bwd_golden(
     const float in_activation[IN_DIM],
@@ -290,107 +354,214 @@ void pool_bwd_golden(
     }
 }
 
-// template<int OC, int IC, int KERNEL_SIZE>
-// void load_conv2d_weight(
-//         const char* filename,
-//         data_t weight[OC][IC][KERNEL_SIZE][KERNEL_SIZE]
-//         ) {
-//     std::ifstream file(filename, std::ios::binary);
+template<int OUT_C, int IN_C, int KERNEL, int IN_ROWS, int IN_COLS>
+void conv_bwd_golden(
+    const float in_activation[IN_C * IN_ROWS * IN_COLS],
+    const float grads[OUT_C * (IN_ROWS - KERNEL + 1) * (IN_COLS - KERNEL + 1)],
+    const float in_weight[OUT_C * IN_C * KERNEL * KERNEL],
+    float out_grads[IN_C * IN_ROWS * IN_COLS],
+    float dW[OUT_C * IN_C * KERNEL * KERNEL],
+    float dB[OUT_C]
+) {
+    const int OUT_ROWS = IN_ROWS - KERNEL + 1;
+    const int OUT_COLS = IN_COLS - KERNEL + 1;
+    
+    // Initialize output arrays to zero
+    for (int i = 0; i < IN_C * IN_ROWS * IN_COLS; ++i) {
+        out_grads[i] = 0.0f;
+    }
+    
+    for (int i = 0; i < OUT_C * IN_C * KERNEL * KERNEL; ++i) {
+        dW[i] = 0.0f;
+    }
+    
+    for (int i = 0; i < OUT_C; ++i) {
+        dB[i] = 0.0f;
+    }
+    
+    // Part 1: Compute bias gradients (dB)
+    // For each output channel, sum all gradient values across spatial dimensions
+    for (int oc = 0; oc < OUT_C; ++oc) {
+        for (int r = 0; r < OUT_ROWS; ++r) {
+            for (int c = 0; c < OUT_COLS; ++c) {
+                int grad_idx = oc * (OUT_ROWS * OUT_COLS) + r * OUT_COLS + c;
+                dB[oc] += grads[grad_idx];
+            }
+        }
+    }
+    
+    // Part 2: Compute weight gradients (dW)
+    // For each position in the output gradient, update the corresponding weight gradients
+    // using the input activation values within the kernel window
+    for (int oc = 0; oc < OUT_C; ++oc) {
+        for (int ic = 0; ic < IN_C; ++ic) {
+            for (int kr = 0; kr < KERNEL; ++kr) {
+                for (int kc = 0; kc < KERNEL; ++kc) {
+                    float gradient_sum = 0.0f;
+                    
+                    for (int r = 0; r < OUT_ROWS; ++r) {
+                        for (int c = 0; c < OUT_COLS; ++c) {
+                            int grad_idx = oc * (OUT_ROWS * OUT_COLS) + r * OUT_COLS + c;
+                            int in_idx = ic * (IN_ROWS * IN_COLS) + (r + kr) * IN_COLS + (c + kc);
+                            
+                            gradient_sum += grads[grad_idx] * in_activation[in_idx];
+                        }
+                    }
+                    
+                    int weight_idx = oc * (IN_C * KERNEL * KERNEL) + ic * (KERNEL * KERNEL) + kr * KERNEL + kc;
+                    dW[weight_idx] = gradient_sum;
+                }
+            }
+        }
+    }
+    
+    // Part 3: Compute input gradients (out_grads)
+    // For each input position, compute the gradient by convolving the output gradients
+    // with the flipped weights
+    for (int ic = 0; ic < IN_C; ++ic) {
+        for (int r = 0; r < IN_ROWS; ++r) {
+            for (int c = 0; c < IN_COLS; ++c) {
+                float gradient_sum = 0.0f;
+                
+                // Iterate over all output channels
+                for (int oc = 0; oc < OUT_C; ++oc) {
+                    // Iterate over the kernel window that could affect this input position
+                    for (int kr = 0; kr < KERNEL; ++kr) {
+                        for (int kc = 0; kc < KERNEL; ++kc) {
+                            // Calculate corresponding output position
+                            int out_r = r - kr;
+                            int out_c = c - kc;
+                            
+                            // Check if this output position is valid
+                            if (out_r >= 0 && out_r < OUT_ROWS && out_c >= 0 && out_c < OUT_COLS) {
+                                int grad_idx = oc * (OUT_ROWS * OUT_COLS) + out_r * OUT_COLS + out_c;
+                                
+                                // Use flipped kernel indices for backprop (rotate 180 degrees)
+                                int weight_idx = oc * (IN_C * KERNEL * KERNEL) + 
+                                                ic * (KERNEL * KERNEL) + 
+                                                (KERNEL - 1 - kr) * KERNEL + 
+                                                (KERNEL - 1 - kc);
+                                
+                                gradient_sum += grads[grad_idx] * in_weight[weight_idx];
+                            }
+                        }
+                    }
+                }
+                
+                int in_idx = ic * (IN_ROWS * IN_COLS) + r * IN_COLS + c;
+                out_grads[in_idx] = gradient_sum;
+            }
+        }
+    }
+}
 
-//     if(!file.is_open()) {
-//         std::cerr << "Error: cannot open " << CONV1_WEIGHT_BIN << std::endl;
-//         exit(1);
-//     }
+void backward_golden(
+    const float* in_data,
+    const float* conv1_weight,
+    const float* conv1_bias,
+    const float* conv1_out,
+    const float* pool1_out,
+    const float* conv2_weight,
+    const float* conv2_bias,
+    const float* conv2_out,
+    const float* pool2_out,
+    const float* fc1_weight,
+    const float* fc1_bias,
+    const float* fc1_out,
+    const float* fc2_weight,
+    const float* fc2_bias,
+    const float* fc2_out,
+    const float* fc3_weight,
+    const float* fc3_bias,
+    const float* fc3_out,
+    const float* label,
+    float* conv1_updated_weight,
+    float* conv1_updated_bias,
+    float* conv2_updated_weight,
+    float* conv2_updated_bias,
+    float* fc1_updated_weight,
+    float* fc1_updated_bias,
+    float* fc2_updated_weight,
+    float* fc2_updated_bias,
+    float* fc3_updated_weight,
+    float* fc3_updated_bias,
+    float loss
+) {
+    float out_grad[FC3_OUT_DIM];
+    // Loss
+    mse_loss_golden<FC3_OUT_DIM>(fc3_out, label, loss, out_grad);
 
-//     for(int oc=0; oc<OC; ++oc) {
-//         for(int ic=0; ic<IC; ++ic) {
-//             for(int i=0; i<KERNEL_SIZE; ++i) {
-//                 for(int j=0; j<KERNEL_SIZE; ++j) {
-//                     float val;
-//                     file.read(reinterpret_cast<char*>(&val), sizeof(float));
-//                     weight[oc][ic][i][j] = data_t(val);
-//                 }
-//             }
-//         }
-//     }
-// }
+    float fc3_dX[FC3_IN_DIM];
+    float fc3_dW[FC3_IN_DIM*FC3_OUT_DIM];
+    float fc3_dB[FC3_OUT_DIM];
+    // FC3 Bwd
+    fc_bwd_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out, out_grad, fc3_weight, fc3_dX, fc3_dW, fc3_dB, false);
+    // Update FC3 weights and biases
+    for(int i = 0; i < FC3_IN_DIM*FC3_OUT_DIM; i++) {
+        fc3_updated_weight[i] = fc3_weight[i] - lr * fc3_dW[i];
+    }
+    for(int i = 0; i < FC3_OUT_DIM; i++) {
+        fc3_updated_bias[i] = fc3_bias[i] - lr * fc3_dB[i];
+    }
 
-// template<int OUT_DIM, int IN_DIM>
-// void load_fc_weight(
-//         const char* filename,
-//         data_t fc_weight[OUT_DIM][IN_DIM]
-//         ) {
-//     std::ifstream file(filename, std::ios::binary);
+    float fc2_dX[FC2_IN_DIM];
+    float fc2_dW[FC2_IN_DIM*FC2_OUT_DIM];
+    float fc2_dB[FC2_OUT_DIM];
+    // FC2 Bwd
+    fc_bwd_golden<FC2_IN_DIM, FC2_OUT_DIM>(fc1_out, fc3_dX, fc2_weight, fc2_dX, fc2_dW, fc2_dB, true);
+    // Update FC2 weights and biases
+    for(int i = 0; i < FC2_IN_DIM*FC2_OUT_DIM; i++) {
+        fc2_updated_weight[i] = fc2_weight[i] - lr * fc2_dW[i];
+    }
+    for(int i = 0; i < FC2_OUT_DIM; i++) {
+        fc2_updated_bias[i] = fc2_bias[i] - lr * fc2_dB[i];
+    }
 
-//     for(int o=0; o<OUT_DIM; ++o) {
-//         for(int i=0; i<IN_DIM; ++i) {
-//             float val;
-//             file.read(reinterpret_cast<char*>(&val), sizeof(float));
-//             fc_weight[o][i] = data_t(val);
-//         }
-//     }
-// }
+    float fc1_dX[FC1_IN_DIM];
+    float fc1_dW[FC1_IN_DIM*FC1_OUT_DIM];
+    float fc1_dB[FC1_OUT_DIM];
+    // FC1 Bwd
+    fc_bwd_golden<FC1_IN_DIM, FC1_OUT_DIM>(pool2_out, fc2_dX, fc1_weight, fc1_dX, fc1_dW, fc1_dB, true);
+    // Update FC1 weights and biases
+    for(int i = 0; i < FC1_IN_DIM*FC1_OUT_DIM; i++) {
+        fc1_updated_weight[i] = fc1_weight[i] - lr * fc1_dW[i];
+    }
+    for(int i = 0; i < FC1_OUT_DIM; i++) {
+        fc1_updated_bias[i] = fc1_bias[i] - lr * fc1_dB[i];
+    }
 
-// template<int SIZE>
-// void load_bias(
-//         const char* filename,
-//         data_t bias[SIZE]
-//         ) {
-//     std::ifstream file(filename, std::ios::binary);
+    float pool2_dX[CONV2_OUT_CH*CONV2_OUT_ROWS*CONV2_OUT_COLS];
+    // Pool2 Bwd
+    pool_bwd_golden<2, 2, CONV2_OUT_CH, CONV2_OUT_ROWS, CONV2_OUT_COLS>(fc1_dX, pool2_dX);
 
-//     for(int i=0; i<SIZE; ++i) {
-//         float val;
-//         file.read(reinterpret_cast<char*>(&val), sizeof(float));
-//         bias[i] = data_t(val);
-//     }
-// }
+    float conv2_dX[CONV2_IN_CH*CONV2_IN_ROWS*CONV2_IN_COLS];
+    float conv2_dW[CONV2_OUT_CH*CONV2_IN_CH*KERNEL_SIZE*KERNEL_SIZE];
+    float conv2_dB[CONV2_OUT_CH];
+    // Conv2 Bwd
+    conv_bwd_golden<CONV2_OUT_CH, CONV2_IN_CH, KERNEL_SIZE, CONV2_IN_ROWS, CONV2_OUT_ROWS>(pool1_out, pool2_dX, conv2_weight, conv2_dX, conv2_dW, conv2_dB);
+    // Update Conv2 weights and biases
+    for(int i = 0; i < CONV2_OUT_CH*CONV2_IN_CH*KERNEL_SIZE*KERNEL_SIZE; i++) {
+        conv2_updated_weight[i] = conv2_weight[i] - lr * conv2_dW[i];
+    }
+    for(int i = 0; i < CONV2_OUT_CH; i++) {
+        conv2_updated_bias[i] = conv2_bias[i] - lr * conv2_dB[i];
+    }
 
-// template<int IN_DIM>
-// void load_input_to_stream(
-//         const char* filename,
-//         hls::stream<data_t>& in_stream
-//         ) {
-//     std::ifstream file(filename, std::ios::binary);
+    float pool1_dX[CONV1_OUT_CH*CONV1_OUT_ROWS*CONV1_OUT_COLS];
+    // Pool1 Bwd
+    pool_bwd_golden<2, 2, CONV1_OUT_CH, CONV1_OUT_ROWS, CONV1_OUT_COLS>(conv2_dX, pool1_dX);
 
-//     // skip MNIST headers (magic, num_images, rows, cols)
-//     file.seekg(16, std::ios::beg);
-
-//     for(int i=0; i<IN_DIM * IN_DIM; ++i) {
-//         unsigned char pixel;
-//         file.read(reinterpret_cast<char*>(&pixel), 1);
-//         data_t val = data_t(pixel);
-//         val /= data_t(255.0);
-//         in_stream.write(val);
-//     }
-// }
-
-// int check_against_golden(int predicted) {
-//     std::ifstream file(VALIDATE_DATA, std::ios::binary);
-
-//     /*
-//      * for testing multiple input
-//     if(!file.is_open()) {
-//         std::cerr << "Error opening labels" << std::endl;
-//         return 1;
-//     }
-//     * end loop
-//     */
-
-//     file.seekg(8, std::ios::beg);
-
-//     unsigned char true_label;
-//     file.read(reinterpret_cast<char*>(&true_label), 1);
-
-//     int golden_class = static_cast<int>(true_label);
-
-//     if(predicted != golden_class) {
-//         std::cout << "ERROR: Predicted: " << predicted
-//             << ", Golden: " << golden_class << std::endl;
-
-//         return 1;
-//     }
-
-//     std::cout << "SUCCESS: Predict class: " << golden_class << std::endl;
-//     return 0;
-// }
+    float conv1_dX[CONV1_IN_CH*CONV1_IN_ROWS*CONV1_IN_COLS];
+    float conv1_dW[CONV1_OUT_CH*CONV1_IN_CH*KERNEL_SIZE*KERNEL_SIZE];
+    float conv1_dB[CONV1_OUT_CH];
+    // Conv1 Bwd
+    conv_bwd_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_OUT_ROWS>(in_data, pool1_dX, conv1_weight, conv1_dX, conv1_dW, conv1_dB);
+    // Update Conv1 weights and biases
+    for(int i = 0; i < CONV1_OUT_CH*CONV1_IN_CH*KERNEL_SIZE*KERNEL_SIZE; i++) {
+        conv1_updated_weight[i] = conv1_weight[i] - lr * conv1_dW[i];
+    }
+    for(int i = 0; i < CONV1_OUT_CH; i++) {
+        conv1_updated_bias[i] = conv1_bias[i] - lr * conv1_dB[i];
+    }
+}
 #endif
