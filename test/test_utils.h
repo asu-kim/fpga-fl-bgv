@@ -144,7 +144,6 @@ void conv_golden(
     }
 }
 
-
 template<int POOL_SIZE, int STRIDE, int IN_C, int IN_ROWS, int IN_COLS>
 void pool_golden(
     const float in_data[IN_C*IN_ROWS*IN_COLS],
@@ -243,6 +242,51 @@ void fc_bwd_golden(
         }
         if(use_relu) acc *= (in_activation[i] > 0 ? 1.0f : 0.0f);
         dX[i] = acc;
+    }
+}
+
+template<int POOL_SIZE, int STRIDE, int IN_C, int IN_ROWS, int IN_COLS>
+void pool_bwd_golden(
+    const float in_data[IN_C*((IN_ROWS-POOL_SIZE)/STRIDE+1)*((IN_COLS-POOL_SIZE)/STRIDE+1)],
+    float out_data[IN_C*IN_ROWS*IN_COLS]
+) {
+    int OUT_ROWS = (IN_ROWS - POOL_SIZE) / STRIDE + 1;
+    int OUT_COLS = (IN_COLS - POOL_SIZE) / STRIDE + 1;
+    
+    // Initialize output to zeros
+    for (int i = 0; i < IN_C*IN_ROWS*IN_COLS; i++) {
+        out_data[i] = 0.0f;
+    }
+    
+    const float scale = 1.0f / (POOL_SIZE * POOL_SIZE);
+    
+    // For each input position
+    for (int c = 0; c < IN_C; c++) {
+        for (int h = 0; h < IN_ROWS; h++) {
+            for (int w = 0; w < IN_COLS; w++) {
+                // Find all output positions that this input contributes to
+                int out_h_start = (h < POOL_SIZE) ? 0 : (h - POOL_SIZE + STRIDE) / STRIDE;
+                int out_w_start = (w < POOL_SIZE) ? 0 : (w - POOL_SIZE + STRIDE) / STRIDE;
+                int out_h_end = std::min(OUT_ROWS, (h / STRIDE) + 1);
+                int out_w_end = std::min(OUT_COLS, (w / STRIDE) + 1);
+                
+                // Add contributions from all relevant output positions
+                for (int oh = out_h_start; oh < out_h_end; oh++) {
+                    for (int ow = out_w_start; ow < out_w_end; ow++) {
+                        // Check if input position (h,w) is in the pooling window of output (oh,ow)
+                        int h_start = oh * STRIDE;
+                        int w_start = ow * STRIDE;
+                        
+                        if (h >= h_start && h < h_start + POOL_SIZE && 
+                            w >= w_start && w < w_start + POOL_SIZE) {
+                            int in_idx = c*OUT_ROWS*OUT_COLS + oh*OUT_COLS + ow;
+                            int out_idx = c*IN_ROWS*IN_COLS + h*IN_COLS + w;
+                            out_data[out_idx] += in_data[in_idx] * scale;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
