@@ -11,7 +11,7 @@ void conv2d(
         const float weight[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE],
         const float bias[OUT_C]
         ) {
-    #pragma HLS INLINE OFF
+    // #pragma HLS INLINE OFF
     
     // Constants
     const int OUT_H = ROW - KERNEL_SIZE + 1;

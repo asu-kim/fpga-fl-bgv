@@ -12,7 +12,7 @@ void fc(
         const float bias[OUT_DIM],
         bool use_relu = true
         ) {
-    #pragma HLS INLINE OFF
+    // #pragma HLS INLINE OFF
     // #pragma HLS ARRAY_PARTITION variable=weight cyclic factor=4 dim=1
     // #pragma HLS ARRAY_PARTITION variable=bias complete dim=1
 

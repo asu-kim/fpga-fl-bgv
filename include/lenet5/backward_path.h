@@ -3,36 +3,14 @@
 
 extern "C" {
 void backward_path(
-    const float* in_data,
-    const float* conv1_weight,
-    const float* conv1_bias,
-    const float* conv1_out,
-    const float* pool1_out,
-    const float* conv2_weight,
-    const float* conv2_bias,
-    const float* conv2_out,
-    const float* pool2_out,
-    const float* fc1_weight,
-    const float* fc1_bias,
-    const float* fc1_out,
-    const float* fc2_weight,
-    const float* fc2_bias,
-    const float* fc2_out,
-    const float* fc3_weight,
-    const float* fc3_bias,
-    const float* fc3_out,
-    const float* label,
-    float* conv1_updated_weight,
-    float* conv1_updated_bias,
-    float* conv2_updated_weight,
-    float* conv2_updated_bias,
-    float* fc1_updated_weight,
-    float* fc1_updated_bias,
-    float* fc2_updated_weight,
-    float* fc2_updated_bias,
-    float* fc3_updated_weight,
-    float* fc3_updated_bias,
-    float loss
+    const float* in_data,             // gmem0
+    const float* weights,             // gmem1 - consolidated weights
+    const float* biases,              // gmem2 - consolidated biases
+    const float* outputs,             // gmem3 - consolidated outputs
+    const float* label,               // gmem4
+    float* updated_weights,           // gmem5 - consolidated updated weights
+    float* updated_biases,            // gmem6 - consolidated updated biases
+    float& loss
 );
 }
 #endif

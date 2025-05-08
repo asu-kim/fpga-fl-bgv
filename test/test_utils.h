@@ -206,24 +206,66 @@ void fc_golden(
 
 void forward_golden(
     const float* in_data,
-    const float* conv1_weight,
-    const float* conv1_bias,
-    float* conv1_out,
-    float* pool1_out,
-    const float* conv2_weight,
-    const float* conv2_bias,
-    float* conv2_out,
-    float* pool2_out,
-    const float* fc1_weight,
-    const float* fc1_bias,
-    float* fc1_out,
-    const float* fc2_weight,
-    const float* fc2_bias,
-    float* fc2_out,  
-    const float* fc3_weight,
-    const float* fc3_bias,
-    float* fc3_out
+    const float* weights,
+    const float* biases,
+    float* outs
 ) {
+    float conv1_out[NUM_CONV1_OUTS];
+    float pool1_out[NUM_POOL1_OUTS];
+    float conv2_out[NUM_CONV2_OUTS];
+    float pool2_out[NUM_POOL2_OUTS];
+    float fc1_out[NUM_FC1_OUTS];
+    float fc2_out[NUM_FC2_OUTS];
+    float fc3_out[NUM_FC3_OUTS];
+    
+    // Create local arrays for weights and biases
+    float conv1_weight[NUM_CONV1_WEIGHTS];
+    float conv1_bias[NUM_CONV1_BIASES];
+    float conv2_weight[NUM_CONV2_WEIGHTS];
+    float conv2_bias[NUM_CONV2_BIASES];
+    float fc1_weight[NUM_FC1_WEIGHTS];
+    float fc1_bias[NUM_FC1_BIASES];
+    float fc2_weight[NUM_FC2_WEIGHTS];
+    float fc2_bias[NUM_FC2_BIASES];
+    float fc3_weight[NUM_FC3_WEIGHTS];
+    float fc3_bias[NUM_FC3_BIASES];
+    
+    // Copy weights and biases from consolidated arrays
+    for(int i = 0; i < NUM_CONV1_WEIGHTS; i++) {
+        conv1_weight[i] = weights[CONV1_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_CONV1_BIASES; i++) {
+        conv1_bias[i] = biases[CONV1_BIAS_OFFSET + i];
+    }
+    
+    for(int i = 0; i < NUM_CONV2_WEIGHTS; i++) {
+        conv2_weight[i] = weights[CONV2_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_CONV2_BIASES; i++) {
+        conv2_bias[i] = biases[CONV2_BIAS_OFFSET + i];
+    }
+    
+    for(int i = 0; i < NUM_FC1_WEIGHTS; i++) {
+        fc1_weight[i] = weights[FC1_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_FC1_BIASES; i++) {
+        fc1_bias[i] = biases[FC1_BIAS_OFFSET + i];
+    }
+    
+    for(int i = 0; i < NUM_FC2_WEIGHTS; i++) {
+        fc2_weight[i] = weights[FC2_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_FC2_BIASES; i++) {
+        fc2_bias[i] = biases[FC2_BIAS_OFFSET + i];
+    }
+    
+    for(int i = 0; i < NUM_FC3_WEIGHTS; i++) {
+        fc3_weight[i] = weights[FC3_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_FC3_BIASES; i++) {
+        fc3_bias[i] = biases[FC3_BIAS_OFFSET + i];
+    }
+    
     // Conv1
     conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(in_data, conv1_out, conv1_weight, conv1_bias);
 
@@ -244,6 +286,35 @@ void forward_golden(
 
     // FC3
     fc_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out, fc3_out, fc3_weight, fc3_bias, false);
+    
+    // Copy outputs to the consolidated output array
+    for(int i = 0; i < NUM_CONV1_OUTS; i++) {
+        outs[CONV1_OUT_OFFSET + i] = conv1_out[i];
+    }
+    
+    for(int i = 0; i < NUM_POOL1_OUTS; i++) {
+        outs[POOL1_OUT_OFFSET + i] = pool1_out[i];
+    }
+    
+    for(int i = 0; i < NUM_CONV2_OUTS; i++) {
+        outs[CONV2_OUT_OFFSET + i] = conv2_out[i];
+    }
+    
+    for(int i = 0; i < NUM_POOL2_OUTS; i++) {
+        outs[POOL2_OUT_OFFSET + i] = pool2_out[i];
+    }
+    
+    for(int i = 0; i < NUM_FC1_OUTS; i++) {
+        outs[FC1_OUT_OFFSET + i] = fc1_out[i];
+    }
+    
+    for(int i = 0; i < NUM_FC2_OUTS; i++) {
+        outs[FC2_OUT_OFFSET + i] = fc2_out[i];
+    }
+    
+    for(int i = 0; i < NUM_FC3_OUTS; i++) {
+        outs[FC3_OUT_OFFSET + i] = fc3_out[i];
+    }
 }
 
 template<int N>
@@ -457,76 +528,92 @@ void conv_bwd_golden(
 
 void backward_golden(
     const float* in_data,
-    const float* conv1_weight,
-    const float* conv1_bias,
-    const float* conv1_out,
-    const float* pool1_out,
-    const float* conv2_weight,
-    const float* conv2_bias,
-    const float* conv2_out,
-    const float* pool2_out,
-    const float* fc1_weight,
-    const float* fc1_bias,
-    const float* fc1_out,
-    const float* fc2_weight,
-    const float* fc2_bias,
-    const float* fc2_out,
-    const float* fc3_weight,
-    const float* fc3_bias,
-    const float* fc3_out,
+    const float* weights,
+    const float* biases,
+    const float* outputs,
     const float* label,
-    float* conv1_updated_weight,
-    float* conv1_updated_bias,
-    float* conv2_updated_weight,
-    float* conv2_updated_bias,
-    float* fc1_updated_weight,
-    float* fc1_updated_bias,
-    float* fc2_updated_weight,
-    float* fc2_updated_bias,
-    float* fc3_updated_weight,
-    float* fc3_updated_bias,
-    float loss
+    float* updated_weights,
+    float* updated_biases,
+    float& loss
 ) {
+    // Extract layer outputs from consolidated outputs array
+    const float* conv1_out = &outputs[CONV1_OUT_OFFSET];
+    const float* pool1_out = &outputs[POOL1_OUT_OFFSET];
+    const float* conv2_out = &outputs[CONV2_OUT_OFFSET];
+    const float* pool2_out = &outputs[POOL2_OUT_OFFSET];
+    const float* fc1_out = &outputs[FC1_OUT_OFFSET];
+    const float* fc2_out = &outputs[FC2_OUT_OFFSET];
+    const float* fc3_out = &outputs[FC3_OUT_OFFSET];
+    
+    // Extract weights from consolidated weights array
+    const float* conv1_weight = &weights[CONV1_WEIGHT_OFFSET];
+    const float* conv2_weight = &weights[CONV2_WEIGHT_OFFSET];
+    const float* fc1_weight = &weights[FC1_WEIGHT_OFFSET];
+    const float* fc2_weight = &weights[FC2_WEIGHT_OFFSET];
+    const float* fc3_weight = &weights[FC3_WEIGHT_OFFSET];
+    
+    // Extract biases from consolidated biases array
+    const float* conv1_bias = &biases[CONV1_BIAS_OFFSET];
+    const float* conv2_bias = &biases[CONV2_BIAS_OFFSET];
+    const float* fc1_bias = &biases[FC1_BIAS_OFFSET];
+    const float* fc2_bias = &biases[FC2_BIAS_OFFSET];
+    const float* fc3_bias = &biases[FC3_BIAS_OFFSET];
+    
+    // Prepare pointers to updated weights and biases
+    float* conv1_updated_weight = &updated_weights[CONV1_WEIGHT_OFFSET];
+    float* conv2_updated_weight = &updated_weights[CONV2_WEIGHT_OFFSET];
+    float* fc1_updated_weight = &updated_weights[FC1_WEIGHT_OFFSET];
+    float* fc2_updated_weight = &updated_weights[FC2_WEIGHT_OFFSET];
+    float* fc3_updated_weight = &updated_weights[FC3_WEIGHT_OFFSET];
+    
+    float* conv1_updated_bias = &updated_biases[CONV1_BIAS_OFFSET];
+    float* conv2_updated_bias = &updated_biases[CONV2_BIAS_OFFSET];
+    float* fc1_updated_bias = &updated_biases[FC1_BIAS_OFFSET];
+    float* fc2_updated_bias = &updated_biases[FC2_BIAS_OFFSET];
+    float* fc3_updated_bias = &updated_biases[FC3_BIAS_OFFSET];
+    
+    // Create temporary buffers for gradients
     float out_grad[FC3_OUT_DIM];
+    
     // Loss
     mse_loss_golden<FC3_OUT_DIM>(fc3_out, label, loss, out_grad);
 
     float fc3_dX[FC3_IN_DIM];
-    float fc3_dW[FC3_IN_DIM*FC3_OUT_DIM];
-    float fc3_dB[FC3_OUT_DIM];
+    float fc3_dW[NUM_FC3_WEIGHTS];
+    float fc3_dB[NUM_FC3_BIASES];
     // FC3 Bwd
     fc_bwd_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out, out_grad, fc3_weight, fc3_dX, fc3_dW, fc3_dB, false);
     // Update FC3 weights and biases
-    for(int i = 0; i < FC3_IN_DIM*FC3_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC3_WEIGHTS; i++) {
         fc3_updated_weight[i] = fc3_weight[i] - lr * fc3_dW[i];
     }
-    for(int i = 0; i < FC3_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC3_BIASES; i++) {
         fc3_updated_bias[i] = fc3_bias[i] - lr * fc3_dB[i];
     }
 
     float fc2_dX[FC2_IN_DIM];
-    float fc2_dW[FC2_IN_DIM*FC2_OUT_DIM];
-    float fc2_dB[FC2_OUT_DIM];
+    float fc2_dW[NUM_FC2_WEIGHTS];
+    float fc2_dB[NUM_FC2_BIASES];
     // FC2 Bwd
     fc_bwd_golden<FC2_IN_DIM, FC2_OUT_DIM>(fc1_out, fc3_dX, fc2_weight, fc2_dX, fc2_dW, fc2_dB, true);
     // Update FC2 weights and biases
-    for(int i = 0; i < FC2_IN_DIM*FC2_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC2_WEIGHTS; i++) {
         fc2_updated_weight[i] = fc2_weight[i] - lr * fc2_dW[i];
     }
-    for(int i = 0; i < FC2_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC2_BIASES; i++) {
         fc2_updated_bias[i] = fc2_bias[i] - lr * fc2_dB[i];
     }
 
     float fc1_dX[FC1_IN_DIM];
-    float fc1_dW[FC1_IN_DIM*FC1_OUT_DIM];
-    float fc1_dB[FC1_OUT_DIM];
+    float fc1_dW[NUM_FC1_WEIGHTS];
+    float fc1_dB[NUM_FC1_BIASES];
     // FC1 Bwd
     fc_bwd_golden<FC1_IN_DIM, FC1_OUT_DIM>(pool2_out, fc2_dX, fc1_weight, fc1_dX, fc1_dW, fc1_dB, true);
     // Update FC1 weights and biases
-    for(int i = 0; i < FC1_IN_DIM*FC1_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC1_WEIGHTS; i++) {
         fc1_updated_weight[i] = fc1_weight[i] - lr * fc1_dW[i];
     }
-    for(int i = 0; i < FC1_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC1_BIASES; i++) {
         fc1_updated_bias[i] = fc1_bias[i] - lr * fc1_dB[i];
     }
 
@@ -535,15 +622,15 @@ void backward_golden(
     pool_bwd_golden<2, 2, CONV2_OUT_CH, CONV2_OUT_ROWS, CONV2_OUT_COLS>(fc1_dX, pool2_dX);
 
     float conv2_dX[CONV2_IN_CH*CONV2_IN_ROWS*CONV2_IN_COLS];
-    float conv2_dW[CONV2_OUT_CH*CONV2_IN_CH*KERNEL_SIZE*KERNEL_SIZE];
-    float conv2_dB[CONV2_OUT_CH];
+    float conv2_dW[NUM_CONV2_WEIGHTS];
+    float conv2_dB[NUM_CONV2_BIASES];
     // Conv2 Bwd
     conv_bwd_golden<CONV2_OUT_CH, CONV2_IN_CH, KERNEL_SIZE, CONV2_IN_ROWS, CONV2_OUT_ROWS>(pool1_out, pool2_dX, conv2_weight, conv2_dX, conv2_dW, conv2_dB);
     // Update Conv2 weights and biases
-    for(int i = 0; i < CONV2_OUT_CH*CONV2_IN_CH*KERNEL_SIZE*KERNEL_SIZE; i++) {
+    for(int i = 0; i < NUM_CONV2_WEIGHTS; i++) {
         conv2_updated_weight[i] = conv2_weight[i] - lr * conv2_dW[i];
     }
-    for(int i = 0; i < CONV2_OUT_CH; i++) {
+    for(int i = 0; i < NUM_CONV2_BIASES; i++) {
         conv2_updated_bias[i] = conv2_bias[i] - lr * conv2_dB[i];
     }
 
@@ -552,15 +639,15 @@ void backward_golden(
     pool_bwd_golden<2, 2, CONV1_OUT_CH, CONV1_OUT_ROWS, CONV1_OUT_COLS>(conv2_dX, pool1_dX);
 
     float conv1_dX[CONV1_IN_CH*CONV1_IN_ROWS*CONV1_IN_COLS];
-    float conv1_dW[CONV1_OUT_CH*CONV1_IN_CH*KERNEL_SIZE*KERNEL_SIZE];
-    float conv1_dB[CONV1_OUT_CH];
+    float conv1_dW[NUM_CONV1_WEIGHTS];
+    float conv1_dB[NUM_CONV1_BIASES];
     // Conv1 Bwd
     conv_bwd_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_OUT_ROWS>(in_data, pool1_dX, conv1_weight, conv1_dX, conv1_dW, conv1_dB);
     // Update Conv1 weights and biases
-    for(int i = 0; i < CONV1_OUT_CH*CONV1_IN_CH*KERNEL_SIZE*KERNEL_SIZE; i++) {
+    for(int i = 0; i < NUM_CONV1_WEIGHTS; i++) {
         conv1_updated_weight[i] = conv1_weight[i] - lr * conv1_dW[i];
     }
-    for(int i = 0; i < CONV1_OUT_CH; i++) {
+    for(int i = 0; i < NUM_CONV1_BIASES; i++) {
         conv1_updated_bias[i] = conv1_bias[i] - lr * conv1_dB[i];
     }
 }

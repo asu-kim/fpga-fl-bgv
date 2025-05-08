@@ -6,7 +6,7 @@ void avg_pool_backward(
         const float grads[IN_C*((IN_ROW-POOL_SIZE)/STRIDE+1)*((IN_COL-POOL_SIZE)/STRIDE+1)],
         float dX[IN_C*IN_ROW*IN_COL]
         ) {
-#pragma HLS INLINE off
+// #pragma HLS INLINE off
 
     constexpr int pooled_row = (IN_ROW-POOL_SIZE)/STRIDE+1;
     constexpr int pooled_col = (IN_COL-POOL_SIZE)/STRIDE+1;

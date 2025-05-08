@@ -92,7 +92,6 @@ void encryption(int* plaintext, int* publick_key1, int* publick_key2, int* ciphe
     int r[n];
 
     std::uniform_int_distribution<int> dist1(-1, 1);
-    // std::uniform_int_distribution<int> dist2(0, q - 1);
 
     for(int i = 0; i < n; i++) {
         error1[i] = dist1(rng);
@@ -148,7 +147,7 @@ void save_keys(const int* private_key, const int* public_key1, const int* public
     outfile << "#include <cstdint>\n\n";
     
     // Write private key
-    outfile << "static const int32_t PRIVATE_KEY[" << n << "] = {\n  ";
+    outfile << "static const int PRIVATE_KEY[" << n << "] = {\n  ";
     for (int i = 0; i < n; i++) {
         outfile << private_key[i];
         if (i < n - 1) outfile << ", ";
@@ -157,7 +156,7 @@ void save_keys(const int* private_key, const int* public_key1, const int* public
     outfile << "\n};\n\n";
     
     // Write public key 1
-    outfile << "static const int32_t PUBLIC_KEY1[" << n << "] = {\n  ";
+    outfile << "static const int PUBLIC_KEY1[" << n << "] = {\n  ";
     for (int i = 0; i < n; i++) {
         outfile << public_key1[i];
         if (i < n - 1) outfile << ", ";
@@ -166,7 +165,7 @@ void save_keys(const int* private_key, const int* public_key1, const int* public
     outfile << "\n};\n\n";
     
     // Write public key 2
-    outfile << "static const int32_t PUBLIC_KEY2[" << n << "] = {\n  ";
+    outfile << "static const int PUBLIC_KEY2[" << n << "] = {\n  ";
     for (int i = 0; i < n; i++) {
         outfile << public_key2[i];
         if (i < n - 1) outfile << ", ";
@@ -239,7 +238,7 @@ int main(int argc, char** argv) {
     }
     
     // Write encrypted CONV1_BIAS to the header
-    encrypted_header << "static const int32_t CONV1_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
+    encrypted_header << "static const int CONV1_BIAS_INT8_DATA_ENC0[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[0][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -247,7 +246,7 @@ int main(int argc, char** argv) {
     }
     encrypted_header << "\n};\n";
     
-    encrypted_header << "static const int32_t CONV1_BIAS_INT8_DATA_ENC2[" << n << "] = {\n  ";
+    encrypted_header << "static const int CONV1_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[1][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -263,6 +262,12 @@ int main(int argc, char** argv) {
     std::cout << "CONV1_WEIGHT num elements: " << num_weight << std::endl;
     int num_slices = (int)std::ceil((double)num_weight / n);
     std::cout << "CONV1_WEIGHT num slices: " << num_slices << std::endl;
+    
+    // Create arrays to hold all concatenated data
+    std::vector<int> all_weights_enc0;
+    std::vector<int> all_weights_enc1;
+    all_weights_enc0.reserve(num_slices * n);
+    all_weights_enc1.reserve(num_slices * n);
     
     for(int slice = 0; slice < num_slices; slice++) {
         int weights_padded[n];
@@ -298,23 +303,29 @@ int main(int argc, char** argv) {
             exit(1);
         }
         
-        // Write encrypted CONV1_WEIGHT slice to the header
-        encrypted_header << "static const int32_t CONV1_WEIGHT_INT8_DATA" << slice << "_ENC1[" << n << "] = {\n  ";
+        // Add encrypted data to the concatenated arrays
         for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[0][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
+            all_weights_enc0.push_back(weights_padded_encrypted[0][j]);
+            all_weights_enc1.push_back(weights_padded_encrypted[1][j]);
         }
-        encrypted_header << "\n};\n";
-        
-        encrypted_header << "static const int32_t CONV1_WEIGHT_INT8_DATA" << slice << "_ENC2[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[1][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n\n";
     }
+    
+    // Write concatenated CONV1_WEIGHT to the header
+    encrypted_header << "static const int CONV1_WEIGHT_INT8_DATA_ENC0[" << all_weights_enc0.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc0.size(); i++) {
+        encrypted_header << all_weights_enc0[i];
+        if(i < all_weights_enc0.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc0.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n";
+    
+    encrypted_header << "static const int CONV1_WEIGHT_INT8_DATA_ENC1[" << all_weights_enc1.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc1.size(); i++) {
+        encrypted_header << all_weights_enc1[i];
+        if(i < all_weights_enc1.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc1.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n\n";
     
     // Process CONV2_BIAS_INT8_DATA
     num_bias = 1;
@@ -351,7 +362,7 @@ int main(int argc, char** argv) {
     }
     
     // Write encrypted CONV2_BIAS to the header
-    encrypted_header << "static const int32_t CONV2_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
+    encrypted_header << "static const int CONV2_BIAS_INT8_DATA_ENC0[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[0][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -359,7 +370,7 @@ int main(int argc, char** argv) {
     }
     encrypted_header << "\n};\n";
     
-    encrypted_header << "static const int32_t CONV2_BIAS_INT8_DATA_ENC2[" << n << "] = {\n  ";
+    encrypted_header << "static const int CONV2_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[1][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -375,6 +386,12 @@ int main(int argc, char** argv) {
     std::cout << "CONV2_WEIGHT num elements: " << num_weight << std::endl;
     num_slices = (int)std::ceil((double)num_weight / n);
     std::cout << "CONV2_WEIGHT num slices: " << num_slices << std::endl;
+
+    // Reset vectors for new layer
+    all_weights_enc0.clear();
+    all_weights_enc1.clear();
+    all_weights_enc0.reserve(num_slices * n);
+    all_weights_enc1.reserve(num_slices * n);
 
     for(int slice = 0; slice < num_slices; slice++) {
         int weights_padded[n];
@@ -410,23 +427,29 @@ int main(int argc, char** argv) {
             exit(1);
         }
         
-        // Write encrypted CONV2_WEIGHT slice to the header
-        encrypted_header << "static const int32_t CONV2_WEIGHT_INT8_DATA" << slice << "_ENC1[" << n << "] = {\n  ";
+        // Add encrypted data to the concatenated arrays
         for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[0][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
+            all_weights_enc0.push_back(weights_padded_encrypted[0][j]);
+            all_weights_enc1.push_back(weights_padded_encrypted[1][j]);
         }
-        encrypted_header << "\n};\n";
-        
-        encrypted_header << "static const int32_t CONV2_WEIGHT_INT8_DATA" << slice << "_ENC2[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[1][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n\n";
     }
+    
+    // Write concatenated CONV2_WEIGHT to the header
+    encrypted_header << "static const int CONV2_WEIGHT_INT8_DATA_ENC0[" << all_weights_enc0.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc0.size(); i++) {
+        encrypted_header << all_weights_enc0[i];
+        if(i < all_weights_enc0.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc0.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n";
+    
+    encrypted_header << "static const int CONV2_WEIGHT_INT8_DATA_ENC1[" << all_weights_enc1.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc1.size(); i++) {
+        encrypted_header << all_weights_enc1[i];
+        if(i < all_weights_enc1.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc1.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n\n";
 
     // Process FC1_BIAS_INT8_DATA
     num_bias = 1;
@@ -463,7 +486,7 @@ int main(int argc, char** argv) {
     }
 
     // Write encrypted FC1_BIAS to the header
-    encrypted_header << "static const int32_t FC1_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
+    encrypted_header << "static const int FC1_BIAS_INT8_DATA_ENC0[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[0][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -471,7 +494,7 @@ int main(int argc, char** argv) {
     }
     encrypted_header << "\n};\n";
 
-    encrypted_header << "static const int32_t FC1_BIAS_INT8_DATA_ENC2[" << n << "] = {\n  ";
+    encrypted_header << "static const int FC1_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[1][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -487,6 +510,12 @@ int main(int argc, char** argv) {
     std::cout << "FC1_WEIGHT num elements: " << num_weight << std::endl;
     num_slices = (int)std::ceil((double)num_weight / n);
     std::cout << "FC1_WEIGHT num slices: " << num_slices << std::endl;
+
+    // Reset vectors for new layer
+    all_weights_enc0.clear();
+    all_weights_enc1.clear();
+    all_weights_enc0.reserve(num_slices * n);
+    all_weights_enc1.reserve(num_slices * n);
 
     for(int slice = 0; slice < num_slices; slice++) {
         int weights_padded[n];
@@ -522,23 +551,29 @@ int main(int argc, char** argv) {
             exit(1);
         }
         
-        // Write encrypted FC1_WEIGHT slice to the header
-        encrypted_header << "static const int32_t FC1_WEIGHT_INT8_DATA" << slice << "_ENC1[" << n << "] = {\n  ";
+        // Add encrypted data to the concatenated arrays
         for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[0][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
+            all_weights_enc0.push_back(weights_padded_encrypted[0][j]);
+            all_weights_enc1.push_back(weights_padded_encrypted[1][j]);
         }
-        encrypted_header << "\n};\n";
-        
-        encrypted_header << "static const int32_t FC1_WEIGHT_INT8_DATA" << slice << "_ENC2[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[1][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n\n";
     }
+    
+    // Write concatenated FC1_WEIGHT to the header
+    encrypted_header << "static const int FC1_WEIGHT_INT8_DATA_ENC0[" << all_weights_enc0.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc0.size(); i++) {
+        encrypted_header << all_weights_enc0[i];
+        if(i < all_weights_enc0.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc0.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n";
+    
+    encrypted_header << "static const int FC1_WEIGHT_INT8_DATA_ENC1[" << all_weights_enc1.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc1.size(); i++) {
+        encrypted_header << all_weights_enc1[i];
+        if(i < all_weights_enc1.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc1.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n\n";
 
     // Process FC2_BIAS_INT8_DATA
     num_bias = 1;
@@ -575,7 +610,7 @@ int main(int argc, char** argv) {
     }
 
     // Write encrypted FC2_BIAS to the header
-    encrypted_header << "static const int32_t FC2_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
+    encrypted_header << "static const int FC2_BIAS_INT8_DATA_ENC0[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[0][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -583,7 +618,7 @@ int main(int argc, char** argv) {
     }
     encrypted_header << "\n};\n";
 
-    encrypted_header << "static const int32_t FC2_BIAS_INT8_DATA_ENC2[" << n << "] = {\n  ";
+    encrypted_header << "static const int FC2_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[1][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -599,6 +634,12 @@ int main(int argc, char** argv) {
     std::cout << "FC2_WEIGHT num elements: " << num_weight << std::endl;
     num_slices = (int)std::ceil((double)num_weight / n);
     std::cout << "FC2_WEIGHT num slices: " << num_slices << std::endl;
+
+    // Reset vectors for new layer
+    all_weights_enc0.clear();
+    all_weights_enc1.clear();
+    all_weights_enc0.reserve(num_slices * n);
+    all_weights_enc1.reserve(num_slices * n);
 
     for(int slice = 0; slice < num_slices; slice++) {
         int weights_padded[n];
@@ -634,23 +675,29 @@ int main(int argc, char** argv) {
             exit(1);
         }
         
-        // Write encrypted FC2_WEIGHT slice to the header
-        encrypted_header << "static const int32_t FC2_WEIGHT_INT8_DATA" << slice << "_ENC1[" << n << "] = {\n  ";
+        // Add encrypted data to the concatenated arrays
         for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[0][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
+            all_weights_enc0.push_back(weights_padded_encrypted[0][j]);
+            all_weights_enc1.push_back(weights_padded_encrypted[1][j]);
         }
-        encrypted_header << "\n};\n";
-        
-        encrypted_header << "static const int32_t FC2_WEIGHT_INT8_DATA" << slice << "_ENC2[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[1][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n\n";
     }
+    
+    // Write concatenated FC2_WEIGHT to the header
+    encrypted_header << "static const int FC2_WEIGHT_INT8_DATA_ENC0[" << all_weights_enc0.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc0.size(); i++) {
+        encrypted_header << all_weights_enc0[i];
+        if(i < all_weights_enc0.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc0.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n";
+    
+    encrypted_header << "static const int FC2_WEIGHT_INT8_DATA_ENC1[" << all_weights_enc1.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc1.size(); i++) {
+        encrypted_header << all_weights_enc1[i];
+        if(i < all_weights_enc1.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc1.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n\n";
 
     // Process FC3_BIAS_INT8_DATA
     num_bias = 1;
@@ -687,7 +734,7 @@ int main(int argc, char** argv) {
     }
 
     // Write encrypted FC3_BIAS to the header
-    encrypted_header << "static const int32_t FC3_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
+    encrypted_header << "static const int FC3_BIAS_INT8_DATA_ENC0[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[0][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -695,7 +742,7 @@ int main(int argc, char** argv) {
     }
     encrypted_header << "\n};\n";
 
-    encrypted_header << "static const int32_t FC3_BIAS_INT8_DATA_ENC2[" << n << "] = {\n  ";
+    encrypted_header << "static const int FC3_BIAS_INT8_DATA_ENC1[" << n << "] = {\n  ";
     for(int i = 0; i < n; i++) {
         encrypted_header << bias_padded_encrypted[1][i];
         if(i < n - 1) encrypted_header << ", ";
@@ -711,6 +758,12 @@ int main(int argc, char** argv) {
     std::cout << "FC3_WEIGHT num elements: " << num_weight << std::endl;
     num_slices = (int)std::ceil((double)num_weight / n);
     std::cout << "FC3_WEIGHT num slices: " << num_slices << std::endl;
+
+    // Reset vectors for new layer
+    all_weights_enc0.clear();
+    all_weights_enc1.clear();
+    all_weights_enc0.reserve(num_slices * n);
+    all_weights_enc1.reserve(num_slices * n);
 
     for(int slice = 0; slice < num_slices; slice++) {
         int weights_padded[n];
@@ -746,23 +799,29 @@ int main(int argc, char** argv) {
             exit(1);
         }
         
-        // Write encrypted FC3_WEIGHT slice to the header
-        encrypted_header << "static const int32_t FC3_WEIGHT_INT8_DATA" << slice << "_ENC1[" << n << "] = {\n  ";
+        // Add encrypted data to the concatenated arrays
         for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[0][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
+            all_weights_enc0.push_back(weights_padded_encrypted[0][j]);
+            all_weights_enc1.push_back(weights_padded_encrypted[1][j]);
         }
-        encrypted_header << "\n};\n";
-        
-        encrypted_header << "static const int32_t FC3_WEIGHT_INT8_DATA" << slice << "_ENC2[" << n << "] = {\n  ";
-        for(int j = 0; j < n; j++) {
-            encrypted_header << weights_padded_encrypted[1][j];
-            if(j < n - 1) encrypted_header << ", ";
-            if((j + 1) % 10 == 0 && j != n - 1) encrypted_header << "\n  ";
-        }
-        encrypted_header << "\n};\n\n";
     }
+    
+    // Write concatenated FC3_WEIGHT to the header
+    encrypted_header << "static const int FC3_WEIGHT_INT8_DATA_ENC0[" << all_weights_enc0.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc0.size(); i++) {
+        encrypted_header << all_weights_enc0[i];
+        if(i < all_weights_enc0.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc0.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n";
+    
+    encrypted_header << "static const int FC3_WEIGHT_INT8_DATA_ENC1[" << all_weights_enc1.size() << "] = {\n  ";
+    for(size_t i = 0; i < all_weights_enc1.size(); i++) {
+        encrypted_header << all_weights_enc1[i];
+        if(i < all_weights_enc1.size() - 1) encrypted_header << ", ";
+        if((i + 1) % 10 == 0 && i != all_weights_enc1.size() - 1) encrypted_header << "\n  ";
+    }
+    encrypted_header << "\n};\n\n";
     
     // Close the header with endif
     encrypted_header << "#endif // ENCRYPTED_WEIGHTS_BIAS_H\n";

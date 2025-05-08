@@ -9,16 +9,16 @@ static const float CONV1_ACT_SCALE_DATA[1] = {
 };
 
 static const int   CONV1_ACT_ZP_SHAPE[] = { 1 };
-static const int32_t CONV1_ACT_ZP_DATA[1] = {
+static const int CONV1_ACT_ZP_DATA[1] = {
     17
 };
 
-static const int32_t CONV1_BIAS_INT8_DATA[6] = {
-  -95, -531, -1662, -1564, -2248, -370,
+static const int CONV1_BIAS_INT8_DATA[6] = {
+  -95, -19, -126, -28, -56, -114,
 };
 static const int CONV1_BIAS_INT8_SHAPE[] = { 6 };
 
-static const int32_t CONV1_WEIGHT_INT8_DATA[150] = {
+static const int CONV1_WEIGHT_INT8_DATA[150] = {
   -49,  -16,  1,  -8,  49,  -27,  -24,  -19,  -37,  -3,
   -32,  10,  -12,  -30,  -47,  -18,  -15,  0,  -7,  -40,
   23,  3,  -29,  -14,  -126,  0,  11,  -40,  -36,  -8,
@@ -44,7 +44,7 @@ static const float CONV1_WEIGHT_SCALE_DATA[6] = {
 };
 
 static const int   CONV1_WEIGHT_ZP_SHAPE[] = { 6 };
-static const int32_t CONV1_WEIGHT_ZP_DATA[6] = {
+static const int CONV1_WEIGHT_ZP_DATA[6] = {
     0, 0, 0, 0, 0, 0
 };
 
@@ -55,18 +55,18 @@ static const float CONV2_ACT_SCALE_DATA[1] = {
 };
 
 static const int   CONV2_ACT_ZP_SHAPE[] = { 1 };
-static const int32_t CONV2_ACT_ZP_DATA[1] = {
+static const int CONV2_ACT_ZP_DATA[1] = {
     87
 };
 
 
-static const int32_t CONV2_BIAS_INT8_DATA[16] = {
-  -4, 25, -35, 42, -39, -2, 14, -4, -56, -31, -8, -23
+static const int CONV2_BIAS_INT8_DATA[16] = {
+  -4, 25, -35, 42, -39, -2, 14, -4, -56, -31, -8, -23,
   27, -29, 28, 43,
 };
 static const int CONV2_BIAS_INT8_SHAPE[] = { 16 };
 
-static const int32_t CONV2_WEIGHT_INT8_DATA[2400] = {
+static const int CONV2_WEIGHT_INT8_DATA[2400] = {
   -1,  18,  -14,  -28,  -23,  -12,  -17,  -44,  -35,  4,
   0,  -9,  -8,  31,  40,  21,  24,  9,  -5,  24,
   28,  20,  5,  6,  23,  -9,  17,  -17,  -22,  17,
@@ -317,7 +317,7 @@ static const float CONV2_WEIGHT_SCALE_DATA[16] = {
 };
 
 static const int   CONV2_WEIGHT_ZP_SHAPE[] = { 16 };
-static const int32_t CONV2_WEIGHT_ZP_DATA[16] = {
+static const int CONV2_WEIGHT_ZP_DATA[16] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
@@ -330,25 +330,25 @@ static const float FC1_ACT_SCALE_DATA[1] = {
 };
 
 static const int   FC1_ACT_ZP_SHAPE[] = { 1 };
-static const int32_t FC1_ACT_ZP_DATA[1] = {
+static const int FC1_ACT_ZP_DATA[1] = {
     80
 };
 
-static const int32_t FC1_BIAS_INT8_DATA[120] = {
-  15, -26, -46, 16, -113, 2, 0, -81, -65, 7, 60, -12
-  7, 59, -32, -45, -117, 4, -70, 10, 99, -26, -37, -19
-  -27, -35, -14, 55, -53, -145, -31, -16, -23, -202, -11, -39
-  -41, -47, 117, -39, 71, -39, -15, -32, 33, 48, -64, -40
-  38, -143, 23, 19, 97, 52, -217, 33, -36, -64, -19, 110
-  -281, 19, 7, -85, -139, -105, 82, -185, -27, 27, 6, -83
-  -76, 1, -7, 90, -55, -2, -94, 11, 9, 32, 17, -22
-  -43, 24, 60, -22, -55, 17, -65, 29, 148, -22, 57, -13
-  -98, -122, -29, -85, 57, -88, -132, 62, -222, 72, -2, -39
-  16, -182, -19, 148, 2, -115, -46, -6, 57, -40, 56, -78,
+static const int FC1_BIAS_INT8_DATA[120] = {
+  15, -26, -46, 16, -113, 2, 0, -81, -65, 7, 60, -12,
+  7, 59, -32, -45, -117, 4, -70, 10, 99, -26, -37, -19,
+  -27, -35, -14, 55, -53, 1, -31, -16, -23, 1, -11, -39,
+  -41, -47, 117, -39, 71, -39, -15, -32, 33, 48, -64, -40,
+  38, 1, 23, 19, 97, 52, 1, 33, -36, -64, -19, 110,
+  1, 19, 7, -85, 1, -105, 82, 1, -27, 27, 6, -83,
+  -76, 1, -7, 90, -55, -2, -94, 11, 9, 32, 17, -22,
+  -43, 24, 60, -22, -55, 17, -65, 29, 1, -22, 57, -13,
+  -98, -122, -29, -85, 57, -88, 1, 62, 1, 72, -2, -39,
+  16, 1, -19, 1, 2, -115, -46, -6, 57, -40, 56, -78,
 };
 static const int FC1_BIAS_INT8_SHAPE[] = { 120 };
 
-static const int32_t FC1_WEIGHT_INT8_DATA[30720] = {
+static const int FC1_WEIGHT_INT8_DATA[30720] = {
   -32,  -90,  -69,  -72,  6,  -51,  40,  -1,  56,  3,
   -24,  -48,  14,  -9,  -80,  -8,  27,  66,  1,  -37,
   65,  48,  12,  -9,  -56,  17,  -8,  -13,  -65,  5,
@@ -3438,7 +3438,7 @@ static const float FC1_WEIGHT_SCALE_DATA[120] = {
 };
 
 static const int   FC1_WEIGHT_ZP_SHAPE[] = { 120 };
-static const int32_t FC1_WEIGHT_ZP_DATA[120] = {
+static const int FC1_WEIGHT_ZP_DATA[120] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -3457,22 +3457,22 @@ static const float FC2_ACT_SCALE_DATA[1] = {
 };
 
 static const int   FC2_ACT_ZP_SHAPE[] = { 1 };
-static const int32_t FC2_ACT_ZP_DATA[1] = {
+static const int FC2_ACT_ZP_DATA[1] = {
     67
 };
 
-static const int32_t FC2_BIAS_INT8_DATA[84] = {
-  -217, 43, 21, -41, 165, -85, -109, -37, 48, -109, 86, 32
-  -58, 37, -9, -89, -78, 14, -48, -111, -62, 26, -61, 86
-  -20, -15, -38, 57, -56, 19, 54, 37, -68, -165, -64, -69
-  -63, 27, -5, 63, -120, -1, -254, -173, -87, 50, -112, 16
-  -10, -89, 1, -22, 16, 187, -75, -92, -132, -66, 10, 9
-  -134, 74, 62, 3, 44, 41, 13, -36, -56, 15, 9, 64
+static const int FC2_BIAS_INT8_DATA[84] = {
+  1, 43, 21, -41, 1, -85, -109, -37, 48, -109, 86, 32,
+  -58, 37, -9, -89, -78, 14, -48, -111, -62, 26, -61, 86,
+  -20, -15, -38, 57, -56, 19, 54, 37, -68, 1, -64, -69,
+  -63, 27, -5, 63, 1, -1, 1, 1, -87, 50, -112, 16,
+  -10, -89, 1, -22, 16, 1, -75, -92, 1, -66, 10, 9,
+  1, 74, 62, 3, 44, 41, 13, -36, -56, 15, 9, 64,
   97, -125, 47, 16, -88, 107, -41, -49, -55, -128, 120, -85,
 };
 static const int FC2_BIAS_INT8_SHAPE[] = { 84 };
 
-static const int32_t FC2_WEIGHT_INT8_DATA[10080] = {
+static const int FC2_WEIGHT_INT8_DATA[10080] = {
   -3,  -90,  0,  -11,  24,  -10,  -34,  6,  35,  -60,
   20,  -5,  -18,  14,  -14,  6,  33,  15,  97,  15,
   94,  22,  -16,  1,  49,  4,  11,  -39,  33,  3,
@@ -4496,7 +4496,7 @@ static const float FC2_WEIGHT_SCALE_DATA[84] = {
 };
 
 static const int   FC2_WEIGHT_ZP_SHAPE[] = { 84 };
-static const int32_t FC2_WEIGHT_ZP_DATA[84] = {
+static const int FC2_WEIGHT_ZP_DATA[84] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -4514,16 +4514,16 @@ static const float FC3_ACT_SCALE_DATA[1] = {
 };
 
 static const int   FC3_ACT_ZP_SHAPE[] = { 1 };
-static const int32_t FC3_ACT_ZP_DATA[1] = {
+static const int FC3_ACT_ZP_DATA[1] = {
     86
 };
 
-static const int32_t FC3_BIAS_INT8_DATA[10] = {
+static const int FC3_BIAS_INT8_DATA[10] = {
   -36, -4, -15, -6, 12, -26, -21, -30, 49, 2,
 };
 static const int FC3_BIAS_INT8_SHAPE[] = { 10 };
 
-static const int32_t FC3_WEIGHT_INT8_DATA[840] = {
+static const int FC3_WEIGHT_INT8_DATA[840] = {
   -53,  -29,  -13,  3,  19,  -11,  -39,  3,  38,  11,
   -79,  -128,  -51,  -27,  33,  -113,  -110,  15,  22,  -97,
   -21,  -110,  -10,  2,  0,  -97,  4,  -118,  19,  -51,
@@ -4618,7 +4618,7 @@ static const float FC3_WEIGHT_SCALE_DATA[10] = {
 };
 
 static const int   FC3_WEIGHT_ZP_SHAPE[] = { 10 };
-static const int32_t FC3_WEIGHT_ZP_DATA[10] = {
+static const int FC3_WEIGHT_ZP_DATA[10] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 

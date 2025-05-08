@@ -13,7 +13,7 @@ void fc_backward(
         float dB[OUT_DIM],
         bool use_relu = true
         ) {
-#pragma HLS INLINE off
+// #pragma HLS INLINE off
 
 // #pragma HLS ARRAY_PARTITION variable=in_weight complete dim=2
 // #pragma HLS ARRAY_PARTITION variable=grads   complete dim=1
@@ -40,7 +40,7 @@ void fc_backward(
 #pragma HLS PIPELINE II=2
         float acc = 0;
         for(int j=0; j<OUT_DIM; ++j) {
-#pragma HLS UNROLL factor=2
+// #pragma HLS UNROLL factor=2
             int idx = i * OUT_DIM + j;
             acc += in_weight[idx] * grads[j];
         }

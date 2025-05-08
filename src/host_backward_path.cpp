@@ -56,6 +56,11 @@ int main(int argc, char **argv)
     auto uuid = device.load_xclbin(binaryFile);
 
     size_t in_size = CONV1_IN_CH * CONV1_IN_ROWS * CONV1_IN_COLS;
+    size_t weights_size = TOTAL_WEIGHTS_SIZE;
+    size_t biases_size = TOTAL_BIASES_SIZE;
+    size_t outputs_size = TOTAL_OUTS_SIZE;
+    size_t labels_size = 10;
+
     size_t conv1_weight_size = CONV1_OUT_CH * CONV1_IN_CH * KERNEL_SIZE * KERNEL_SIZE;
     size_t conv1_bias_size = CONV1_OUT_CH;
     size_t conv1_out_size = CONV1_OUT_CH * CONV1_OUT_ROWS * CONV1_OUT_COLS;
@@ -87,131 +92,34 @@ int main(int argc, char **argv)
 
     std::cout << "Allocate Buffer in Global Memory\n";
     auto bo_in_data = xrt::bo(device, sizeof(float)*in_size, backward_krnl.group_id(0));
+    auto bo_weights = xrt::bo(device, sizeof(float)*weights_size, backward_krnl.group_id(1));
+    auto bo_biases = xrt::bo(device, sizeof(float)*biases_size, backward_krnl.group_id(2));
+    auto bo_outputs = xrt::bo(device, sizeof(float)*outputs_size, backward_krnl.group_id(3));
+    auto bo_labels = xrt::bo(device, sizeof(float)*labels_size, backward_krnl.group_id(4));
 
-    auto bo_conv1_weight = xrt::bo(device, sizeof(float)*conv1_weight_size, backward_krnl.group_id(1));
-    auto bo_conv1_bias = xrt::bo(device, sizeof(float)*conv1_bias_size, backward_krnl.group_id(2));
-    auto bo_conv1_out = xrt::bo(device, sizeof(float)*conv1_out_size, backward_krnl.group_id(3));
-
-    auto bo_pool1_out = xrt::bo(device, sizeof(float)*pool1_out_size, backward_krnl.group_id(4));
-
-    auto bo_conv2_weight = xrt::bo(device, sizeof(float)*conv2_weight_size, backward_krnl.group_id(5));
-    auto bo_conv2_bias = xrt::bo(device, sizeof(float)*conv2_bias_size, backward_krnl.group_id(6));
-    auto bo_conv2_out = xrt::bo(device, sizeof(float)*conv2_out_size, backward_krnl.group_id(7));
-
-    auto bo_pool2_out = xrt::bo(device, sizeof(float)*pool2_out_size, backward_krnl.group_id(8));
-
-    auto bo_fc1_weight = xrt::bo(device, sizeof(float)*fc1_weight_size, backward_krnl.group_id(9));
-    auto bo_fc1_bias = xrt::bo(device, sizeof(float)*fc1_bias_size, backward_krnl.group_id(10));
-    auto bo_fc1_out = xrt::bo(device, sizeof(float)*fc1_out_size, backward_krnl.group_id(11));
-
-    auto bo_fc2_weight = xrt::bo(device, sizeof(float)*fc2_weight_size, backward_krnl.group_id(12));
-    auto bo_fc2_bias = xrt::bo(device, sizeof(float)*fc2_bias_size, backward_krnl.group_id(13));
-    auto bo_fc2_out = xrt::bo(device, sizeof(float)*fc2_out_size, backward_krnl.group_id(14));
-
-    auto bo_fc3_weight = xrt::bo(device, sizeof(float)*fc3_weight_size, backward_krnl.group_id(15));
-    auto bo_fc3_bias = xrt::bo(device, sizeof(float)*fc3_bias_size, backward_krnl.group_id(16));
-    auto bo_fc3_out = xrt::bo(device, sizeof(float)*fc3_out_size, backward_krnl.group_id(17));
-
-    auto bo_label = xrt::bo(device, sizeof(float)*label_size, backward_krnl.group_id(18));
-
-    auto bo_conv1_updated_weight = xrt::bo(device, sizeof(float)*conv1_weight_size, backward_krnl.group_id(19));
-    auto bo_conv1_updated_bias = xrt::bo(device, sizeof(float)*conv1_bias_size, backward_krnl.group_id(20));
-
-    auto bo_conv2_updated_weight = xrt::bo(device, sizeof(float)*conv2_weight_size, backward_krnl.group_id(21));
-    auto bo_conv2_updated_bias = xrt::bo(device, sizeof(float)*conv2_bias_size, backward_krnl.group_id(22));
-
-    auto bo_fc1_updated_weight = xrt::bo(device, sizeof(float)*fc1_weight_size, backward_krnl.group_id(23));
-    auto bo_fc1_updated_bias = xrt::bo(device, sizeof(float)*fc1_bias_size, backward_krnl.group_id(24));
-
-    auto bo_fc2_updated_weight = xrt::bo(device, sizeof(float)*fc2_weight_size, backward_krnl.group_id(25));
-    auto bo_fc2_updated_bias = xrt::bo(device, sizeof(float)*fc2_bias_size, backward_krnl.group_id(26));
-
-    auto bo_fc3_updated_weight = xrt::bo(device, sizeof(float)*fc3_weight_size, backward_krnl.group_id(27));
-    auto bo_fc3_updated_bias = xrt::bo(device, sizeof(float)*fc3_bias_size, backward_krnl.group_id(28));
+    auto bo_updated_weights = xrt::bo(device, sizeof(float)*weights_size, backward_krnl.group_id(5));
+    auto bo_updated_biases = xrt::bo(device, sizeof(float)*biases_size, backward_krnl.group_id(6));
 
     // Map buffers to host memory
     auto bo_in_data_map = bo_in_data.map<float *>();
-    auto bo_conv1_weight_map = bo_conv1_weight.map<float *>();
-    auto bo_conv1_bias_map = bo_conv1_bias.map<float *>();
-    auto bo_conv1_out_map = bo_conv1_out.map<float *>();
+    auto bo_weights_map = bo_weights.map<float *>();
+    auto bo_biases_map = bo_biases.map<float *>();
+    auto bo_outputs_map = bo_outputs.map<float *>();
+    auto bo_labels_map = bo_labels.map<float *>();
 
-    auto bo_pool1_out_map = bo_pool1_out.map<float *>();
-
-    auto bo_conv2_weight_map = bo_conv2_weight.map<float *>();
-    auto bo_conv2_bias_map = bo_conv2_bias.map<float *>();
-    auto bo_conv2_out_map = bo_conv2_out.map<float *>();
-
-    auto bo_pool2_out_map = bo_pool2_out.map<float *>();
-
-    auto bo_fc1_weight_map = bo_fc1_weight.map<float *>();
-    auto bo_fc1_bias_map = bo_fc1_bias.map<float *>();
-    auto bo_fc1_out_map = bo_fc1_out.map<float *>();
-
-    auto bo_fc2_weight_map = bo_fc2_weight.map<float *>();
-    auto bo_fc2_bias_map = bo_fc2_bias.map<float *>();
-    auto bo_fc2_out_map = bo_fc2_out.map<float *>();
-
-    auto bo_fc3_weight_map = bo_fc3_weight.map<float *>();
-    auto bo_fc3_bias_map = bo_fc3_bias.map<float *>();
-    auto bo_fc3_out_map = bo_fc3_out.map<float *>();
-    auto bo_label_map = bo_label.map<float *>();
-
-    auto bo_conv1_updated_weight_map = bo_conv1_updated_weight.map<float *>();
-    auto bo_conv1_updated_bias_map = bo_conv1_updated_bias.map<float *>();
-
-    auto bo_conv2_updated_weight_map = bo_conv2_updated_weight.map<float *>();
-    auto bo_conv2_updated_bias_map = bo_conv2_updated_bias.map<float *>();
-
-    auto bo_fc1_updated_weight_map = bo_fc1_updated_weight.map<float *>();
-    auto bo_fc1_updated_bias_map = bo_fc1_updated_bias.map<float *>();
-
-    auto bo_fc2_updated_weight_map = bo_fc2_updated_weight.map<float *>();
-    auto bo_fc2_updated_bias_map = bo_fc2_updated_bias.map<float *>();
-
-    auto bo_fc3_updated_weight_map = bo_fc3_updated_weight.map<float *>();
-    auto bo_fc3_updated_bias_map = bo_fc3_updated_bias.map<float *>();
+    auto bo_updated_weights_map = bo_updated_weights.map<float *>();
+    auto bo_updated_biases_map = bo_updated_biases.map<float *>();
 
     std::cout << "Initialize buffers\n";
     // Initialize buffers
     std::fill(bo_in_data_map, bo_in_data_map + in_size, 0);
-    std::fill(bo_conv1_weight_map, bo_conv1_weight_map + conv1_weight_size, 0);
-    std::fill(bo_conv1_bias_map, bo_conv1_bias_map + conv1_bias_size, 0);
-    std::fill(bo_conv1_out_map, bo_conv1_out_map + conv1_out_size, 0);
+    std::fill(bo_weights_map, bo_weights_map + weights_size, 0);
+    std::fill(bo_biases_map, bo_biases_map + biases_size, 0);
+    std::fill(bo_outputs_map, bo_outputs_map + outputs_size, 0);
+    std::fill(bo_labels_map, bo_labels_map + labels_size, 0);
 
-    std::fill(bo_pool1_out_map, bo_pool1_out_map + pool1_out_size, 0);
-
-    std::fill(bo_conv2_weight_map, bo_conv2_weight_map + conv2_weight_size, 0);
-    std::fill(bo_conv2_bias_map, bo_conv2_bias_map + conv2_bias_size, 0);
-    std::fill(bo_conv2_out_map, bo_conv2_out_map + conv2_out_size, 0);
-
-    std::fill(bo_pool2_out_map, bo_pool2_out_map + pool2_out_size, 0);
-    
-    std::fill(bo_fc1_weight_map, bo_fc1_weight_map + fc1_weight_size, 0);
-    std::fill(bo_fc1_bias_map, bo_fc1_bias_map + fc1_bias_size, 0);
-    std::fill(bo_fc1_out_map, bo_fc1_out_map + fc1_out_size, 0);
-
-    std::fill(bo_fc2_weight_map, bo_fc2_weight_map + fc2_weight_size, 0);
-    std::fill(bo_fc2_bias_map, bo_fc2_bias_map + fc2_bias_size, 0);
-    std::fill(bo_fc2_out_map, bo_fc2_out_map + fc2_out_size, 0);
-
-    std::fill(bo_fc3_weight_map, bo_fc3_weight_map + fc3_weight_size, 0);
-    std::fill(bo_fc3_bias_map, bo_fc3_bias_map + fc3_bias_size, 0);
-    std::fill(bo_fc3_out_map, bo_fc3_out_map + fc3_out_size, 0);
-
-    std::fill(bo_conv1_updated_weight_map, bo_conv1_updated_weight_map + conv1_weight_size, 0);
-    std::fill(bo_conv1_updated_bias_map, bo_conv1_updated_bias_map + conv1_bias_size, 0);
-
-    std::fill(bo_conv2_updated_weight_map, bo_conv2_updated_weight_map + conv2_weight_size, 0);
-    std::fill(bo_conv2_updated_bias_map, bo_conv2_updated_bias_map + conv2_bias_size, 0);
-
-    std::fill(bo_fc1_updated_weight_map, bo_fc1_updated_weight_map + fc1_weight_size, 0);
-    std::fill(bo_fc1_updated_bias_map, bo_fc1_updated_bias_map + fc1_bias_size, 0);
-
-    std::fill(bo_fc2_updated_weight_map, bo_fc2_updated_weight_map + fc2_weight_size, 0);
-    std::fill(bo_fc2_updated_bias_map, bo_fc2_updated_bias_map + fc2_bias_size, 0);
-
-    std::fill(bo_fc3_updated_weight_map, bo_fc3_updated_weight_map + fc3_weight_size, 0);
-    std::fill(bo_fc3_updated_bias_map, bo_fc3_updated_bias_map + fc3_bias_size, 0);
+    std::fill(bo_updated_weights_map, bo_updated_weights_map + weights_size, 0);
+    std::fill(bo_updated_biases_map, bo_updated_biases_map + biases_size, 0);
 
     std::cout << "Initialize weight and bias\n";
     // Write input data
@@ -220,43 +128,43 @@ int main(int argc, char **argv)
     }
 
     // Write Conv1 weights and biases
-    for(int i = 0; i < conv1_weight_size; i++) {
-        bo_conv1_weight_map[i] = CONV1_WEIGHT_FP32_DATA[i];
+    for(int i = 0; i < NUM_CONV1_WEIGHTS; i++) {
+        bo_weights_map[CONV1_WEIGHT_OFFSET + i] = CONV1_WEIGHT_FP32_DATA[i];
     }
-    for(int i = 0; i < conv1_bias_size; i++) {
-        bo_conv1_bias_map[i] = CONV1_BIAS_FP32_DATA[i];
+    for(int i = 0; i < NUM_CONV1_BIASES; i++) {
+        bo_biases_map[CONV1_BIAS_OFFSET + i] = CONV1_BIAS_FP32_DATA[i];
     }
 
     // Write Conv2 weights and biases
-    for(int i = 0; i < conv2_weight_size; i++) {
-        bo_conv2_weight_map[i] = CONV2_WEIGHT_FP32_DATA[i];
+    for(int i = 0; i < NUM_CONV2_WEIGHTS; i++) {
+        bo_weights_map[CONV2_WEIGHT_OFFSET + i] = CONV2_WEIGHT_FP32_DATA[i];
     }
-    for(int i = 0; i < conv2_bias_size; i++) {
-        bo_conv2_bias_map[i] = CONV2_BIAS_FP32_DATA[i];
+    for(int i = 0; i < NUM_CONV2_BIASES; i++) {
+        bo_biases_map[CONV2_BIAS_OFFSET + i] = CONV2_BIAS_FP32_DATA[i];
     }
 
     // Write FC1 weights and biases
-    for(int i = 0; i < fc1_weight_size; i++) {
-        bo_fc1_weight_map[i] = FC1_WEIGHT_FP32_DATA[i];
+    for(int i = 0; i < NUM_FC1_WEIGHTS; i++) {
+        bo_weights_map[FC1_WEIGHT_OFFSET + i] = FC1_WEIGHT_FP32_DATA[i];
     }
-    for(int i = 0; i < fc1_bias_size; i++) {
-        bo_fc1_bias_map[i] = FC1_BIAS_FP32_DATA[i];
+    for(int i = 0; i < NUM_FC1_BIASES; i++) {
+        bo_biases_map[FC1_BIAS_OFFSET + i] = FC1_BIAS_FP32_DATA[i];
     }
 
     // Write FC2 weights and biases
-    for(int i = 0; i < fc2_weight_size; i++) {
-        bo_fc2_weight_map[i] = FC2_WEIGHT_FP32_DATA[i];
+    for(int i = 0; i < NUM_FC2_WEIGHTS; i++) {
+        bo_weights_map[FC2_WEIGHT_OFFSET + i] = FC2_WEIGHT_FP32_DATA[i];
     }
-    for(int i = 0; i < fc2_bias_size; i++) {
-        bo_fc2_bias_map[i] = FC2_BIAS_FP32_DATA[i];
+    for(int i = 0; i < NUM_FC2_BIASES; i++) {
+        bo_biases_map[FC2_BIAS_OFFSET + i] = FC2_BIAS_FP32_DATA[i];
     }
 
     // Write FC3 weights and biases
-    for(int i = 0; i < fc3_weight_size; i++) {
-        bo_fc3_weight_map[i] = FC3_WEIGHT_FP32_DATA[i];
+    for(int i = 0; i < NUM_FC3_WEIGHTS; i++) {
+        bo_weights_map[FC3_WEIGHT_OFFSET + i] = FC3_WEIGHT_FP32_DATA[i];
     }
-    for(int i = 0; i < fc3_bias_size; i++) {
-        bo_fc3_bias_map[i] = FC3_BIAS_FP32_DATA[i];
+    for(int i = 0; i < NUM_FC3_BIASES; i++) {
+        bo_biases_map[FC3_BIAS_OFFSET + i] = FC3_BIAS_FP32_DATA[i];
     }
 
     float conv1_out_golden[conv1_out_size];
@@ -271,22 +179,22 @@ int main(int argc, char **argv)
     // Run forward path on the CPU
     forward_golden(
         bo_in_data_map,
-        bo_conv1_weight_map,
-        bo_conv1_bias_map,
+        bo_weights_map,
+        bo_biases_map,
         conv1_out_golden,
         pool1_out_golden,
-        bo_conv2_weight_map,
-        bo_conv2_bias_map,
+        bo_weights_map,
+        bo_biases_map,
         conv2_out_golden,
         pool2_out_golden,
-        bo_fc1_weight_map,
-        bo_fc1_bias_map,
+        bo_weights_map,
+        bo_biases_map,
         fc1_out_golden,
-        bo_fc2_weight_map,
-        bo_fc2_bias_map,
+        bo_weights_map,
+        bo_biases_map,
         fc2_out_golden,
-        bo_fc3_weight_map,
-        bo_fc3_bias_map,
+        bo_weights_map,
+        bo_biases_map,
         fc3_out_golden
     );
     for(int i = 0; i < conv1_out_size; i++) {
