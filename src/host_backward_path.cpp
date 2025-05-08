@@ -15,6 +15,7 @@
  */
 
 #include "cmdlineparser.h"
+#include <chrono>
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -317,14 +318,17 @@ int main(int argc, char **argv)
 
     std::cout << "Sync buffers\n";
     // Sync all buffers to device
+
+    float loss = 0;
+
+    // Run backward path
+    std::cout << "Running the kernel\n";
+    auto hw_start = std::chrono::high_resolution_clock::now();
+
     bo_in_data.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-    std::cout << "Check\n";
     bo_conv1_weight.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-    std::cout << "Check\n";
     bo_conv1_bias.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-    std::cout << "Check\n";
     bo_conv1_out.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-    std::cout << "Check\n";
 
     bo_pool1_out.sync(XCL_BO_SYNC_BO_TO_DEVICE);
 
@@ -348,10 +352,6 @@ int main(int argc, char **argv)
 
     bo_label.sync(XCL_BO_SYNC_BO_TO_DEVICE);
 
-    float loss = 0;
-
-    // Run backward path
-    std::cout << "Running the kernel\n";
     auto run = backward_krnl(
         bo_in_data,
         bo_conv1_weight,
@@ -390,7 +390,6 @@ int main(int argc, char **argv)
         // Handle error
     }
     // run.wait();
-    std::cout << "Done convolution\n";
 
     // Read output from stream
     bo_conv1_updated_weight.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
@@ -404,6 +403,10 @@ int main(int argc, char **argv)
     bo_fc3_updated_weight.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
     bo_fc3_updated_bias.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
+    auto hw_end = std::chrono::high_resolution_clock::now();
+    auto hw_duration = std::chrono::duration<double, std::milli>(hw_end - hw_start).count();
+    std::cout << "Hardware kernel execution time: " << hw_duration << " ms" << std::endl;
+    std::cout << "Done backward\n";
 
     float conv1_updated_weight_golden[conv1_weight_size];
     float conv1_updated_bias_golden[conv1_bias_size];
@@ -416,6 +419,8 @@ int main(int argc, char **argv)
     float fc3_updated_weight_golden[fc3_weight_size];
     float fc3_updated_bias_golden[fc3_bias_size];
     float loss_golden = 0;
+
+    auto cpu_start = std::chrono::high_resolution_clock::now();
     // Run goldenerence
     backward_golden(
         bo_in_data_map,
@@ -450,7 +455,10 @@ int main(int argc, char **argv)
         loss_golden
     );
 
-    // TODO: verify backward path results.
+    auto cpu_end = std::chrono::high_resolution_clock::now();
+    auto cpu_duration = std::chrono::duration<double, std::milli>(cpu_end - cpu_start).count();
+    std::cout << "CPU reference execution time: " << cpu_duration << " ms" << std::endl;
+
     // Output loss value
     std::cout << "Loss from FPGA: " << loss << std::endl;
     std::cout << "Loss from golden: " << loss_golden << std::endl;

@@ -15,6 +15,7 @@
  */
 
 #include "cmdlineparser.h"
+#include <chrono>
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -208,6 +209,10 @@ int main(int argc, char **argv)
         bo_fc3_bias_map[i] = FC3_BIAS_FP32_DATA[i];
     }
 
+    // Run forward path
+    std::cout << "Running the kernel\n";
+    auto hw_start = std::chrono::high_resolution_clock::now();
+
     // Sync all buffers to device
     bo_in_data.sync(XCL_BO_SYNC_BO_TO_DEVICE);
     bo_conv1_weight.sync(XCL_BO_SYNC_BO_TO_DEVICE);
@@ -221,8 +226,6 @@ int main(int argc, char **argv)
     bo_fc3_weight.sync(XCL_BO_SYNC_BO_TO_DEVICE);
     bo_fc3_bias.sync(XCL_BO_SYNC_BO_TO_DEVICE);
 
-    // Run forward path
-    std::cout << "Running the kernel\n";
     auto run = forward_krnl(
         bo_in_data,
         bo_conv1_weight,
@@ -243,13 +246,12 @@ int main(int argc, char **argv)
         bo_fc3_bias,
         bo_fc3_out
     );
-    auto state = run.wait(std::chrono::seconds(10)); // Add timeout
-    if (state != ERT_CMD_STATE_COMPLETED) {
-        std::cout << "Kernel execution timed out or failed" << std::endl;
-        // Handle error
-    }
-    // run.wait();
-    std::cout << "Done convolution\n";
+    run.wait();
+    // auto state = run.wait(std::chrono::seconds(10)); // Add timeout
+    // if (state != ERT_CMD_STATE_COMPLETED) {
+    //     std::cout << "Kernel execution timed out or failed" << std::endl;
+    //     // Handle error
+    // }
 
     // Read output from stream
     bo_conv1_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
@@ -260,6 +262,11 @@ int main(int argc, char **argv)
     bo_fc2_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
     bo_fc3_out.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
+    auto hw_end = std::chrono::high_resolution_clock::now();
+    auto hw_duration = std::chrono::duration<double, std::milli>(hw_end - hw_start).count();
+    std::cout << "Hardware kernel execution time: " << hw_duration << " ms" << std::endl;
+    std::cout << "Done forward\n";
+
     float conv1_out_golden[conv1_out_size];
     float pool1_out_golden[pool1_out_size];
     float conv2_out_golden[conv2_out_size];
@@ -268,6 +275,7 @@ int main(int argc, char **argv)
     float fc2_out_golden[fc2_out_size];
     float fc3_out_golden[fc3_out_size];
 
+    auto cpu_start = std::chrono::high_resolution_clock::now();
     forward_golden(
         bo_in_data_map,
         bo_conv1_weight_map,
@@ -288,6 +296,10 @@ int main(int argc, char **argv)
         bo_fc3_bias_map,
         fc3_out_golden
     );
+
+    auto cpu_end = std::chrono::high_resolution_clock::now();
+    auto cpu_duration = std::chrono::duration<double, std::milli>(cpu_end - cpu_start).count();
+    std::cout << "CPU reference execution time: " << cpu_duration << " ms" << std::endl;
 
 
     // float conv1_out_golden[conv1_out_size];

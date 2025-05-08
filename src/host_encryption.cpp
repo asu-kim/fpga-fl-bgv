@@ -14,234 +14,357 @@
  * under the License.
  */
 
-#include "cmdlineparser.h"
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include <random>
-#include <ctime>
-#include "encryption.hpp"
-#include "constants.hpp"
-
-// XRT includes
-#include "experimental/xrt_bo.h"
-#include "experimental/xrt_device.h"
-#include "experimental/xrt_kernel.h"
-
-#define DATA_SIZE POLYNOMIAL_DEGREE
-
-std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
-
-void polynomial_multiplication_reference(std::vector<data_t> input1, std::vector<data_t> input2, std::vector<data_t> output) {
-    data_t n = POLYNOMIAL_DEGREE;
-    data_t n_inv = INVERSE_POLYNOMIAL_DEGREE;
-    data_t q = CIPHERTEXT_MODULUS;
-    data_t w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
-    data_t w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
-
-    // data_t temp[POLYNOMIAL_DEGREE];
-    for (int i = 0; i < n; i++) {
-        int pos = 0;
-        for (int j = 0; j <= i; j++) {
-            pos += (input1[j] * input2[i - j]) % q;
-        }
-        int neg = 0;
-        for (int j = i + 1; j < n; j++) {
-            neg += (input1[j] * input2[n + i - j]) % q;
-        }
-        output[i] = (((pos - neg) % q) + q) % q;
-    }
-}
-
-void generate_key(std::vector<data_t> private_key, std::vector<data_t> public_key1, std::vector<data_t> public_key2)
-{
-    int n = DATA_SIZE;
-    int p = PLAINTEXT_MODULUS;
-    int q = CIPHERTEXT_MODULUS;
-
-    std::vector<data_t> a_prime(DATA_SIZE);
-    std::vector<data_t> error(DATA_SIZE);
-
-    std::uniform_int_distribution<int> dist1(-1, 1);
-
-    for (int i = 0; i < n; i++)
-    {
-        private_key[i] = dist1(rng);
-        error[i] = dist1(rng);
-    }
-
-    std::uniform_int_distribution<int> dist2(0, q - 1);
-
-    for (int i = 0; i < n; i++)
-    {
-        a_prime[i] = dist2(rng);
-    }
-
-    std::vector<data_t> temp(DATA_SIZE);
-    polynomial_multiplication_reference(a_prime, private_key, temp);
-
-    for (int i = 0; i < n; i++)
-    {
-        public_key1[i] = temp[i] + p * error[i];
-        public_key2[i] = -a_prime[i];
-    }
-}
-
-void random_sampling(std::vector<data_t> array)
-{
-    std::uniform_int_distribution<int> dist1(-1, 1);
-    for (int i = 0; i < DATA_SIZE; i++)
-    {
-        array[i] = dist1(rng);
-    }
-}
-
-int main(int argc, char **argv)
+ #include "cmdlineparser.h"
+ #include <iostream>
+ #include <fstream>
+ #include <cstring>
+ #include <random>
+ #include <ctime>
+ #include "BGV/encryption.hpp"
+ #include "BGV/parameter_processing.hpp"
+ 
+ #include "keys.h"
+ #include "weights_bias.h"
+ #include "weights_bias_float.h"
+ #include "encrypted_weights_bias.h"
+ #include "constants.hpp"
+ 
+ // XRT includes
+ #include "experimental/xrt_bo.h"
+ #include "experimental/xrt_device.h"
+ #include "experimental/xrt_kernel.h"
+ 
+ #define DATA_SIZE POLYNOMIAL_DEGREE
+ 
+ // std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
+ std::mt19937 rng(42);
+ 
+ void print_float_array(const float* arr, int size, const std::string& name) {
+     std::cout << name << " (first 10 elements): ";
+     for(int i=0; i < std::min(10, size); i++) {
+         std::cout << arr[i] << ", ";
+     }
+     std::cout << std::endl;
+ }
+ 
+ void print_data_t_array(const data_t* arr, int size, const std::string& name) {
+     std::cout << name << " (first 10 elements): ";
+     for(int i=0; i < std::min(10, size); i++) {
+         std::cout << arr[i] << ", ";
+     }
+     std::cout << std::endl;
+ }
+ 
+ void print_data_t_array_last(const data_t* arr, int size, const std::string& name) {
+     std::cout << name << " (last 128 elements): ";
+     int start_idx = size >= 128 ? size - 128 : 0;
+     for(int i = 0; i < std::min(128, size); i++) {
+         std::cout << arr[start_idx + i] << ", ";
+     }
+     std::cout << std::endl << std::endl;
+ }
+ 
+ int modulo(int a, int b) {
+     int c = (a % b + b) % b;
+     if (c < b /2) {
+         return c;
+     } else {
+         return c - b;
+     }
+ }
+ 
+ // Reference implementation for verification
+ void ntt_reference(data_t* input, data_t* output) {
+     int n = POLYNOMIAL_DEGREE;
+     int q = CIPHERTEXT_MODULUS;
+     int w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
+     // Make a copy of input
+     data_t temp[POLYNOMIAL_DEGREE];
+     for (int i = 0; i < n; i++) {
+         temp[i] = input[i];
+     }
+ 
+     // Perform NTT using the same algorithm
+     for (int m = n / 2; m >= 1; m /= 2) {
+         for (int j = 0; j < m; j++) {
+             int exp = (j * n) / (2 * m);
+             data_t w_m = 1;
+             for (int k = 0; k < exp; k++) {
+                 w_m = (w_m * w) % q;
+             }
+             // printf("test w_m = %d\n", w_m);
+ 
+             for (int i = j; i < n; i += 2 * m) {
+                 data_t t1 = temp[i];
+                 data_t t2 = temp[i + m];
+                 temp[i] = (t1 + t2) % q;
+                 temp[i + m] = (w_m * ((t1 - t2 + q) % q)) % q;
+             }
+         }
+     }
+     
+     // Apply bit reversal
+     for (int i = 0; i < n; i++) {
+         output[BIT_REVERSE_LUT[i]] = temp[i];
+     }
+ }
+ 
+ // Reference implementation for INNT verification
+ void intt_reference(data_t* input, data_t* output) {
+     int n = POLYNOMIAL_DEGREE;
+     int q = CIPHERTEXT_MODULUS;
+     int w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
+     int n_inv = INVERSE_POLYNOMIAL_DEGREE;
+     // Make a copy of input with bit-reversal
+     data_t temp[n];
+     for (int i = 0; i < n; i++) {
+         temp[i] = input[i];
+     }
+ 
+     // INTT algorithm
+     for (int m = n / 2; m >= 1; m /= 2) {
+         for (int j = 0; j < m; j++) {
+             int exp = (j * n) / (2 * m);
+             data_t w_m = 1;
+             for (int k = 0; k < exp; k++) {
+                 w_m = (w_m * w_inv) % q;
+             }
+             
+             for (int i = j; i < n; i += 2 * m) {
+                 data_t t1 = temp[i];
+                 data_t t2 = temp[i + m];
+                 temp[i] = (t1 + t2) % q;
+                 
+                 // Correct computation for INTT
+                 data_t diff = (t1 - t2 + q) % q;  // Ensure positive result
+                 temp[i + m] = (diff * w_m) % q;
+             }
+         }
+     }
+     
+     // Apply scaling by n_inv
+     for (int i = 0; i < n; i++) {
+         output[BIT_REVERSE_LUT[i]] = (temp[i] * n_inv) % q;
+     }
+ }
+ 
+ void polynomial_multiplication_reference(data_t* input1, data_t* input2, data_t* output) {
+     data_t n = POLYNOMIAL_DEGREE;
+     data_t n_inv = INVERSE_POLYNOMIAL_DEGREE;
+     data_t q = CIPHERTEXT_MODULUS;
+     data_t w = PRIMITIVE_N_TH_ROOT_OF_UNITY;
+     data_t w_inv = INVERSE_PRIMITIVE_N_TH_ROOT_OF_UNITY;
+ 
+     data_t in1_tilde[POLYNOMIAL_DEGREE];
+     data_t in2_tilde[POLYNOMIAL_DEGREE];
+     for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+         in1_tilde[i] = (E_POWERS_LUT[i] * input1[i]) % q;
+         in2_tilde[i] = (E_POWERS_LUT[i] * input2[i]) % q;
+     }
+ 
+     data_t transformed_in1_tilde[POLYNOMIAL_DEGREE];
+     data_t transformed_in2_tilde[POLYNOMIAL_DEGREE];
+     ntt_reference(in1_tilde, transformed_in1_tilde);
+     ntt_reference(in2_tilde, transformed_in2_tilde);
+ 
+     data_t transformed_out_tilde[POLYNOMIAL_DEGREE];
+     for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+         transformed_out_tilde[i] = (transformed_in1_tilde[i] * transformed_in2_tilde[i]) % q;
+     }
+ 
+     data_t out_tilde[POLYNOMIAL_DEGREE];
+     intt_reference(transformed_out_tilde, out_tilde);
+ 
+     for (int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+         output[i] = (E_INV_POWERS_LUT[i] * out_tilde[i]) % q;
+     }
+ }
+ 
+ void encryption_reference(data_t* error1, data_t* error2, data_t* r, data_t* public_key0, data_t* public_key1, data_t* plaintext, data_t* ciphertext0, data_t* ciphertext1) {
+     int n = POLYNOMIAL_DEGREE;
+     int p = PLAINTEXT_MODULUS;
+     int q = CIPHERTEXT_MODULUS;
+     
+     data_t temp1[n];
+     data_t temp2[n];
+ 
+     polynomial_multiplication_reference(public_key0, r, temp1);
+     polynomial_multiplication_reference(public_key1, r, temp2);
+ 
+     // print_data_t_array(temp1, 128, "temp1");
+     // print_data_t_array(temp2, 128, "temp2");
+     // std::cout << std::endl;
+ 
+     for(int i = 0; i < n; i++) {
+         ciphertext0[i] = (plaintext[i] + p * error1[i] + temp1[i] + q) % q;
+         ciphertext1[i] = (p * error2[i] + temp2[i] + q) % q;
+     }
+ }
+ 
+ void decryption_reference(data_t* private_key, data_t* ciphertext1, data_t* ciphertext2, data_t* plaintext){
+     int n = POLYNOMIAL_DEGREE;
+     int p = PLAINTEXT_MODULUS;
+     int q = CIPHERTEXT_MODULUS;
+ 
+     data_t temp[n];
+     polynomial_multiplication_reference(ciphertext2, private_key, temp);
+ 
+     for(int i = 0; i < n; i++) {
+         data_t intermittent = modulo(ciphertext1[i] + temp[i], q);
+         // printf("intermittent = %d\n", intermittent);
+         plaintext[i] = modulo(intermittent, p);
+     }
+ }
+ 
+ void parameter_encryption_reference(
+     float pt[POLYNOMIAL_DEGREE],
+     float scale,
+     float zp,
+     data_t errors[POLYNOMIAL_DEGREE*3],
+     data_t pk0[POLYNOMIAL_DEGREE],
+     data_t pk1[POLYNOMIAL_DEGREE],
+ 
+     data_t ct0[POLYNOMIAL_DEGREE],
+     data_t ct1[POLYNOMIAL_DEGREE]
+ ) {
+     // Quantize
+     data_t quantized_pt[POLYNOMIAL_DEGREE];
+ 
+     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+         float quantized = pt[i] / scale+ zp;
+         quantized = (quantized > 127) ? 127 : ((quantized < -128) ? -128 : quantized);
+         quantized_pt[i] = (data_t) quantized;
+     }
+ 
+     data_t error0[POLYNOMIAL_DEGREE];
+     data_t ciphertext0[POLYNOMIAL_DEGREE];
+     data_t r[POLYNOMIAL_DEGREE];
+ 
+     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+         error0[i] = errors[i];
+     }
+ 
+     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+         ciphertext0[i] = errors[POLYNOMIAL_DEGREE + i];
+     }
+ 
+     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+         r[i] = errors[2*POLYNOMIAL_DEGREE + i];
+     }
+ 
+     encryption_reference(
+         error0,
+         ciphertext0,
+         r,
+         pk0,
+         pk1,
+         quantized_pt, 
+         ct0,
+         ct1
+     );
+ }
+ 
+ void parameter_decryption_reference(
+     data_t sk[POLYNOMIAL_DEGREE*3],
+     data_t ct0[POLYNOMIAL_DEGREE],
+     data_t ct1[POLYNOMIAL_DEGREE],
+     float scale,
+     float zp,
+ 
+     float pt[POLYNOMIAL_DEGREE]
+ ) {
+     // Dequantize
+     data_t quantized_pt[POLYNOMIAL_DEGREE];
+     decryption_reference(
+         sk, 
+         ct0, 
+         ct1, 
+         quantized_pt
+     );
+ 
+     print_data_t_array(sk, POLYNOMIAL_DEGREE, "sk");
+     print_data_t_array(ct0, POLYNOMIAL_DEGREE, "ct0");
+     print_data_t_array(ct1, POLYNOMIAL_DEGREE, "ct1");
+     print_data_t_array(quantized_pt, POLYNOMIAL_DEGREE, "quantized_pt");
+ 
+     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
+         pt[i] = (quantized_pt[i] - zp) * scale;
+     }
+ }
+ 
+ int main(int argc, char **argv)
 {
     // Command Line Parser
     sda::utils::CmdLineParser parser;
-
-    // Switches
-    //**************//"<Full Arg>",  "<Short Arg>", "<Description>", "<Default>"
     parser.addSwitch("--xclbin_file", "-x", "input binary file string", "");
     parser.addSwitch("--device_id", "-d", "device index", "0");
-    parser.addSwitch("--input_file", "-i", "input data file", "input.txt");
     parser.parse(argc, argv);
 
-    // Read settings
     std::string binaryFile = parser.value("xclbin_file");
     int device_index = stoi(parser.value("device_id"));
-    std::string inputFile = parser.value("input_file");
 
-    if (binaryFile.empty())
-    {
+    if (binaryFile.empty()) {
         parser.printHelp();
         return EXIT_FAILURE;
     }
 
-    // Read input file
-    std::ifstream infile(inputFile);
-    if (!infile.is_open())
-    {
-        std::cerr << "Error: Unable to open input file '" << inputFile << "'" << std::endl;
-        return EXIT_FAILURE;
-    }
-
-    std::vector<data_t> plaintext(DATA_SIZE);
-    data_t cpu_source_in[DATA_SIZE];
-
-    std::cout << "Reading input from file: " << inputFile << std::endl;
-
-    // Read up to DATA_SIZE pairs of numbers from the file
-    for (int i = 0; i < DATA_SIZE; i++)
-    {
-        if (infile >> plaintext[i])
-        {
-            cpu_source_in[i] = plaintext[i];
-        }
-        else
-        {
-            if (i == 0)
-            {
-                std::cerr << "Error: Input file format is invalid. Expected pairs of numbers." << std::endl;
-                return EXIT_FAILURE;
-            }
-            // If we reach end of file before reading DATA_SIZE pairs, fill the rest with zeros
-            for (int j = i; j < DATA_SIZE; j++)
-            {
-                plaintext[j] = 0;
-                cpu_source_in[j] = 0;
-            }
-            break;
-        }
-    }
-
-    std::vector<data_t> private_key(DATA_SIZE);
-    std::vector<data_t> public_key1(DATA_SIZE);
-    std::vector<data_t> public_key2(DATA_SIZE);
-
-    generate_key(private_key, public_key1, public_key2);
-
-    std::vector<data_t> error1(DATA_SIZE);
-    std::vector<data_t> error2(DATA_SIZE);
-    std::vector<data_t> r(DATA_SIZE);
-
-    random_sampling(error1);
-    random_sampling(error2);
-    random_sampling(r);
-
-    // for (int i = 0; i < DATA_SIZE; i++) {
-    //     printf("plaintext[%d] = %d.\n", i, plaintext[i]);
-    //     printf("input2[%d] = %d.\n", i, input2[i]);
-    // }
-
-    std::cout << "Open the device" << device_index << std::endl;
+    std::cout << "Open the device " << device_index << std::endl;
     auto device = xrt::device(device_index);
     std::cout << "Load the xclbin " << binaryFile << std::endl;
     auto uuid = device.load_xclbin(binaryFile);
 
-    size_t vector_size_bytes = sizeof(data_t) * DATA_SIZE;
-
-    auto krnl = xrt::kernel(device, uuid, "top_encryption_decryption_test");
+    auto krnl = xrt::kernel(device, uuid, "parameter_encryption");
 
     std::cout << "Allocate Buffer in Global Memory\n";
-    auto bo_plaintext = xrt::bo(device, vector_size_bytes, krnl.group_id(0));
-    auto bo_private_key = xrt::bo(device, vector_size_bytes, krnl.group_id(1));
-    auto bo_public_key1 = xrt::bo(device, vector_size_bytes, krnl.group_id(2));
-    auto bo_public_key2 = xrt::bo(device, vector_size_bytes, krnl.group_id(2));
-    auto bo_error1 = xrt::bo(device, vector_size_bytes, krnl.group_id(3));
-    auto bo_error2 = xrt::bo(device, vector_size_bytes, krnl.group_id(3));
-    auto bo_r = xrt::bo(device, vector_size_bytes, krnl.group_id(3));
-    auto bo_out = xrt::bo(device, vector_size_bytes, krnl.group_id(4));
+    auto bo_error0      = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(0));
+    auto bo_error1      = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(1));
+    auto bo_r           = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(2));
+    auto bo_public_key0 = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(3));
+    auto bo_public_key1 = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(4));
+    auto bo_plaintext   = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(5));
+    auto bo_ciphertext0 = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(6));
+    auto bo_ciphertext1 = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(7));
 
+    std::cout << "Create maps\n";
     // Map the contents of the buffer object into host memory
-    auto bo_plaintext_map = bo_plaintext.map<data_t *>();
-    auto bo_private_key_map = bo_private_key.map<data_t *>();
+    auto bo_error0_map      = bo_error0.map<data_t *>();
+    auto bo_error1_map      = bo_error1.map<data_t *>();
+    auto bo_r_map           = bo_r.map<data_t *>();
+    auto bo_public_key0_map = bo_public_key0.map<data_t *>();
     auto bo_public_key1_map = bo_public_key1.map<data_t *>();
-    auto bo_public_key2_map = bo_public_key2.map<data_t *>();
-    auto bo_error1_map = bo_error1.map<data_t *>();
-    auto bo_error2_map = bo_error2.map<data_t *>();
-    auto bo_r_map = bo_r.map<data_t *>();
-    auto bo_out_map = bo_out.map<data_t *>();
-    std::fill(bo_plaintext_map, bo_plaintext_map + DATA_SIZE, 0);
-    std::fill(bo_private_key_map, bo_private_key_map + DATA_SIZE, 0);
-    std::fill(bo_public_key1_map, bo_public_key1_map + DATA_SIZE, 0);
-    std::fill(bo_public_key2_map, bo_public_key2_map + DATA_SIZE, 0);
-    std::fill(bo_error1_map, bo_error1_map + DATA_SIZE, 0);
-    std::fill(bo_error2_map, bo_error2_map + DATA_SIZE, 0);
-    std::fill(bo_r_map, bo_r_map + DATA_SIZE, 0);
-    std::fill(bo_out_map, bo_out_map + DATA_SIZE, 0);
+    auto bo_plaintext_map   = bo_plaintext.map<data_t *>();
+    auto bo_ciphertext0_map = bo_ciphertext0.map<data_t *>();
+    auto bo_ciphertext1_map = bo_ciphertext1.map<data_t *>();
 
-    // Create the test data
-    // int bufReference[DATA_SIZE];
-    // for (int i = 0; i < DATA_SIZE; ++i) {
-    //     bo0_map[i] = i;
-    //     bo1_map[i] = i;
-    //     bufReference[i] = bo0_map[i] + bo1_map[i];
-    // }
+    std::fill(bo_error0_map, bo_error0_map + POLYNOMIAL_DEGREE, 0);
+    std::fill(bo_error1_map, bo_error1_map + POLYNOMIAL_DEGREE, 0);
+    std::fill(bo_r_map, bo_r_map + POLYNOMIAL_DEGREE, 0);
+    std::fill(bo_public_key0_map, bo_public_key0_map + POLYNOMIAL_DEGREE, 0);
+    std::fill(bo_public_key1_map, bo_public_key1_map + POLYNOMIAL_DEGREE, 0);
+    std::fill(bo_plaintext_map, bo_plaintext_map + POLYNOMIAL_DEGREE, 0);
+    std::fill(bo_ciphertext0_map, bo_ciphertext0_map + POLYNOMIAL_DEGREE, 0);
+    std::fill(bo_ciphertext1_map, bo_ciphertext1_map + POLYNOMIAL_DEGREE, 0);
 
     // Copy input data to mapped buffers
     for (int i = 0; i < DATA_SIZE; i++)
     {
-        bo_plaintext_map[i] = plaintext[i];
-        bo_private_key_map[i] = private_key[i];
-        bo_public_key1_map[i] = public_key1[i];
-        bo_public_key2_map[i] = public_key2[i];
-        bo_error1_map[i] = error1[i];
-        bo_error2_map[i] = error2[i];
-        bo_r_map[i] = r[i];
+        bo_error0_map[i] = dist1(rng);
+        bo_error1_map[i] = dist1(rng);
+        bo_r_map[i] = dist1(rng);
+        bo_public_key0_map[i] = PUBLIC_KEY0[i];
+        bo_public_key1_map[i] = PUBLIC_KEY1[i];
+        bo_plaintext_map[i] = CONV1_WEIGHT_INT8_DATA[i];
     }
 
     // Synchronize buffer content with device side
     std::cout << "synchronize input buffer data to device global memory\n";
 
-    bo_plaintext.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-    bo_private_key.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-    bo_public_key1.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-    bo_public_key2.sync(XCL_BO_SYNC_BO_TO_DEVICE);
+    bo_error0.sync(XCL_BO_SYNC_BO_TO_DEVICE);
     bo_error1.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-    bo_error2.sync(XCL_BO_SYNC_BO_TO_DEVICE);
     bo_r.sync(XCL_BO_SYNC_BO_TO_DEVICE);
+    bo_public_key0.sync(XCL_BO_SYNC_BO_TO_DEVICE);
+    bo_public_key1.sync(XCL_BO_SYNC_BO_TO_DEVICE);
+    bo_plaintext.sync(XCL_BO_SYNC_BO_TO_DEVICE);
 
     std::cout << "Execution of the kernel\n";
     auto run = krnl(bo_error1, bo_error2, bo_r, bo_private_key, bo_public_key1, bo_public_key2, bo_plaintext, bo_out);

@@ -161,7 +161,7 @@ void random_sampling(std::vector<data_t> array)
         array[i] = dist1(rng);
     }
 }
- 
+
 int main(int argc, char **argv)
 {
     // Command Line Parser
