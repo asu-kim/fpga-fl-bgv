@@ -5,6 +5,32 @@
 #include <cstdint>
 #include "data_type.hpp"
 
+// CH, ROWS, COLS
+#define CONV1_OUT_CH 6
+#define CONV1_IN_CH 1
+#define KERNEL_SIZE 5
+#define CONV1_IN_ROWS 28
+#define CONV1_IN_COLS 28
+#define CONV1_OUT_ROWS (CONV1_IN_ROWS - KERNEL_SIZE + 1)
+#define CONV1_OUT_COLS (CONV1_IN_COLS - KERNEL_SIZE + 1)
+
+#define CONV2_OUT_CH 16
+#define CONV2_IN_CH 6
+#define CONV2_IN_ROWS 12
+#define CONV2_IN_COLS 12
+#define CONV2_OUT_ROWS (CONV2_IN_ROWS - KERNEL_SIZE + 1)
+#define CONV2_OUT_COLS (CONV2_IN_COLS - KERNEL_SIZE + 1)
+
+#define FC1_IN_DIM 256
+#define FC1_OUT_DIM 120
+
+#define FC2_IN_DIM 120
+#define FC2_OUT_DIM 84
+
+#define FC3_IN_DIM 84
+#define FC3_OUT_DIM 10
+
+// TOTAL WEIGHTS
 #define NUM_CONV1_WEIGHTS 150
 #define NUM_CONV2_WEIGHTS 2400
 #define NUM_FC1_WEIGHTS 30720

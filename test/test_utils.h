@@ -33,30 +33,6 @@
 // #define DATASET DATASET_PATH.c_str()
 // #define VALIDATE_DATA VALIDATE_DATA_PATH.c_str() 
 
-#define CONV1_OUT_CH 6
-#define CONV1_IN_CH 1
-#define KERNEL_SIZE 5
-#define CONV1_IN_ROWS 28
-#define CONV1_IN_COLS 28
-#define CONV1_OUT_ROWS (CONV1_IN_ROWS - KERNEL_SIZE + 1)
-#define CONV1_OUT_COLS (CONV1_IN_COLS - KERNEL_SIZE + 1)
-
-#define CONV2_OUT_CH 16
-#define CONV2_IN_CH 6
-#define CONV2_IN_ROWS 12
-#define CONV2_IN_COLS 12
-#define CONV2_OUT_ROWS (CONV2_IN_ROWS - KERNEL_SIZE + 1)
-#define CONV2_OUT_COLS (CONV2_IN_COLS - KERNEL_SIZE + 1)
-
-#define FC1_IN_DIM 256
-#define FC1_OUT_DIM 120
-
-#define FC2_IN_DIM 120
-#define FC2_OUT_DIM 84
-
-#define FC3_IN_DIM 84
-#define FC3_OUT_DIM 10
-
 data_ap_fixed_t SAMPLE_INPUT[784] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -98,48 +74,98 @@ data_ap_fixed_t SAMPLE_INPUT[784] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0};
 
+// template<int OUT_C, int IN_C, int KERNEL, int IN_ROWS, int IN_COLS>
+// void conv_golden(
+//     const data_ap_fixed_t in_data[IN_C][IN_ROWS][IN_COLS],
+//     data_ap_fixed_t out_data[OUT_C][IN_ROWS - KERNEL + 1][IN_COLS - KERNEL + 1],
+//     const data_ap_fixed_t weights[OUT_C][IN_C][KERNEL][KERNEL],
+//     const data_ap_fixed_t bias[OUT_C]
+// ) {
+//     const int OUT_ROWS = IN_ROWS - KERNEL + 1;
+//     const int OUT_COLS = IN_COLS - KERNEL + 1;
+
+//     // Loop over each output channel
+//     for (int oc = 0; oc < OUT_C; oc++) {
+//         for (int oh = 0; oh < OUT_ROWS; oh++) {
+//             for (int ow = 0; ow < OUT_COLS; ow++) {
+//                 data_ap_fixed_t acc = bias[oc];
+
+//                 for (int ic = 0; ic < IN_C; ic++) {
+//                     for (int kh = 0; kh < KERNEL; kh++) {
+//                         for (int kw = 0; kw < KERNEL; kw++) {
+//                             int ih = oh + kh;
+//                             int iw = ow + kw;
+//                             acc += in_data[ic][ih][iw] * weights[oc][ic][kh][kw];
+//                         }
+//                     }
+//                 }
+
+//                 out_data[oc][oh][ow] = acc;
+//             }
+//         }
+//     }
+// }
+
 template<int OUT_C, int IN_C, int KERNEL, int IN_ROWS, int IN_COLS>
 void conv_golden(
-    const data_ap_fixed_t in_data[IN_C * IN_ROWS * IN_COLS],
-    data_ap_fixed_t out_data[OUT_C * (IN_ROWS - KERNEL + 1) * (IN_COLS - KERNEL + 1)],
-    const data_ap_fixed_t weights[OUT_C * IN_C * KERNEL * KERNEL],
+    const data_ap_fixed_t in_data[IN_C][IN_ROWS][IN_COLS],
+    data_ap_fixed_t out_data[OUT_C][IN_ROWS - KERNEL + 1][IN_COLS - KERNEL + 1],
+    const data_ap_fixed_t weights[OUT_C][IN_C][KERNEL][KERNEL],
     const data_ap_fixed_t bias[OUT_C]
 ) {
     const int OUT_ROWS = IN_ROWS - KERNEL + 1;
     const int OUT_COLS = IN_COLS - KERNEL + 1;
-    
-    // Loop over each output channel
+
+    // Initialize output with bias (같은 초기화 패턴)
     for (int oc = 0; oc < OUT_C; oc++) {
-        // Loop over each output row
         for (int oh = 0; oh < OUT_ROWS; oh++) {
-            // Loop over each output column
             for (int ow = 0; ow < OUT_COLS; ow++) {
-                // Initialize accumulator with bias
-                data_ap_fixed_t acc = bias[oc];
-                
-                // Calculate convolution for current output position
-                for (int ic = 0; ic < IN_C; ic++) {
-                    for (int kh = 0; kh < KERNEL; kh++) {
-                        for (int kw = 0; kw < KERNEL; kw++) {
-                            // Input position
-                            int ih = oh + kh;
-                            int iw = ow + kw;
-                            
-                            // Calculate flattened indices
-                            int in_idx = ic * IN_ROWS * IN_COLS + ih * IN_COLS + iw;
-                            int w_idx = oc * IN_C * KERNEL * KERNEL + 
-                                        ic * KERNEL * KERNEL + 
-                                        kh * KERNEL + kw;
-                            
-                            // Accumulate weighted input
-                            acc += in_data[in_idx] * weights[w_idx];
+                out_data[oc][oh][ow] = bias[oc];
+            }
+        }
+    }
+
+    // 루프 순서를 HLS 구현과 동일하게 변경 (ic -> r -> c -> oc)
+    for (int ic = 0; ic < IN_C; ic++) {
+        // Line buffer 로직을 에뮬레이션 (실제 메모리 최적화 없이)
+        data_ap_fixed_t line_buffer[KERNEL][IN_COLS];
+        
+        // 라인 버퍼 초기화
+        for (int i = 0; i < KERNEL; i++) {
+            for (int j = 0; j < IN_COLS; j++) {
+                line_buffer[i][j] = 0;
+            }
+        }
+
+        for (int r = 0; r < IN_ROWS; r++) {
+            // 라인 버퍼 시프트 (위로 밀기)
+            for (int i = KERNEL - 1; i > 0; i--) {
+                for (int j = 0; j < IN_COLS; j++) {
+                    line_buffer[i][j] = line_buffer[i - 1][j];
+                }
+            }
+
+            // 새 행 삽입
+            for (int j = 0; j < IN_COLS; j++) {
+                line_buffer[0][j] = in_data[ic][r][j];
+            }
+
+            // 충분한 행이 채워졌을 때 컨볼루션 적용
+            if (r >= KERNEL - 1) {
+                for (int c = 0; c <= IN_COLS - KERNEL; c++) {
+                    for (int oc = 0; oc < OUT_C; oc++) {
+                        data_ap_fixed_t acc = 0;
+                        for (int kr = 0; kr < KERNEL; kr++) {
+                            for (int kc = 0; kc < KERNEL; kc++) {
+                                data_ap_fixed_t val = line_buffer[kr][c + kc];
+                                data_ap_fixed_t w = weights[oc][ic][kr][kc];
+                                acc += val * w;
+                            }
                         }
+                        // HLS 구현과 동일하게 누적 (+=)
+                        out_data[oc][r - KERNEL + 1][c] += acc;
                     }
                 }
-                
-                // Calculate output index and store result
-                int out_idx = oc * OUT_ROWS * OUT_COLS + oh * OUT_COLS + ow;
-                out_data[out_idx] = acc;
             }
         }
     }
@@ -147,8 +173,8 @@ void conv_golden(
 
 template<int POOL_SIZE, int STRIDE, int IN_C, int IN_ROWS, int IN_COLS>
 void pool_golden(
-    const data_ap_fixed_t in_data[IN_C*IN_ROWS*IN_COLS],
-    data_ap_fixed_t out_data[IN_C * ((IN_ROWS - POOL_SIZE) / STRIDE + 1) * ((IN_COLS - POOL_SIZE) / STRIDE + 1)]
+    const data_ap_fixed_t in_data[IN_C][IN_ROWS][IN_COLS],
+    data_ap_fixed_t out_data[IN_C][(IN_ROWS - POOL_SIZE) / STRIDE + 1][(IN_COLS - POOL_SIZE) / STRIDE + 1]
 ) {
     int OUT_ROWS = (IN_ROWS - POOL_SIZE) / STRIDE + 1;
     int OUT_COLS = (IN_COLS - POOL_SIZE) / STRIDE + 1;
@@ -162,12 +188,12 @@ void pool_golden(
                     for(int j=0; j < POOL_SIZE; j++) {
                         int r = out_r * STRIDE + i;
                         int c = out_c * STRIDE + j;
-                        sum += in_data[ch*IN_ROWS*IN_COLS + r*IN_COLS + c];
+                        sum += in_data[ch][r][c];
                     }
                 }
                 // Calculate average
                 data_ap_fixed_t avg = sum / (POOL_SIZE * POOL_SIZE);
-                out_data[ch*OUT_ROWS*OUT_COLS + out_r*OUT_COLS + out_c] = avg;
+                out_data[ch][out_r][out_c] = avg;
             }
         }
     }
@@ -177,7 +203,7 @@ template<int IN_DIM, int OUT_DIM>
 void fc_golden(
     const data_ap_fixed_t in_data[IN_DIM],
     data_ap_fixed_t out_data[OUT_DIM],
-    const data_ap_fixed_t weight[IN_DIM*OUT_DIM],
+    const data_ap_fixed_t weight[IN_DIM][OUT_DIM],
     const data_ap_fixed_t bias[OUT_DIM],
     bool use_relu
 ) {
@@ -189,7 +215,7 @@ void fc_golden(
     // Matrix multiplication
     for(int i=0; i<IN_DIM; i++) {
         for(int j=0; j<OUT_DIM; j++) {
-            out_data[j] += in_data[i] * weight[i*OUT_DIM + j];
+            out_data[j] += in_data[i] * weight[i][j];
         }
     }
     
@@ -209,64 +235,103 @@ void forward_golden(
     const data_ap_fixed_t* biases,
     data_ap_fixed_t* outs
 ) {
-    data_ap_fixed_t conv1_out[NUM_CONV1_OUTS];
-    data_ap_fixed_t pool1_out[NUM_POOL1_OUTS];
-    data_ap_fixed_t conv2_out[NUM_CONV2_OUTS];
-    data_ap_fixed_t pool2_out[NUM_POOL2_OUTS];
-    data_ap_fixed_t fc1_out[NUM_FC1_OUTS];
-    data_ap_fixed_t fc2_out[NUM_FC2_OUTS];
-    data_ap_fixed_t fc3_out[NUM_FC3_OUTS];
+    data_ap_fixed_t local_in_data[CONV1_IN_CH][CONV1_IN_ROWS][CONV1_IN_COLS]; // [1*28*28];
+    data_ap_fixed_t conv1_out[CONV1_OUT_CH][CONV1_OUT_ROWS][CONV1_OUT_COLS];// [6*24*24];
+    data_ap_fixed_t pool1_out[CONV2_IN_CH][CONV2_IN_ROWS][CONV2_IN_COLS]; // [6*12*12];
+    data_ap_fixed_t conv2_out[CONV2_OUT_CH][CONV2_OUT_ROWS][CONV2_OUT_COLS]; // [16*8*8];
+    data_ap_fixed_t pool2_out[CONV2_OUT_CH][CONV2_OUT_ROWS/2][CONV2_OUT_COLS/2]; // [16*4*4];
+    data_ap_fixed_t fc1_out[FC1_OUT_DIM]; // [120];
+    data_ap_fixed_t fc2_out[FC2_OUT_DIM]; // [84];
+    data_ap_fixed_t fc3_out[FC3_OUT_DIM]; // [10];
     
     // Create local arrays for weights and biases
-    data_ap_fixed_t conv1_weight[NUM_CONV1_WEIGHTS];
-    data_ap_fixed_t conv1_bias[NUM_CONV1_BIASES];
-    data_ap_fixed_t conv2_weight[NUM_CONV2_WEIGHTS];
-    data_ap_fixed_t conv2_bias[NUM_CONV2_BIASES];
-    data_ap_fixed_t fc1_weight[NUM_FC1_WEIGHTS];
-    data_ap_fixed_t fc1_bias[NUM_FC1_BIASES];
-    data_ap_fixed_t fc2_weight[NUM_FC2_WEIGHTS];
-    data_ap_fixed_t fc2_bias[NUM_FC2_BIASES];
-    data_ap_fixed_t fc3_weight[NUM_FC3_WEIGHTS];
-    data_ap_fixed_t fc3_bias[NUM_FC3_BIASES];
-    
-    // Copy weights and biases from consolidated arrays
-    for(int i = 0; i < NUM_CONV1_WEIGHTS; i++) {
-        conv1_weight[i] = weights[CONV1_WEIGHT_OFFSET + i];
+    data_ap_fixed_t conv1_weight[CONV1_OUT_CH][CONV1_IN_CH][KERNEL_SIZE][KERNEL_SIZE];
+    data_ap_fixed_t conv1_bias[CONV1_OUT_CH];
+    data_ap_fixed_t conv2_weight[CONV2_OUT_CH][CONV2_IN_CH][KERNEL_SIZE][KERNEL_SIZE];
+    data_ap_fixed_t conv2_bias[CONV2_OUT_CH];
+    data_ap_fixed_t fc1_weight[FC1_IN_DIM][FC1_OUT_DIM];
+    data_ap_fixed_t fc1_bias[FC1_OUT_DIM];
+    data_ap_fixed_t fc2_weight[FC2_IN_DIM][FC2_OUT_DIM];
+    data_ap_fixed_t fc2_bias[FC2_OUT_DIM];
+    data_ap_fixed_t fc3_weight[FC3_IN_DIM][FC3_OUT_DIM];
+    data_ap_fixed_t fc3_bias[FC3_OUT_DIM];
+
+    // Copy input data to local memory
+    for(int i = 0; i < CONV1_IN_CH; i++) {
+        for(int j = 0; j < CONV1_IN_ROWS; j++) {
+            for(int k = 0; k < CONV1_IN_COLS; k++) {
+                int idx = i * (CONV1_IN_ROWS*CONV1_IN_COLS) + j * (CONV1_IN_COLS) + k;
+                local_in_data[i][j][k] = in_data[idx];
+            }
+        }
     }
-    for(int i = 0; i < NUM_CONV1_BIASES; i++) {
+    
+    // Copy Conv1's weights and biases to local memory from consolidated arrays
+    for(int i = 0; i < CONV1_OUT_CH; i++) {
+        for(int j = 0; j < CONV1_IN_CH; j++) {
+            for(int k = 0; k < KERNEL_SIZE; k++) {
+                for(int l = 0; l < KERNEL_SIZE; l++) {
+                    int idx = i*(CONV1_IN_CH*KERNEL_SIZE*KERNEL_SIZE) + j*(KERNEL_SIZE*KERNEL_SIZE) + k*KERNEL_SIZE + l;
+                    conv1_weight[i][j][k][l] = weights[CONV1_WEIGHT_OFFSET + idx];
+                }
+            }
+        }
+    }
+    for(int i = 0; i < CONV1_OUT_CH; i++) {
         conv1_bias[i] = biases[CONV1_BIAS_OFFSET + i];
     }
-    
-    for(int i = 0; i < NUM_CONV2_WEIGHTS; i++) {
-        conv2_weight[i] = weights[CONV2_WEIGHT_OFFSET + i];
+
+    // Copy Conv2's weights and biases to local memory from consolidated arrays
+    for(int i = 0; i < CONV2_OUT_CH; i++) {
+        for(int j = 0; j < CONV2_IN_CH; j++) {
+            for(int k = 0; k < KERNEL_SIZE; k++) {
+                for(int l = 0; l < KERNEL_SIZE; l++) {
+                    int idx = i*(CONV2_IN_CH*KERNEL_SIZE*KERNEL_SIZE) + j*(KERNEL_SIZE*KERNEL_SIZE) + k*KERNEL_SIZE + l;
+                    conv2_weight[i][j][k][l] = weights[CONV2_WEIGHT_OFFSET + idx];
+                }
+            }
+        }
     }
-    for(int i = 0; i < NUM_CONV2_BIASES; i++) {
+    for(int i = 0; i < CONV2_OUT_CH; i++) {
         conv2_bias[i] = biases[CONV2_BIAS_OFFSET + i];
     }
     
-    for(int i = 0; i < NUM_FC1_WEIGHTS; i++) {
-        fc1_weight[i] = weights[FC1_WEIGHT_OFFSET + i];
+    // Copy FC1's weights and biases to local memory from consolidated arrays
+    for(int i = 0; i < FC1_IN_DIM; i++) {
+        for(int j = 0; j < FC1_OUT_DIM; j++) {
+            int idx = i * FC1_OUT_DIM + j;
+            fc1_weight[i][j] = weights[FC1_WEIGHT_OFFSET + idx];
+        }
     }
-    for(int i = 0; i < NUM_FC1_BIASES; i++) {
+    for(int i = 0; i < FC1_OUT_DIM; i++) {
         fc1_bias[i] = biases[FC1_BIAS_OFFSET + i];
     }
-    
-    for(int i = 0; i < NUM_FC2_WEIGHTS; i++) {
-        fc2_weight[i] = weights[FC2_WEIGHT_OFFSET + i];
+        
+    // Copy FC2's weights and biases to local memory from consolidated arrays
+    for(int i = 0; i < FC2_IN_DIM; i++) {
+        for(int j = 0; j < FC2_OUT_DIM; j++) {
+            int idx = i * FC2_OUT_DIM + j;
+            fc2_weight[i][j] = weights[FC2_WEIGHT_OFFSET + idx];
+        }
     }
-    for(int i = 0; i < NUM_FC2_BIASES; i++) {
+    for(int i = 0; i < FC2_OUT_DIM; i++) {
         fc2_bias[i] = biases[FC2_BIAS_OFFSET + i];
     }
-    
-    for(int i = 0; i < NUM_FC3_WEIGHTS; i++) {
-        fc3_weight[i] = weights[FC3_WEIGHT_OFFSET + i];
+
+    // Copy FC3's weights and biases to local memory from consolidated arrays
+    for(int i = 0; i < FC3_IN_DIM; i++) {
+        for(int j = 0; j < FC3_OUT_DIM; j++) {
+            int idx = i * FC3_OUT_DIM + j;
+            fc3_weight[i][j] = weights[FC3_WEIGHT_OFFSET + idx];
+        }
     }
-    for(int i = 0; i < NUM_FC3_BIASES; i++) {
+    for(int i = 0; i < FC3_OUT_DIM; i++) {
+        #pragma HLS PIPELINE II=1
         fc3_bias[i] = biases[FC3_BIAS_OFFSET + i];
     }
     
     // Conv1
-    conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(in_data, conv1_out, conv1_weight, conv1_bias);
+    conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(local_in_data, conv1_out, conv1_weight, conv1_bias);
 
     // Pool1
     pool_golden<2, 2, CONV1_OUT_CH, CONV1_OUT_ROWS, CONV1_OUT_COLS>(conv1_out, pool1_out);
@@ -277,40 +342,73 @@ void forward_golden(
     // Pool2
     pool_golden<2, 2, CONV2_OUT_CH, CONV2_OUT_ROWS, CONV2_OUT_COLS>(conv2_out, pool2_out);
 
+    data_ap_fixed_t fc1_in[FC1_IN_DIM];
+    for(int i = 0; i < CONV2_OUT_CH; i++) {
+        for(int j = 0; j < CONV2_OUT_ROWS/2; j++) {
+            for(int k = 0; k < CONV2_OUT_COLS/2; k++) {
+                int idx = i*(CONV2_OUT_ROWS/2*CONV2_OUT_COLS/2) + j*(CONV2_OUT_COLS/2) + k;
+                fc1_in[idx] = pool2_out[i][j][k];
+            }
+        }
+    }
+
     // FC1
-    fc_golden<FC1_IN_DIM, FC1_OUT_DIM>(pool2_out, fc1_out, fc1_weight, fc1_bias, true);
+    fc_golden<FC1_IN_DIM, FC1_OUT_DIM>(fc1_in, fc1_out, fc1_weight, fc1_bias, true);
 
     // FC2
     fc_golden<FC2_IN_DIM, FC2_OUT_DIM>(fc1_out, fc2_out, fc2_weight, fc2_bias, true);
 
     // FC3
     fc_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out, fc3_out, fc3_weight, fc3_bias, false);
-    
-    // Copy outputs to the consolidated output array
-    for(int i = 0; i < NUM_CONV1_OUTS; i++) {
-        outs[CONV1_OUT_OFFSET + i] = conv1_out[i];
+
+    // conv1 output
+    for (int ch = 0; ch < CONV1_OUT_CH; ch++) {
+        for (int row = 0; row < CONV1_OUT_ROWS; row++) {
+            for (int col = 0; col < CONV1_OUT_COLS; col++) {
+                int idx = CONV1_OUT_OFFSET + ch * (CONV1_OUT_ROWS * CONV1_OUT_COLS) + row * CONV1_OUT_COLS + col;
+                outs[idx] = conv1_out[ch][row][col];
+            }
+        }
     }
-    
-    for(int i = 0; i < NUM_POOL1_OUTS; i++) {
-        outs[POOL1_OUT_OFFSET + i] = pool1_out[i];
+
+    // pool1 output
+    for (int ch = 0; ch < CONV2_IN_CH; ch++) {
+        for (int row = 0; row < CONV2_IN_ROWS; row++) {
+            for (int col = 0; col < CONV2_IN_COLS; col++) {
+                int idx = POOL1_OUT_OFFSET + ch * (CONV2_IN_ROWS * CONV2_IN_COLS) + row * CONV2_IN_COLS + col;
+                outs[idx] = pool1_out[ch][row][col];
+            }
+        }
     }
-    
-    for(int i = 0; i < NUM_CONV2_OUTS; i++) {
-        outs[CONV2_OUT_OFFSET + i] = conv2_out[i];
+
+    // conv2 output
+    for (int ch = 0; ch < CONV2_OUT_CH; ch++) {
+        for (int row = 0; row < CONV2_OUT_ROWS; row++) {
+            for (int col = 0; col < CONV2_OUT_COLS; col++) {
+                int idx = CONV2_OUT_OFFSET + ch * (CONV2_OUT_ROWS * CONV2_OUT_COLS) + row * CONV2_OUT_COLS + col;
+                outs[idx] = conv2_out[ch][row][col];
+            }
+        }
     }
-    
-    for(int i = 0; i < NUM_POOL2_OUTS; i++) {
-        outs[POOL2_OUT_OFFSET + i] = pool2_out[i];
+
+    // pool2 output
+    for (int ch = 0; ch < CONV2_OUT_CH; ch++) {
+        for (int row = 0; row < CONV2_OUT_ROWS / 2; row++) {
+            for (int col = 0; col < CONV2_OUT_COLS / 2; col++) {
+                int idx = POOL2_OUT_OFFSET + ch * ((CONV2_OUT_ROWS/2) * (CONV2_OUT_COLS/2)) + row * (CONV2_OUT_COLS/2) + col;
+                outs[idx] = pool2_out[ch][row][col];
+            }
+        }
     }
-    
+
     for(int i = 0; i < NUM_FC1_OUTS; i++) {
         outs[FC1_OUT_OFFSET + i] = fc1_out[i];
     }
-    
+
     for(int i = 0; i < NUM_FC2_OUTS; i++) {
         outs[FC2_OUT_OFFSET + i] = fc2_out[i];
     }
-    
+
     for(int i = 0; i < NUM_FC3_OUTS; i++) {
         outs[FC3_OUT_OFFSET + i] = fc3_out[i];
     }
