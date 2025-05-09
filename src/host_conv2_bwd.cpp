@@ -57,7 +57,7 @@ int main(int argc, char **argv)
     std::cout << "Load the xclbin " << binaryFile << std::endl;
     auto uuid = device.load_xclbin(binaryFile);
 
-    // size_t vector_size_bytes = sizeof(float) * DATA_SIZE;
+    // size_t vector_size_bytes = sizeof(data_ap_fixed_t) * DATA_SIZE;
     size_t in_activation_size = IN_C * IN_ROW * IN_COL;
     size_t grads_size = OUT_C * OUT_ROW * OUT_COL;
     size_t in_weight_size = OUT_C * IN_C * KERNEL_SIZE * KERNEL_SIZE;
@@ -71,20 +71,20 @@ int main(int argc, char **argv)
     std::cout << "Allocate Buffer in Global Memory\n";
 
     // Allocate buffers
-    auto bo_in_activation = xrt::bo(device, sizeof(float) * in_activation_size, conv2_bwd_krnl.group_id(0));
-    auto bo_grads = xrt::bo(device, sizeof(float) * grads_size, conv2_bwd_krnl.group_id(1));
-    auto bo_in_weight = xrt::bo(device, sizeof(float) * in_weight_size, conv2_bwd_krnl.group_id(2));
-    auto bo_out_grads = xrt::bo(device, sizeof(float) * out_grads_size, conv2_bwd_krnl.group_id(3));
-    auto bo_dW = xrt::bo(device, sizeof(float) * dW_size, conv2_bwd_krnl.group_id(4));
-    auto bo_dB = xrt::bo(device, sizeof(float) * dB_size, conv2_bwd_krnl.group_id(5));
+    auto bo_in_activation = xrt::bo(device, sizeof(data_ap_fixed_t) * in_activation_size, conv2_bwd_krnl.group_id(0));
+    auto bo_grads = xrt::bo(device, sizeof(data_ap_fixed_t) * grads_size, conv2_bwd_krnl.group_id(1));
+    auto bo_in_weight = xrt::bo(device, sizeof(data_ap_fixed_t) * in_weight_size, conv2_bwd_krnl.group_id(2));
+    auto bo_out_grads = xrt::bo(device, sizeof(data_ap_fixed_t) * out_grads_size, conv2_bwd_krnl.group_id(3));
+    auto bo_dW = xrt::bo(device, sizeof(data_ap_fixed_t) * dW_size, conv2_bwd_krnl.group_id(4));
+    auto bo_dB = xrt::bo(device, sizeof(data_ap_fixed_t) * dB_size, conv2_bwd_krnl.group_id(5));
 
     // Map buffers to host memory
-    auto bo_in_activation_map = bo_in_activation.map<float *>();
-    auto bo_grads_map = bo_grads.map<float *>();
-    auto bo_in_weight_map = bo_in_weight.map<float *>();
-    auto bo_out_grads_map = bo_out_grads.map<float *>();
-    auto bo_dW_map = bo_dW.map<float *>();
-    auto bo_dB_map = bo_dB.map<float *>();
+    auto bo_in_activation_map = bo_in_activation.map<data_ap_fixed_t *>();
+    auto bo_grads_map = bo_grads.map<data_ap_fixed_t *>();
+    auto bo_in_weight_map = bo_in_weight.map<data_ap_fixed_t *>();
+    auto bo_out_grads_map = bo_out_grads.map<data_ap_fixed_t *>();
+    auto bo_dW_map = bo_dW.map<data_ap_fixed_t *>();
+    auto bo_dB_map = bo_dB.map<data_ap_fixed_t *>();
 
     std::cout << "Initialize buffers\n";
     // Initialize buffers
@@ -96,9 +96,9 @@ int main(int argc, char **argv)
     std::fill(bo_dB_map, bo_dB_map + dB_size, 0);
 
     // Initialize data with values from -1 to 1 in 0.1 increments (round robin)
-    float values[] = {-1.0f, -0.9f, -0.8f, -0.7f, -0.6f, -0.5f, -0.4f, -0.3f, -0.2f, -0.1f, 
+    data_ap_fixed_t values[] = {-1.0f, -0.9f, -0.8f, -0.7f, -0.6f, -0.5f, -0.4f, -0.3f, -0.2f, -0.1f, 
         0.0f,  0.1f,  0.2f,  0.3f,  0.4f,  0.5f,  0.6f,  0.7f,  0.8f,  0.9f, 1.0f};
-    int num_values = sizeof(values) / sizeof(float);
+    int num_values = sizeof(values) / sizeof(data_ap_fixed_t);
 
     for(int i = 0; i < in_activation_size; i++) {
     bo_in_activation_map[i] = values[i % num_values];
@@ -131,20 +131,20 @@ int main(int argc, char **argv)
     bo_dW.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
     bo_dB.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
-    float out_grads_golden[IN_C * IN_ROW * IN_COL];
-    float dW_golden[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
-    float dB_golden[OUT_C];
+    data_ap_fixed_t out_grads_golden[IN_C * IN_ROW * IN_COL];
+    data_ap_fixed_t dW_golden[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
+    data_ap_fixed_t dB_golden[OUT_C];
     conv_bwd_golden<OUT_C, IN_C, KERNEL_SIZE, IN_ROW, IN_COL>(bo_in_activation_map, bo_grads_map, bo_in_weight_map, out_grads_golden, dW_golden, dB_golden);
 
     // Compare results
     int total_errs = 0;
     int errs = 0;
-    float max_diff = 0.0f;
+    data_ap_fixed_t max_diff = 0.0f;
     
     // Verify out_grads
     int out_grads_length = out_grads_size;
     for(int j=0; j<out_grads_length; j++) {
-        float diff = std::fabs(bo_out_grads_map[j] - out_grads_golden[j]);
+        data_ap_fixed_t diff = std::fabs(bo_out_grads_map[j] - out_grads_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {
@@ -176,7 +176,7 @@ int main(int argc, char **argv)
     errs = 0;
     int dW_length = dW_size;
     for(int j=0; j<dW_length; j++) {
-        float diff = std::fabs(bo_dW_map[j] - dW_golden[j]);
+        data_ap_fixed_t diff = std::fabs(bo_dW_map[j] - dW_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {
@@ -208,7 +208,7 @@ int main(int argc, char **argv)
     errs = 0;
     int dB_length = dB_size;
     for(int j=0; j<dB_length; j++) {
-        float diff = std::fabs(bo_dB_map[j] - dB_golden[j]);
+        data_ap_fixed_t diff = std::fabs(bo_dB_map[j] - dB_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {

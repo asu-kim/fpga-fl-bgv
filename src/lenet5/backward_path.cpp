@@ -6,19 +6,17 @@
 
 #include "constants.hpp"
 
-#define lr 1e-3
-
 extern "C" {
 void backward_path(
-    const float* in_data,             // gmem0
-    const float* weights,             // gmem1 - consolidated weights
-    const float* biases,              // gmem2 - consolidated biases
-    const float* outputs,             // gmem3 - consolidated outputs
-    const float* label,               // gmem4
+    const data_ap_fixed_t* in_data,             // gmem0
+    const data_ap_fixed_t* weights,             // gmem1 - consolidated weights
+    const data_ap_fixed_t* biases,              // gmem2 - consolidated biases
+    const data_ap_fixed_t* outputs,             // gmem3 - consolidated outputs
+    const data_ap_fixed_t* label,               // gmem4
 
-    float* updated_weights,           // gmem5 - consolidated updated weights
-    float* updated_biases,            // gmem6 - consolidated updated biases
-    float& loss
+    data_ap_fixed_t* updated_weights,           // gmem5 - consolidated updated weights
+    data_ap_fixed_t* updated_biases,            // gmem6 - consolidated updated biases
+    data_ap_fixed_t& loss
 ) {
     // Input data
     #pragma HLS INTERFACE m_axi port=in_data bundle=gmem0 depth=784
@@ -26,7 +24,7 @@ void backward_path(
     // Combined weights, biases and outputs
     #pragma HLS INTERFACE m_axi port=weights bundle=gmem1 depth=TOTAL_WEIGHTS_SIZE
     #pragma HLS INTERFACE m_axi port=biases bundle=gmem2 depth=TOTAL_BIASES_SIZE
-    #pragma HLS INTERFACE m_axi port=outputs bundle=gmem3 depth=5910 // Sum of all output sizes
+    #pragma HLS INTERFACE m_axi port=outputs bundle=gmem3 depth=TOTAL_OUTS_SIZE // Sum of all output sizes
     #pragma HLS INTERFACE m_axi port=label bundle=gmem4 depth=10
 
     // Combined updated weights and biases
@@ -45,29 +43,29 @@ void backward_path(
     #pragma HLS INTERFACE s_axilite port=return bundle=control
 
     // Local memory for each stage input and output
-    float local_in_data[1*28*28];
-    float local_conv1_out[6*24*24];
-    float local_pool1_out[6*12*12];
-    float local_conv2_out[16*8*8];
-    float local_pool2_out[16*4*4];
-    float local_fc1_out[120];
-    float local_fc2_out[84];
-    float local_fc3_out[10];
+    data_ap_fixed_t local_in_data[1*28*28];
+    data_ap_fixed_t local_conv1_out[6*24*24];
+    data_ap_fixed_t local_pool1_out[6*12*12];
+    data_ap_fixed_t local_conv2_out[16*8*8];
+    data_ap_fixed_t local_pool2_out[16*4*4];
+    data_ap_fixed_t local_fc1_out[120];
+    data_ap_fixed_t local_fc2_out[84];
+    data_ap_fixed_t local_fc3_out[10];
     
     // Local memory for weights and biases
-    float local_conv1_weight[6*1*5*5];
-    float local_conv1_bias[6];
-    float local_conv2_weight[16*6*5*5];
-    float local_conv2_bias[16];
-    float local_fc1_weight[256*120];
-    float local_fc1_bias[120];
-    float local_fc2_weight[120*84];
-    float local_fc2_bias[84];
-    float local_fc3_weight[84*10];
-    float local_fc3_bias[10];
+    data_ap_fixed_t local_conv1_weight[6*1*5*5];
+    data_ap_fixed_t local_conv1_bias[6];
+    data_ap_fixed_t local_conv2_weight[16*6*5*5];
+    data_ap_fixed_t local_conv2_bias[16];
+    data_ap_fixed_t local_fc1_weight[256*120];
+    data_ap_fixed_t local_fc1_bias[120];
+    data_ap_fixed_t local_fc2_weight[120*84];
+    data_ap_fixed_t local_fc2_bias[84];
+    data_ap_fixed_t local_fc3_weight[84*10];
+    data_ap_fixed_t local_fc3_bias[10];
     
     // FC3 Backward
-    float out_grad[10];
+    data_ap_fixed_t out_grad[10];
     // Copy FC3's weights and biases to local memory from consolidated arrays
     for(int i = 0; i < 84*10; i++) {
         #pragma HLS PIPELINE II=1
@@ -79,7 +77,7 @@ void backward_path(
     }
     
     // Get FC3 output from consolidated outputs array
-    float fc3_output[10];
+    data_ap_fixed_t fc3_output[10];
     for(int i = 0; i < 10; i++) {
         #pragma HLS PIPELINE II=1
         fc3_output[i] = outputs[FC3_OUT_OFFSET + i];
@@ -87,9 +85,9 @@ void backward_path(
     
     mse_loss<10>(fc3_output, label, loss, out_grad);
 
-    float fc3_dX[84];
-    float fc3_dW[84*10];
-    float fc3_dB[10];
+    data_ap_fixed_t fc3_dX[84];
+    data_ap_fixed_t fc3_dW[84*10];
+    data_ap_fixed_t fc3_dB[10];
     
     // Get FC2 output from consolidated outputs array
     for(int i = 0; i < 84; i++) {
@@ -110,9 +108,9 @@ void backward_path(
     }
 
     // FC2 Backward
-    float fc2_dX[120];
-    float fc2_dW[120*84];
-    float fc2_dB[84];
+    data_ap_fixed_t fc2_dX[120];
+    data_ap_fixed_t fc2_dW[120*84];
+    data_ap_fixed_t fc2_dB[84];
     
     // Copy FC2's weights and biases from consolidated arrays
     for(int i = 0; i < 120; i++) {
@@ -141,9 +139,9 @@ void backward_path(
     }
 
     // FC1 Backward
-    float fc1_dX[256];
-    float fc1_dW[256*120];
-    float fc1_dB[120];
+    data_ap_fixed_t fc1_dX[256];
+    data_ap_fixed_t fc1_dW[256*120];
+    data_ap_fixed_t fc1_dB[120];
     
     // Copy FC1's weights and biases from consolidated arrays
     for(int i = 0; i < 256; i++) {
@@ -172,13 +170,13 @@ void backward_path(
     }
 
     // Pool2 Backward
-    float pool2_dX[16*8*8];
+    data_ap_fixed_t pool2_dX[16*8*8];
     avg_pool_backward<2, 2, 16, 8, 8>(fc1_dX, pool2_dX);
     
     // Conv2 Backward
-    float conv2_dX[6*12*12];
-    float conv2_dW[16*6*5*5];
-    float conv2_dB[16];
+    data_ap_fixed_t conv2_dX[6*12*12];
+    data_ap_fixed_t conv2_dW[16*6*5*5];
+    data_ap_fixed_t conv2_dB[16];
     
     // Copy Conv2's weights and biases from consolidated arrays
     for(int i = 0; i < 6*12*12; i++) {
@@ -207,13 +205,13 @@ void backward_path(
     }
 
     // Pool1 Backward
-    float pool1_dX[6*24*24];
+    data_ap_fixed_t pool1_dX[6*24*24];
     avg_pool_backward<2, 2, 6, 24, 24>(conv2_dX, pool1_dX);
     
     // Conv1 Backward
-    float conv1_dX[1*28*28];
-    float conv1_dW[6*1*5*5];
-    float conv1_dB[6];
+    data_ap_fixed_t conv1_dX[1*28*28];
+    data_ap_fixed_t conv1_dW[6*1*5*5];
+    data_ap_fixed_t conv1_dB[6];
     
     // Copy Conv1's weights and biases from consolidated arrays
     for(int i = 0; i < 1*28*28; i++) {

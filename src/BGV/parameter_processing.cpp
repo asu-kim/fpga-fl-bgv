@@ -27,9 +27,9 @@ void print_data_t_array_hls(const data_t* arr, int size, const char* name) {}
 
 extern "C" {
 void parameter_encryption(
-    float pt[POLYNOMIAL_DEGREE],
-    float scale,
-    float zp,
+    data_ap_fixed_t pt[POLYNOMIAL_DEGREE],
+    data_ap_fixed_t scale,
+    data_ap_fixed_t zp,
     data_t errors[POLYNOMIAL_DEGREE*3],
     data_t pk0[POLYNOMIAL_DEGREE],
     data_t pk1[POLYNOMIAL_DEGREE],
@@ -55,7 +55,7 @@ void parameter_encryption(
     #pragma HLS INTERFACE s_axilite port=ct1    bundle=control
     #pragma HLS INTERFACE s_axilite port=return bundle=control
 
-    float local_pt[POLYNOMIAL_DEGREE];
+    data_ap_fixed_t local_pt[POLYNOMIAL_DEGREE];
 
     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
         #pragma HLS PIPELINE II=1
@@ -93,7 +93,7 @@ void parameter_encryption(
 
     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
         #pragma HLS PIPELINE II=1
-        float quantized = local_pt[i] / scale + zp;
+        data_ap_fixed_t quantized = local_pt[i] / scale + zp;
         quantized = (quantized > 127) ? 127 : ((quantized < -128) ? -128 : quantized);
         quantized_pt[i] = (data_t) quantized;
     }
@@ -123,10 +123,10 @@ void parameter_decryption(
     data_t* sk,
     data_t* ct0,
     data_t* ct1,
-    float scale,
-    float zp,
+    data_ap_fixed_t scale,
+    data_ap_fixed_t zp,
 
-    float* pt
+    data_ap_fixed_t* pt
 ) {
     #pragma HLS INTERFACE m_axi port=sk     bundle=gmem0 depth=POLYNOMIAL_DEGREE
     #pragma HLS INTERFACE m_axi port=ct0    bundle=gmem1 depth=POLYNOMIAL_DEGREE
@@ -170,7 +170,7 @@ void parameter_decryption(
     print_data_t_array_hls(local_ct1, POLYNOMIAL_DEGREE, "local_ct1");
     print_data_t_array_hls(quantized_pt, POLYNOMIAL_DEGREE, "quantized_pt");
 
-    float local_pt[POLYNOMIAL_DEGREE];
+    data_ap_fixed_t local_pt[POLYNOMIAL_DEGREE];
 
     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
         #pragma HLS PIPELINE II=1

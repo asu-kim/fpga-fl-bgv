@@ -3,10 +3,10 @@
 
 extern "C" {
 void fc1(
-    const float* in_data,
-    float* out_data,
-    const float* weight,
-    const float* bias,
+    const data_ap_fixed_t* in_data,
+    data_ap_fixed_t* out_data,
+    const data_ap_fixed_t* weight,
+    const data_ap_fixed_t* bias,
     bool use_relu
 );
 }

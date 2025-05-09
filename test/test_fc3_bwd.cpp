@@ -7,7 +7,7 @@
 #define IN_DIM 84
 #define OUT_DIM 10
 
-void print_array(const float* arr, int size, const std::string& name) {
+void print_array(const data_ap_fixed_t* arr, int size, const std::string& name) {
     std::cout << name << " (first 10 elements): ";
     for(int i=0; i < std::min(10, size); i++) {
         std::cout << arr[i] << " ";
@@ -18,12 +18,12 @@ void print_array(const float* arr, int size, const std::string& name) {
 #ifndef __SYNTHESIS__
 int main() {
     // Allocate arrays
-    float in_activation[IN_DIM];
-    float grads[OUT_DIM];
-    float in_weight[IN_DIM*OUT_DIM];
-    float dX[IN_DIM];
-    float dW[IN_DIM*OUT_DIM];
-    float dB[OUT_DIM];
+    data_ap_fixed_t in_activation[IN_DIM];
+    data_ap_fixed_t grads[OUT_DIM];
+    data_ap_fixed_t in_weight[IN_DIM*OUT_DIM];
+    data_ap_fixed_t dX[IN_DIM];
+    data_ap_fixed_t dW[IN_DIM*OUT_DIM];
+    data_ap_fixed_t dB[OUT_DIM];
 
     // Initialize weights with a deterministic pattern
     for(int i=0; i<IN_DIM; i++) {
@@ -49,9 +49,9 @@ int main() {
     // Run the FC implementation being tested
     fc3_bwd(in_activation, grads, in_weight, dX, dW, dB);
 
-    float dX_golden[IN_DIM];
-    float dW_golden[IN_DIM*OUT_DIM];
-    float dB_golden[OUT_DIM];
+    data_ap_fixed_t dX_golden[IN_DIM];
+    data_ap_fixed_t dW_golden[IN_DIM*OUT_DIM];
+    data_ap_fixed_t dB_golden[OUT_DIM];
 
     // Run the golden reference implementation
     fc_bwd_golden<IN_DIM, OUT_DIM>(in_activation, grads, in_weight, dX_golden, dW_golden, dB_golden, false);
@@ -59,12 +59,12 @@ int main() {
     // Compare results
     int total_errs = 0;
     int errs = 0;
-    float max_diff = 0.0f;
+    data_ap_fixed_t max_diff = 0.0f;
     
     // Verify dX
     int dX_length = IN_DIM;
     for(int j=0; j<dX_length; j++) {
-        float diff = std::fabs(dX[j] - dX_golden[j]);
+        data_ap_fixed_t diff = std::fabs(dX[j] - dX_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {
@@ -96,7 +96,7 @@ int main() {
     errs = 0;
     int dW_length = IN_DIM*OUT_DIM;
     for(int j=0; j<dW_length; j++) {
-        float diff = std::fabs(dW[j] - dW_golden[j]);
+        data_ap_fixed_t diff = std::fabs(dW[j] - dW_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {
@@ -128,7 +128,7 @@ int main() {
     errs = 0;
     int dB_length = OUT_DIM;
     for(int j=0; j<dB_length; j++) {
-        float diff = std::fabs(dB[j] - dB_golden[j]);
+        data_ap_fixed_t diff = std::fabs(dB[j] - dB_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {

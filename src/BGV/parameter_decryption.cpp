@@ -30,10 +30,10 @@ void parameter_decryption(
     data_t sk[POLYNOMIAL_DEGREE],
     data_t ct0[POLYNOMIAL_DEGREE],
     data_t ct1[POLYNOMIAL_DEGREE],
-    float scale,
-    float zp,
+    data_ap_fixed_t scale,
+    data_ap_fixed_t zp,
 
-    float pt[POLYNOMIAL_DEGREE]
+    data_ap_fixed_t pt[POLYNOMIAL_DEGREE]
 ) {
     #pragma HLS INTERFACE m_axi port=sk     bundle=gmem0 depth=POLYNOMIAL_DEGREE
     #pragma HLS INTERFACE m_axi port=ct0    bundle=gmem1 depth=POLYNOMIAL_DEGREE
@@ -78,7 +78,7 @@ void parameter_decryption(
     print_data_t_array_hls(local_ct1, POLYNOMIAL_DEGREE, "local_ct1");
     print_data_t_array_hls(quantized_pt, POLYNOMIAL_DEGREE, "quantized_pt");
 
-    float local_pt[POLYNOMIAL_DEGREE];
+    data_ap_fixed_t local_pt[POLYNOMIAL_DEGREE];
 
     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
         #pragma HLS PIPELINE II=1

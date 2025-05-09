@@ -3,6 +3,7 @@
 
 #include <array>
 #include <cstdint>
+#include "data_type.hpp"
 
 #define NUM_CONV1_WEIGHTS 150
 #define NUM_CONV2_WEIGHTS 2400
@@ -76,6 +77,8 @@
 #define FC2_OUT_OFFSET (FC1_OUT_OFFSET + NUM_FC1_OUTS)
 #define FC3_OUT_OFFSET (FC2_OUT_OFFSET + NUM_FC2_OUTS)
 #define TOTAL_OUTS_SIZE (FC3_OUT_OFFSET + NUM_FC3_OUTS)
+
+const data_ap_fixed_t lr = data_ap_fixed_t(1e-3);
 
 /** 
  * Rules: 

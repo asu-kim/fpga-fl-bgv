@@ -1,14 +1,16 @@
 #ifndef CONV2_BWD_H
 #define CONV2_BWD_H
 
+#include "data_type.hpp"
+
 extern "C" {
 void conv2_bwd(
-    const float* in_activation,
-    const float* grads,
-    const float* in_weight,
-    float* out_grads,
-    float* dW,
-    float* dB
+    const data_ap_fixed_t* in_activation,
+    const data_ap_fixed_t* grads,
+    const data_ap_fixed_t* in_weight,
+    data_ap_fixed_t* out_grads,
+    data_ap_fixed_t* dW,
+    data_ap_fixed_t* dB
 );
 }
 #endif

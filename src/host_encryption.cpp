@@ -39,7 +39,7 @@
  // std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
  std::mt19937 rng(42);
  
- void print_float_array(const float* arr, int size, const std::string& name) {
+ void print_float_array(const data_ap_fixed_t* arr, int size, const std::string& name) {
      std::cout << name << " (first 10 elements): ";
      for(int i=0; i < std::min(10, size); i++) {
          std::cout << arr[i] << ", ";
@@ -217,9 +217,9 @@
  }
  
  void parameter_encryption_reference(
-     float pt[POLYNOMIAL_DEGREE],
-     float scale,
-     float zp,
+     data_ap_fixed_t pt[POLYNOMIAL_DEGREE],
+     data_ap_fixed_t scale,
+     data_ap_fixed_t zp,
      data_t errors[POLYNOMIAL_DEGREE*3],
      data_t pk0[POLYNOMIAL_DEGREE],
      data_t pk1[POLYNOMIAL_DEGREE],
@@ -231,7 +231,7 @@
      data_t quantized_pt[POLYNOMIAL_DEGREE];
  
      for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
-         float quantized = pt[i] / scale+ zp;
+         data_ap_fixed_t quantized = pt[i] / scale+ zp;
          quantized = (quantized > 127) ? 127 : ((quantized < -128) ? -128 : quantized);
          quantized_pt[i] = (data_t) quantized;
      }
@@ -268,10 +268,10 @@
      data_t sk[POLYNOMIAL_DEGREE*3],
      data_t ct0[POLYNOMIAL_DEGREE],
      data_t ct1[POLYNOMIAL_DEGREE],
-     float scale,
-     float zp,
+     data_ap_fixed_t scale,
+     data_ap_fixed_t zp,
  
-     float pt[POLYNOMIAL_DEGREE]
+     data_ap_fixed_t pt[POLYNOMIAL_DEGREE]
  ) {
      // Dequantize
      data_t quantized_pt[POLYNOMIAL_DEGREE];

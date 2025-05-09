@@ -13,12 +13,12 @@ int COL = 28;
 
 extern "C" {
     void conv1(
-        // hls::stream<float>& in_stream,
-        // hls::stream<float>& out_stream,
-        float* in_data,
-        float* out_data,
-        float* conv1_weight,
-        float* conv1_bias
+        // hls::stream<data_ap_fixed_t>& in_stream,
+        // hls::stream<data_ap_fixed_t>& out_stream,
+        data_ap_fixed_t* in_data,
+        data_ap_fixed_t* out_data,
+        data_ap_fixed_t* conv1_weight,
+        data_ap_fixed_t* conv1_bias
     ) { 
         #pragma HLS INTERFACE m_axi port=in_data bundle=gmem0 depth=784
         #pragma HLS INTERFACE m_axi port=out_data bundle=gmem1 depth=3456
@@ -27,8 +27,8 @@ extern "C" {
         #pragma HLS INTERFACE s_axilite port=return bundle=control
 
         // Create local copy
-        float local_weight[6*1*5*5];
-        float local_bias[6];
+        data_ap_fixed_t local_weight[6*1*5*5];
+        data_ap_fixed_t local_bias[6];
 
         // Copy data
         for(int i=0; i<150; i++) {

@@ -6,9 +6,9 @@
 
 extern "C" {
 void parameter_encryption(
-    float pt[POLYNOMIAL_DEGREE],
-    float scale,
-    float zp,
+    data_ap_fixed_t pt[POLYNOMIAL_DEGREE],
+    data_ap_fixed_t scale,
+    data_ap_fixed_t zp,
     data_t errors[POLYNOMIAL_DEGREE*3],
     data_t pk0[POLYNOMIAL_DEGREE],
     data_t pk1[POLYNOMIAL_DEGREE],

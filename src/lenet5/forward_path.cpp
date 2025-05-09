@@ -6,10 +6,10 @@
 
 extern "C" {
 void forward_path(
-    float* in_data,
-    float* weights,       // Single array for all weights
-    float* biases,        // Single array for all biases
-    float* outs
+    data_ap_fixed_t* in_data,
+    data_ap_fixed_t* weights,       // Single array for all weights
+    data_ap_fixed_t* biases,        // Single array for all biases
+    data_ap_fixed_t* outs
     ) {
     // Input data
     #pragma HLS INTERFACE m_axi port=in_data bundle=gmem0 depth=784
@@ -28,26 +28,26 @@ void forward_path(
     #pragma HLS INTERFACE s_axilite port=return bundle=control
 
     // Local memory for each stage input and output
-    float local_in_data[1*28*28];
-    float local_conv1_out[6*24*24];
-    float local_pool1_out[6*12*12];
-    float local_conv2_out[16*8*8];
-    float local_pool2_out[16*4*4];
-    float local_fc1_out[120];
-    float local_fc2_out[84];
-    float local_fc3_out[10];
+    data_ap_fixed_t local_in_data[1*28*28];
+    data_ap_fixed_t local_conv1_out[6*24*24];
+    data_ap_fixed_t local_pool1_out[6*12*12];
+    data_ap_fixed_t local_conv2_out[16*8*8];
+    data_ap_fixed_t local_pool2_out[16*4*4];
+    data_ap_fixed_t local_fc1_out[120];
+    data_ap_fixed_t local_fc2_out[84];
+    data_ap_fixed_t local_fc3_out[10];
     
     // Local memory for weights and biases
-    float local_conv1_weight[6*1*5*5];
-    float local_conv1_bias[6];
-    float local_conv2_weight[16*6*5*5];
-    float local_conv2_bias[16];
-    float local_fc1_weight[256*120];
-    float local_fc1_bias[120];
-    float local_fc2_weight[120*84];
-    float local_fc2_bias[84];
-    float local_fc3_weight[84*10];
-    float local_fc3_bias[10];
+    data_ap_fixed_t local_conv1_weight[6*1*5*5];
+    data_ap_fixed_t local_conv1_bias[6];
+    data_ap_fixed_t local_conv2_weight[16*6*5*5];
+    data_ap_fixed_t local_conv2_bias[16];
+    data_ap_fixed_t local_fc1_weight[256*120];
+    data_ap_fixed_t local_fc1_bias[120];
+    data_ap_fixed_t local_fc2_weight[120*84];
+    data_ap_fixed_t local_fc2_bias[84];
+    data_ap_fixed_t local_fc3_weight[84*10];
+    data_ap_fixed_t local_fc3_bias[10];
     
     // Copy input data to local memory
     for(int i = 0; i < 784; i++) {

@@ -3,12 +3,12 @@
 
 extern "C" {
     void fc1_bwd(
-        const float in_activation[256],
-        const float grads[120],
-        const float in_weight[256*120],
-        float dX[256],
-        float dW[256*120],
-        float dB[120]
+        const data_ap_fixed_t in_activation[256],
+        const data_ap_fixed_t grads[120],
+        const data_ap_fixed_t in_weight[256*120],
+        data_ap_fixed_t dX[256],
+        data_ap_fixed_t dW[256*120],
+        data_ap_fixed_t dB[120]
     ) { 
         #pragma HLS INTERFACE m_axi port=in_activation bundle=gmem0 depth=256
         #pragma HLS INTERFACE m_axi port=grads bundle=gmem1 depth=120

@@ -8,10 +8,10 @@
 
 // Golden reference implementation for FC layer
 void fc_golden(
-    const float in_data[IN_DIM],
-    float out_data[OUT_DIM],
-    const float weight[IN_DIM*OUT_DIM],
-    const float bias[OUT_DIM],
+    const data_ap_fixed_t in_data[IN_DIM],
+    data_ap_fixed_t out_data[OUT_DIM],
+    const data_ap_fixed_t weight[IN_DIM*OUT_DIM],
+    const data_ap_fixed_t bias[OUT_DIM],
     bool use_relu
 ) {
     // Initialize with bias
@@ -36,7 +36,7 @@ void fc_golden(
     }
 }
 
-void print_array(const float* arr, int size, const std::string& name) {
+void print_array(const data_ap_fixed_t* arr, int size, const std::string& name) {
     std::cout << name << " (first 10 elements): ";
     for(int i=0; i < std::min(10, size); i++) {
         std::cout << arr[i] << " ";
@@ -47,11 +47,11 @@ void print_array(const float* arr, int size, const std::string& name) {
 #ifndef __SYNTHESIS__
 int main() {
     // Allocate arrays
-    float in_data[IN_DIM];
-    float out_data[OUT_DIM];
-    float golden_output[OUT_DIM];
-    float weight[IN_DIM*OUT_DIM]; // 1D array as expected by fc function
-    float bias[OUT_DIM];
+    data_ap_fixed_t in_data[IN_DIM];
+    data_ap_fixed_t out_data[OUT_DIM];
+    data_ap_fixed_t golden_output[OUT_DIM];
+    data_ap_fixed_t weight[IN_DIM*OUT_DIM]; // 1D array as expected by fc function
+    data_ap_fixed_t bias[OUT_DIM];
     bool use_relu = true;
 
     // Initialize weights with a deterministic pattern
@@ -84,10 +84,10 @@ int main() {
 
     // Compare results
     int errs = 0;
-    float max_diff = 0.0f;
+    data_ap_fixed_t max_diff = 0.0f;
     
     for(int j=0; j<OUT_DIM; j++) {
-        float diff = std::fabs(out_data[j] - golden_output[j]);
+        data_ap_fixed_t diff = std::fabs(out_data[j] - golden_output[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {

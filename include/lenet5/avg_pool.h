@@ -8,15 +8,15 @@
 
 template<int POOL_SIZE, int STRIDE, int IN_C, int IN_ROWS, int IN_COLS>
 void avg_pool(
-        const float* in_data,  // Input data array of size IN_C*IN_ROWS*IN_COLS
-        float* out_data        // Output data array
+        const data_ap_fixed_t* in_data,  // Input data array of size IN_C*IN_ROWS*IN_COLS
+        data_ap_fixed_t* out_data        // Output data array
         ) {
     // Calculate output dimensions based on stride
     const int OUT_ROWS = (IN_ROWS - POOL_SIZE) / STRIDE + 1;
     const int OUT_COLS = (IN_COLS - POOL_SIZE) / STRIDE + 1;
-    const float pool_area = POOL_SIZE * POOL_SIZE;
+    const data_ap_fixed_t pool_area = POOL_SIZE * POOL_SIZE;
 
-    static float plane[IN_ROWS][IN_COLS]; // scratch pad
+    static data_ap_fixed_t plane[IN_ROWS][IN_COLS]; // scratch pad
     #pragma HLS ARRAY_PARTITION variable=plane cyclic factor=4 dim=1
 
     for(int channel = 0; channel < IN_C; channel++) {
@@ -36,7 +36,7 @@ void avg_pool(
         for(int out_r = 0; out_r < OUT_ROWS; out_r++) {
             for(int out_c = 0; out_c < OUT_COLS; out_c++) {
                 #pragma HLS PIPELINE II=1
-                float sum = 0.0f;
+                data_ap_fixed_t sum = 0.0f;
 
                 // Sum the values in the pooling window
                 for(int i = 0; i < POOL_SIZE; i++) {
@@ -48,7 +48,7 @@ void avg_pool(
                 }
                 // printf("sum = %f\n", sum);
                 // Compute average
-                float avg = sum / pool_area;
+                data_ap_fixed_t avg = sum / pool_area;
                 
                 // Store result
                 out_data[out_channel_offset + out_r * OUT_COLS + out_c] = avg;

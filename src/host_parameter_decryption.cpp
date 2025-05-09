@@ -36,7 +36,7 @@
 
 #define DATA_SIZE POLYNOMIAL_DEGREE
 
-void print_float_array(const float* arr, int size, const std::string& name) {
+void print_float_array(const data_ap_fixed_t* arr, int size, const std::string& name) {
     std::cout << name << " (first 10 elements): ";
     for(int i=0; i < std::min(10, size); i++) {
         std::cout << arr[i] << ", ";
@@ -196,10 +196,10 @@ void parameter_decryption_reference(
     data_t sk[POLYNOMIAL_DEGREE*3],
     data_t ct0[POLYNOMIAL_DEGREE],
     data_t ct1[POLYNOMIAL_DEGREE],
-    float scale,
-    float zp,
+    data_ap_fixed_t scale,
+    data_ap_fixed_t zp,
 
-    float pt[POLYNOMIAL_DEGREE]
+    data_ap_fixed_t pt[POLYNOMIAL_DEGREE]
 ) {
     // Dequantize
     data_t quantized_pt[POLYNOMIAL_DEGREE];
@@ -242,14 +242,14 @@ int main(int argc, char **argv)
     auto bo_private_key = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(0));
     auto bo_ciphertext0 = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(1));
     auto bo_ciphertext1 = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(2));
-    auto bo_plaintext = xrt::bo(device, sizeof(float)*POLYNOMIAL_DEGREE, krnl.group_id(5));
+    auto bo_plaintext = xrt::bo(device, sizeof(data_ap_fixed_t)*POLYNOMIAL_DEGREE, krnl.group_id(5));
 
     std::cout << "Create maps\n";
     // Map the contents of the buffer object into host memory
     auto bo_private_key_map = bo_private_key.map<data_t *>();
     auto bo_ciphertext0_map = bo_ciphertext0.map<data_t *>();
     auto bo_ciphertext1_map = bo_ciphertext1.map<data_t *>();
-    auto bo_plaintext_map = bo_plaintext.map<float *>();
+    auto bo_plaintext_map = bo_plaintext.map<data_ap_fixed_t *>();
 
     std::fill(bo_private_key_map, bo_private_key_map + POLYNOMIAL_DEGREE, 0);
     std::fill(bo_ciphertext0_map, bo_ciphertext0_map + POLYNOMIAL_DEGREE*3, 0);
@@ -270,8 +270,8 @@ int main(int argc, char **argv)
     // Synchronize buffer content with device side
     std::cout << "synchronize input buffer data to device global memory\n";
 
-    float scale = CONV1_ACT_SCALE_DATA[0];
-    float zp = CONV1_ACT_ZP_DATA[0];
+    data_ap_fixed_t scale = CONV1_ACT_SCALE_DATA[0];
+    data_ap_fixed_t zp = CONV1_ACT_ZP_DATA[0];
 
     std::cout << "Execution of the kernel\n";
     auto hw_start = std::chrono::high_resolution_clock::now();
@@ -286,7 +286,7 @@ int main(int argc, char **argv)
     auto hw_duration = std::chrono::duration<double, std::milli>(hw_end - hw_start).count();
     std::cout << "Hardware kernel execution time: " << hw_duration << " ms" << std::endl;
 
-    float paintext_ref[POLYNOMIAL_DEGREE];
+    data_ap_fixed_t paintext_ref[POLYNOMIAL_DEGREE];
 
     auto cpu_start = std::chrono::high_resolution_clock::now();
     parameter_decryption_reference(
@@ -303,11 +303,11 @@ int main(int argc, char **argv)
     std::cout << "CPU reference execution time: " << cpu_duration << " ms" << std::endl;
 
     int num_err = 0;
-    float max_err = 0;
+    data_ap_fixed_t max_err = 0;
     std::cout << "Test" << std::endl;
     for (int i = 0; i < POLYNOMIAL_DEGREE; i++)
     {
-        float diff = std::abs(bo_plaintext_map[i] - paintext_ref[i]);
+        data_ap_fixed_t diff = std::abs(bo_plaintext_map[i] - paintext_ref[i]);
         if(diff > max_err) {
             max_err = diff;
         }

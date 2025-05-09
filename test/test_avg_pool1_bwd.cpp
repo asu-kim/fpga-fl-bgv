@@ -12,7 +12,7 @@
 #define OUT_ROWS ((IN_ROWS - POOL_SIZE) / STRIDE + 1)
 #define OUT_COLS ((IN_COLS - POOL_SIZE) / STRIDE + 1)
 
-void print_array(const float* arr, int size, const std::string& name) {
+void print_array(const data_ap_fixed_t* arr, int size, const std::string& name) {
     std::cout << name << " (first 10 elements): ";
     for(int i=0; i < std::min(10, size); i++) {
         std::cout << arr[i] << " ";
@@ -22,9 +22,9 @@ void print_array(const float* arr, int size, const std::string& name) {
 
 int main() {
     // Allocate arrays
-    float grads[IN_CHANNELS * OUT_ROWS * OUT_COLS];
-    float dX[IN_CHANNELS * IN_ROWS * IN_COLS];
-    float dX_ref[IN_CHANNELS * IN_ROWS * IN_COLS];
+    data_ap_fixed_t grads[IN_CHANNELS * OUT_ROWS * OUT_COLS];
+    data_ap_fixed_t dX[IN_CHANNELS * IN_ROWS * IN_COLS];
+    data_ap_fixed_t dX_ref[IN_CHANNELS * IN_ROWS * IN_COLS];
 
     // Initialize input data with a pattern that makes it easy to verify results
     for(int ch=0; ch < IN_CHANNELS; ch++) {
@@ -67,7 +67,7 @@ int main() {
     }
 
     int errors = 0;
-    const float EPSILON = 1e-5f; // Allow for small floating-point differences
+    const data_ap_fixed_t EPSILON = 1e-5f; // Allow for small floating-point differences
     
     // Check for errors
     std::cout << "\nChecking for errors..." << std::endl;

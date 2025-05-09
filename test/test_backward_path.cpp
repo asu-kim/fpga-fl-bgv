@@ -5,26 +5,27 @@
 #include "weights_bias_float.h"
 #include "test_utils.h"
 #include "constants.hpp"
+#include "hls_math.h"
 
 #define lr 1e-3
 
 int main() {
     // Initialize input data
-    float in_data[CONV1_IN_CH*CONV1_IN_ROWS*CONV1_IN_COLS];
+    data_ap_fixed_t in_data[CONV1_IN_CH*CONV1_IN_ROWS*CONV1_IN_COLS];
     
     // Consolidated arrays
-    float weights[TOTAL_WEIGHTS_SIZE];
-    float biases[TOTAL_BIASES_SIZE];
-    float outputs[TOTAL_OUTS_SIZE];
-    float updated_weights[TOTAL_WEIGHTS_SIZE];
-    float updated_biases[TOTAL_BIASES_SIZE];
+    data_ap_fixed_t weights[TOTAL_WEIGHTS_SIZE];
+    data_ap_fixed_t biases[TOTAL_BIASES_SIZE];
+    data_ap_fixed_t outputs[TOTAL_OUTS_SIZE];
+    data_ap_fixed_t updated_weights[TOTAL_WEIGHTS_SIZE];
+    data_ap_fixed_t updated_biases[TOTAL_BIASES_SIZE];
     
-    float label[FC3_OUT_DIM];
-    float loss = 0.0f;
+    data_ap_fixed_t label[FC3_OUT_DIM];
+    data_ap_fixed_t loss = 0.0f;
     
     // Original format updated weights and biases
-    float updated_weights_ref[TOTAL_WEIGHTS_SIZE];
-    float updated_biases_ref[TOTAL_BIASES_SIZE];
+    data_ap_fixed_t updated_weights_ref[TOTAL_WEIGHTS_SIZE];
+    data_ap_fixed_t updated_biases_ref[TOTAL_BIASES_SIZE];
     
     // Initialize input data
     for(int i = 0; i < CONV1_IN_CH*CONV1_IN_ROWS*CONV1_IN_COLS; i++) {
@@ -100,7 +101,7 @@ int main() {
         loss
     );
 
-    float loss_ref = 0.0f;
+    data_ap_fixed_t loss_ref = 0.0f;
     // Run backward path with original format arrays for reference
     backward_golden(
         in_data,
@@ -118,32 +119,32 @@ int main() {
 
     // Extract pointers to each layer's updated weights and biases from consolidated arrays
     // For the implementation
-    const float* conv1_updated_weight = &updated_weights[CONV1_WEIGHT_OFFSET];
-    const float* conv1_updated_bias = &updated_biases[CONV1_BIAS_OFFSET];
-    const float* conv2_updated_weight = &updated_weights[CONV2_WEIGHT_OFFSET];
-    const float* conv2_updated_bias = &updated_biases[CONV2_BIAS_OFFSET];
-    const float* fc1_updated_weight = &updated_weights[FC1_WEIGHT_OFFSET];
-    const float* fc1_updated_bias = &updated_biases[FC1_BIAS_OFFSET];
-    const float* fc2_updated_weight = &updated_weights[FC2_WEIGHT_OFFSET];
-    const float* fc2_updated_bias = &updated_biases[FC2_BIAS_OFFSET];
-    const float* fc3_updated_weight = &updated_weights[FC3_WEIGHT_OFFSET];
-    const float* fc3_updated_bias = &updated_biases[FC3_BIAS_OFFSET];
+    const data_ap_fixed_t* conv1_updated_weight = &updated_weights[CONV1_WEIGHT_OFFSET];
+    const data_ap_fixed_t* conv1_updated_bias = &updated_biases[CONV1_BIAS_OFFSET];
+    const data_ap_fixed_t* conv2_updated_weight = &updated_weights[CONV2_WEIGHT_OFFSET];
+    const data_ap_fixed_t* conv2_updated_bias = &updated_biases[CONV2_BIAS_OFFSET];
+    const data_ap_fixed_t* fc1_updated_weight = &updated_weights[FC1_WEIGHT_OFFSET];
+    const data_ap_fixed_t* fc1_updated_bias = &updated_biases[FC1_BIAS_OFFSET];
+    const data_ap_fixed_t* fc2_updated_weight = &updated_weights[FC2_WEIGHT_OFFSET];
+    const data_ap_fixed_t* fc2_updated_bias = &updated_biases[FC2_BIAS_OFFSET];
+    const data_ap_fixed_t* fc3_updated_weight = &updated_weights[FC3_WEIGHT_OFFSET];
+    const data_ap_fixed_t* fc3_updated_bias = &updated_biases[FC3_BIAS_OFFSET];
 
     // For the reference implementation
-    const float* conv1_updated_weight_ref = &updated_weights_ref[CONV1_WEIGHT_OFFSET];
-    const float* conv1_updated_bias_ref = &updated_biases_ref[CONV1_BIAS_OFFSET];
-    const float* conv2_updated_weight_ref = &updated_weights_ref[CONV2_WEIGHT_OFFSET];
-    const float* conv2_updated_bias_ref = &updated_biases_ref[CONV2_BIAS_OFFSET];
-    const float* fc1_updated_weight_ref = &updated_weights_ref[FC1_WEIGHT_OFFSET];
-    const float* fc1_updated_bias_ref = &updated_biases_ref[FC1_BIAS_OFFSET];
-    const float* fc2_updated_weight_ref = &updated_weights_ref[FC2_WEIGHT_OFFSET];
-    const float* fc2_updated_bias_ref = &updated_biases_ref[FC2_BIAS_OFFSET];
-    const float* fc3_updated_weight_ref = &updated_weights_ref[FC3_WEIGHT_OFFSET];
-    const float* fc3_updated_bias_ref = &updated_biases_ref[FC3_BIAS_OFFSET];
+    const data_ap_fixed_t* conv1_updated_weight_ref = &updated_weights_ref[CONV1_WEIGHT_OFFSET];
+    const data_ap_fixed_t* conv1_updated_bias_ref = &updated_biases_ref[CONV1_BIAS_OFFSET];
+    const data_ap_fixed_t* conv2_updated_weight_ref = &updated_weights_ref[CONV2_WEIGHT_OFFSET];
+    const data_ap_fixed_t* conv2_updated_bias_ref = &updated_biases_ref[CONV2_BIAS_OFFSET];
+    const data_ap_fixed_t* fc1_updated_weight_ref = &updated_weights_ref[FC1_WEIGHT_OFFSET];
+    const data_ap_fixed_t* fc1_updated_bias_ref = &updated_biases_ref[FC1_BIAS_OFFSET];
+    const data_ap_fixed_t* fc2_updated_weight_ref = &updated_weights_ref[FC2_WEIGHT_OFFSET];
+    const data_ap_fixed_t* fc2_updated_bias_ref = &updated_biases_ref[FC2_BIAS_OFFSET];
+    const data_ap_fixed_t* fc3_updated_weight_ref = &updated_weights_ref[FC3_WEIGHT_OFFSET];
+    const data_ap_fixed_t* fc3_updated_bias_ref = &updated_biases_ref[FC3_BIAS_OFFSET];
 
     // FC3 Weight and Bias Errors
     int errors = 0;
-    float max_diff = 0.0f;
+    data_ap_fixed_t max_diff = 0.0f;
 
     std::cout << "FC3 Updated Weights sample = [";
     for(int i = 0; i < 5; i++) {
@@ -159,9 +160,9 @@ int main() {
 
     std::cout << "FC3 Weight and Bias Errors:" << std::endl;
     for(int i = 0; i < NUM_FC3_WEIGHTS; i++) {
-        float diff = std::fabs(fc3_updated_weight[i] - fc3_updated_weight_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(fc3_updated_weight[i] - fc3_updated_weight_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at FC3 weight " << i << ": got " << fc3_updated_weight[i]
@@ -171,9 +172,9 @@ int main() {
         }
     }
     for(int i = 0; i < NUM_FC3_BIASES; i++) {
-        float diff = std::fabs(fc3_updated_bias[i] - fc3_updated_bias_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(fc3_updated_bias[i] - fc3_updated_bias_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at FC3 bias " << i << ": got " << fc3_updated_bias[i]
@@ -203,9 +204,9 @@ int main() {
 
     std::cout << "FC2 Weight and Bias Errors:" << std::endl;
     for(int i = 0; i < NUM_FC2_WEIGHTS; i++) {
-        float diff = std::fabs(fc2_updated_weight[i] - fc2_updated_weight_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(fc2_updated_weight[i] - fc2_updated_weight_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at FC2 weight " << i << ": got " << fc2_updated_weight[i]
@@ -215,9 +216,9 @@ int main() {
         }
     }
     for(int i = 0; i < NUM_FC2_BIASES; i++) {
-        float diff = std::fabs(fc2_updated_bias[i] - fc2_updated_bias_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(fc2_updated_bias[i] - fc2_updated_bias_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at FC2 bias " << i << ": got " << fc2_updated_bias[i]
@@ -247,9 +248,9 @@ int main() {
 
     std::cout << "FC1 Weight and Bias Errors:" << std::endl;
     for(int i = 0; i < NUM_FC1_WEIGHTS; i++) {
-        float diff = std::fabs(fc1_updated_weight[i] - fc1_updated_weight_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(fc1_updated_weight[i] - fc1_updated_weight_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at FC1 weight " << i << ": got " << fc1_updated_weight[i]
@@ -259,9 +260,9 @@ int main() {
         }
     }
     for(int i = 0; i < NUM_FC1_BIASES; i++) {
-        float diff = std::fabs(fc1_updated_bias[i] - fc1_updated_bias_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(fc1_updated_bias[i] - fc1_updated_bias_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at FC1 bias " << i << ": got " << fc1_updated_bias[i]
@@ -291,9 +292,9 @@ int main() {
 
     std::cout << "Conv2 Weight and Bias Errors:" << std::endl;
     for(int i = 0; i < NUM_CONV2_WEIGHTS; i++) {
-        float diff = std::fabs(conv2_updated_weight[i] - conv2_updated_weight_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(conv2_updated_weight[i] - conv2_updated_weight_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at Conv2 weight " << i << ": got " << conv2_updated_weight[i]
@@ -303,9 +304,9 @@ int main() {
         }
     }
     for(int i = 0; i < NUM_CONV2_BIASES; i++) {
-        float diff = std::fabs(conv2_updated_bias[i] - conv2_updated_bias_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(conv2_updated_bias[i] - conv2_updated_bias_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at Conv2 bias " << i << ": got " << conv2_updated_bias[i]
@@ -335,9 +336,9 @@ int main() {
 
     std::cout << "Conv1 Weight and Bias Errors:" << std::endl;
     for(int i = 0; i < NUM_CONV1_WEIGHTS; i++) {
-        float diff = std::fabs(conv1_updated_weight[i] - conv1_updated_weight_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(conv1_updated_weight[i] - conv1_updated_weight_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at Conv1 weight " << i << ": got " << conv1_updated_weight[i]
@@ -347,9 +348,9 @@ int main() {
         }
     }
     for(int i = 0; i < NUM_CONV1_BIASES; i++) {
-        float diff = std::fabs(conv1_updated_bias[i] - conv1_updated_bias_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(conv1_updated_bias[i] - conv1_updated_bias_ref[i]);
         max_diff = std::max(max_diff, diff);
-        if(diff > 0.1f) {
+        if(diff > data_ap_fixed_t(0.1)) {
             errors++;
             if(errors < 10) {
                 std::cout << "Error at Conv1 bias " << i << ": got " << conv1_updated_bias[i]

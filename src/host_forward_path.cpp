@@ -29,6 +29,8 @@
 #include "../test/test_utils.h"
 #include "constants.hpp"
 
+#include "hls_math.h"
+
 // XRT includes
 #include "experimental/xrt_bo.h"
 #include "experimental/xrt_device.h"
@@ -65,16 +67,16 @@ int main(int argc, char **argv)
     auto forward_krnl = xrt::kernel(device, uuid, "forward_path");
 
     std::cout << "Allocate Buffer in Global Memory\n";
-    auto bo_in_data = xrt::bo(device, sizeof(float)*in_size, forward_krnl.group_id(0));
-    auto bo_weights = xrt::bo(device, sizeof(float)*weights_size, forward_krnl.group_id(1));
-    auto bo_biases = xrt::bo(device, sizeof(float)*biases_size, forward_krnl.group_id(2));
-    auto bo_outs = xrt::bo(device, sizeof(float)*outputs_size, forward_krnl.group_id(3));
+    auto bo_in_data = xrt::bo(device, sizeof(data_ap_fixed_t)*in_size, forward_krnl.group_id(0));
+    auto bo_weights = xrt::bo(device, sizeof(data_ap_fixed_t)*weights_size, forward_krnl.group_id(1));
+    auto bo_biases = xrt::bo(device, sizeof(data_ap_fixed_t)*biases_size, forward_krnl.group_id(2));
+    auto bo_outs = xrt::bo(device, sizeof(data_ap_fixed_t)*outputs_size, forward_krnl.group_id(3));
 
     // Map buffers to host memory
-    auto bo_in_data_map = bo_in_data.map<float *>();
-    auto bo_weights_map = bo_weights.map<float *>();
-    auto bo_biases_map = bo_biases.map<float *>();
-    auto bo_outs_map = bo_outs.map<float *>();
+    auto bo_in_data_map = bo_in_data.map<data_ap_fixed_t *>();
+    auto bo_weights_map = bo_weights.map<data_ap_fixed_t *>();
+    auto bo_biases_map = bo_biases.map<data_ap_fixed_t *>();
+    auto bo_outs_map = bo_outs.map<data_ap_fixed_t *>();
 
     std::cout << "Initialize buffers\n";
     // Initialize buffers
@@ -158,7 +160,7 @@ int main(int argc, char **argv)
     std::cout << "Hardware kernel execution time: " << hw_duration << " ms" << std::endl;
     std::cout << "Done forward\n";
 
-    float outs_ref[TOTAL_OUTS_SIZE];
+    data_ap_fixed_t outs_ref[TOTAL_OUTS_SIZE];
 
     auto cpu_start = std::chrono::high_resolution_clock::now();
     forward_golden(
@@ -172,27 +174,25 @@ int main(int argc, char **argv)
     auto cpu_duration = std::chrono::duration<double, std::milli>(cpu_end - cpu_start).count();
     std::cout << "CPU reference execution time: " << cpu_duration << " ms" << std::endl;
 
-    // TODO: compare bo_outs_map and outs_ref
-
     // Define pointers to each layer's outputs in the consolidated arrays
-    const float* bo_conv1_out = &bo_outs_map[CONV1_OUT_OFFSET];
-    const float* bo_pool1_out = &bo_outs_map[POOL1_OUT_OFFSET];
-    const float* bo_conv2_out = &bo_outs_map[CONV2_OUT_OFFSET];
-    const float* bo_pool2_out = &bo_outs_map[POOL2_OUT_OFFSET];
-    const float* bo_fc1_out = &bo_outs_map[FC1_OUT_OFFSET];
-    const float* bo_fc2_out = &bo_outs_map[FC2_OUT_OFFSET];
-    const float* bo_fc3_out = &bo_outs_map[FC3_OUT_OFFSET];
+    const data_ap_fixed_t* bo_conv1_out = &bo_outs_map[CONV1_OUT_OFFSET];
+    const data_ap_fixed_t* bo_pool1_out = &bo_outs_map[POOL1_OUT_OFFSET];
+    const data_ap_fixed_t* bo_conv2_out = &bo_outs_map[CONV2_OUT_OFFSET];
+    const data_ap_fixed_t* bo_pool2_out = &bo_outs_map[POOL2_OUT_OFFSET];
+    const data_ap_fixed_t* bo_fc1_out = &bo_outs_map[FC1_OUT_OFFSET];
+    const data_ap_fixed_t* bo_fc2_out = &bo_outs_map[FC2_OUT_OFFSET];
+    const data_ap_fixed_t* bo_fc3_out = &bo_outs_map[FC3_OUT_OFFSET];
 
     // Define pointers to golden outputs in the consolidated reference array
-    const float* conv1_out_golden = &outs_ref[CONV1_OUT_OFFSET];
-    const float* pool1_out_golden = &outs_ref[POOL1_OUT_OFFSET];
-    const float* conv2_out_golden = &outs_ref[CONV2_OUT_OFFSET];
-    const float* pool2_out_golden = &outs_ref[POOL2_OUT_OFFSET];
-    const float* fc1_out_golden = &outs_ref[FC1_OUT_OFFSET];
-    const float* fc2_out_golden = &outs_ref[FC2_OUT_OFFSET];
-    const float* fc3_out_golden = &outs_ref[FC3_OUT_OFFSET];
+    const data_ap_fixed_t* conv1_out_golden = &outs_ref[CONV1_OUT_OFFSET];
+    const data_ap_fixed_t* pool1_out_golden = &outs_ref[POOL1_OUT_OFFSET];
+    const data_ap_fixed_t* conv2_out_golden = &outs_ref[CONV2_OUT_OFFSET];
+    const data_ap_fixed_t* pool2_out_golden = &outs_ref[POOL2_OUT_OFFSET];
+    const data_ap_fixed_t* fc1_out_golden = &outs_ref[FC1_OUT_OFFSET];
+    const data_ap_fixed_t* fc2_out_golden = &outs_ref[FC2_OUT_OFFSET];
+    const data_ap_fixed_t* fc3_out_golden = &outs_ref[FC3_OUT_OFFSET];
 
-    // float conv1_out_golden[conv1_out_size];
+    // data_ap_fixed_t conv1_out_golden[conv1_out_size];
     // conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(in_data, &outs_ref[CONV1_OUT_OFFSET], weights + CONV1_WEIGHT_OFFSET, biases + CONV1_BIAS_OFFSET);
     std::cout << "Sample of conv1_out (6x6): " << std::endl;
     for(int i=0; i<6; i++) {
@@ -206,13 +206,13 @@ int main(int argc, char **argv)
     // Conv1 Test
     int global_errors = 0;
     int errors = 0;
-    float max_diff = 0.0f;
+    data_ap_fixed_t max_diff = 0.0f;
     std::cout << "Conv1 error indexes: ";
     for(int i=0; i<NUM_CONV1_OUTS; i++) {
-        float diff = std::fabs(bo_conv1_out[i] - conv1_out_golden[i]);
+        data_ap_fixed_t diff = hls::fabs(bo_conv1_out[i] - conv1_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > 0.1f) {
+        if (diff > data_ap_fixed_t(0.1f)) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_conv1_out[i] 
@@ -225,7 +225,7 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // Pool1 Test
-    // float pool1_out_golden[pool1_out_size];
+    // data_ap_fixed_t pool1_out_golden[pool1_out_size];
     // pool_golden<2, 2, CONV1_OUT_CH, CONV1_OUT_ROWS, CONV1_OUT_COLS>(&outs_ref[CONV1_OUT_OFFSET], &outs_ref[POOL1_OUT_OFFSET]);
     errors = 0;
     max_diff = 0.0f;
@@ -241,10 +241,10 @@ int main(int argc, char **argv)
 
     std::cout << "Pool1 error indexes: ";
     for(int i=0; i<NUM_POOL1_OUTS; i++) {
-        float diff = std::fabs(bo_pool1_out[i] - pool1_out_golden[i]);
+        data_ap_fixed_t diff = hls::fabs(bo_pool1_out[i] - pool1_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > 0.1f) {
+        if (diff > data_ap_fixed_t(0.1f)) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_pool1_out[i] 
@@ -257,7 +257,7 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // Conv2 Test
-    // float conv2_out_golden[conv2_out_size];
+    // data_ap_fixed_t conv2_out_golden[conv2_out_size];
     // conv_golden<CONV2_OUT_CH, CONV2_IN_CH, KERNEL_SIZE, CONV2_IN_ROWS, CONV2_IN_COLS>(&outs_ref[POOL1_OUT_OFFSET], &outs_ref[CONV2_OUT_OFFSET], weights + CONV2_WEIGHT_OFFSET, biases + CONV2_BIAS_OFFSET);
     std::cout << "Sample of conv2_out (6x6): " << std::endl;
     for(int i=0; i<6; i++) {
@@ -272,10 +272,10 @@ int main(int argc, char **argv)
     max_diff = 0.0f;
     std::cout << "Conv2 error indexes: ";
     for(int i=0; i<NUM_CONV2_OUTS; i++) {
-        float diff = std::fabs(bo_conv2_out[i] - conv2_out_golden[i]);
+        data_ap_fixed_t diff = hls::fabs(bo_conv2_out[i] - conv2_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > 0.1f) {
+        if (diff > data_ap_fixed_t(0.1f)) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_conv2_out[i] 
@@ -288,7 +288,7 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // Pool2 Test
-    // float pool2_out_golden[pool2_out_size];
+    // data_ap_fixed_t pool2_out_golden[pool2_out_size];
     // pool_golden<2, 2, CONV2_OUT_CH, CONV2_OUT_ROWS, CONV2_OUT_COLS>(&outs_ref[CONV2_OUT_OFFSET], &outs_ref[POOL2_OUT_OFFSET]);
     errors = 0;
     max_diff = 0.0f;
@@ -304,10 +304,10 @@ int main(int argc, char **argv)
 
     std::cout << "Pool2 error indexes: ";
     for(int i=0; i<NUM_POOL2_OUTS; i++) {
-        float diff = std::fabs(bo_pool2_out[i] - pool2_out_golden[i]);
+        data_ap_fixed_t diff = hls::fabs(bo_pool2_out[i] - pool2_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > 0.1f) {
+        if (diff > data_ap_fixed_t(0.1f)) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_pool2_out[i] 
@@ -320,7 +320,7 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // FC1 Test
-    // float fc1_out_golden[fc1_out_size];
+    // data_ap_fixed_t fc1_out_golden[fc1_out_size];
     // fc_golden<FC1_IN_DIM, FC1_OUT_DIM>(&outs_ref[POOL2_OUT_OFFSET], &outs_ref[FC1_OUT_OFFSET], weights + FC1_WEIGHT_OFFSET, biases + FC1_BIAS_OFFSET, true);
     errors = 0;
     max_diff = 0.0f;
@@ -333,10 +333,10 @@ int main(int argc, char **argv)
 
     std::cout << "FC1 error indexes: ";
     for(int i=0; i<NUM_FC1_OUTS; i++) {
-        float diff = std::fabs(bo_fc1_out[i] - fc1_out_golden[i]);
+        data_ap_fixed_t diff = hls::fabs(bo_fc1_out[i] - fc1_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > 0.1f) {
+        if (diff > data_ap_fixed_t(0.1f)) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_fc1_out[i] 
@@ -349,7 +349,7 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // FC2 Test
-    // float fc2_out_golden[fc2_out_size];
+    // data_ap_fixed_t fc2_out_golden[fc2_out_size];
     // fc_golden<FC2_IN_DIM, FC2_OUT_DIM>(&outs_ref[FC1_OUT_OFFSET], &outs_ref[FC2_OUT_OFFSET], weights + FC2_WEIGHT_OFFSET, biases + FC2_BIAS_OFFSET, true);
     errors = 0;
     max_diff = 0.0f;
@@ -362,10 +362,10 @@ int main(int argc, char **argv)
 
     std::cout << "FC2 error indexes: ";
     for(int i=0; i<NUM_FC2_OUTS; i++) {
-        float diff = std::fabs(bo_fc2_out[i] - fc2_out_golden[i]);
+        data_ap_fixed_t diff = hls::fabs(bo_fc2_out[i] - fc2_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > 0.1f) {
+        if (diff > data_ap_fixed_t(0.1f)) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_fc2_out[i] 
@@ -378,7 +378,7 @@ int main(int argc, char **argv)
     std::cout << std::endl << std::endl;
 
     // FC3 Test
-    // float fc3_out_golden[fc3_out_size];
+    // data_ap_fixed_t fc3_out_golden[fc3_out_size];
     // fc_golden<FC3_IN_DIM, FC3_OUT_DIM>(&outs_ref[FC2_OUT_OFFSET], &outs_ref[FC3_OUT_OFFSET], weights + FC3_WEIGHT_OFFSET, biases + FC3_BIAS_OFFSET, false);
     errors = 0;
     max_diff = 0.0f;
@@ -391,10 +391,10 @@ int main(int argc, char **argv)
 
     std::cout << "FC3 error indexes: ";
     for(int i=0; i<NUM_FC3_OUTS; i++) {
-        float diff = std::fabs(bo_fc3_out[i] - fc3_out_golden[i]);
+        data_ap_fixed_t diff = hls::fabs(bo_fc3_out[i] - fc3_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > 0.1f) {
+        if (diff > data_ap_fixed_t(0.1f)) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_fc3_out[i] 

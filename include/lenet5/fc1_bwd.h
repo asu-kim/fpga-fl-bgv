@@ -3,12 +3,12 @@
 
 extern "C" {
 void fc1_bwd(
-    const float in_activation[120],
-    const float grads[256],
-    const float in_weight[256*120],
-    float dX[120],
-    float dW[256*120],
-    float dB[256]
+    const data_ap_fixed_t in_activation[120],
+    const data_ap_fixed_t grads[256],
+    const data_ap_fixed_t in_weight[256*120],
+    data_ap_fixed_t dX[120],
+    data_ap_fixed_t dW[256*120],
+    data_ap_fixed_t dB[256]
 );
 }
 #endif

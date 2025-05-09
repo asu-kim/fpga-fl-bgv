@@ -6,10 +6,10 @@
 
 template<int OUT_C, int IN_C, int KERNEL_SIZE, int ROW, int COL>
 void conv2d(
-        float in_data[IN_C * ROW * COL],
-        float out_data[OUT_C * (ROW - KERNEL_SIZE + 1) * (COL - KERNEL_SIZE + 1)],
-        const float weight[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE],
-        const float bias[OUT_C]
+        data_ap_fixed_t in_data[IN_C * ROW * COL],
+        data_ap_fixed_t out_data[OUT_C * (ROW - KERNEL_SIZE + 1) * (COL - KERNEL_SIZE + 1)],
+        const data_ap_fixed_t weight[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE],
+        const data_ap_fixed_t bias[OUT_C]
         ) {
     // #pragma HLS INLINE OFF
     
@@ -30,7 +30,7 @@ void conv2d(
     for (int oc = 0; oc < OUT_C; oc++) {
         for (int ic = 0; ic < IN_C; ic++) {
             // Create line buffer for current input channel only
-            float line_buffer[KERNEL_SIZE][COL];
+            data_ap_fixed_t line_buffer[KERNEL_SIZE][COL];
             #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=1
             
             // Initialize buffer
@@ -63,13 +63,13 @@ void conv2d(
                         
                         // Compute partial convolution for current input channel
                         int out_row = r - (KERNEL_SIZE - 1);
-                        float partial_sum = 0;
+                        data_ap_fixed_t partial_sum = 0;
                         
                         for (int kr = 0; kr < KERNEL_SIZE; kr++) {
                             for (int kc = 0; kc < KERNEL_SIZE; kc++) {
                                 #pragma HLS PIPELINE II=1
-                                float in_val = line_buffer[kr_indices[kr]][c+kc];
-                                float w_val = weight[oc*IN_C*KERNEL_SIZE*KERNEL_SIZE + 
+                                data_ap_fixed_t in_val = line_buffer[kr_indices[kr]][c+kc];
+                                data_ap_fixed_t w_val = weight[oc*IN_C*KERNEL_SIZE*KERNEL_SIZE + 
                                                      ic*KERNEL_SIZE*KERNEL_SIZE + 
                                                      kr*KERNEL_SIZE + kc];
                                 partial_sum += in_val * w_val;
