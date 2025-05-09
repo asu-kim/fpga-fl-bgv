@@ -227,7 +227,8 @@ void parameter_encryption_reference(
 
     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
         data_ap_fixed_t quantized = pt[i] / scale+ zp;
-        quantized = (quantized > 127) ? 127 : ((quantized < -128) ? -128 : quantized);
+        quantized = (quantized > data_ap_fixed_t(127)) ? data_ap_fixed_t(127) : 
+        ((quantized < data_ap_fixed_t(-128)) ? data_ap_fixed_t(-128) : quantized);
         quantized_pt[i] = (data_t) quantized;
     }
 

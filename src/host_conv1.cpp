@@ -15,6 +15,7 @@
  */
 
 #include "cmdlineparser.h"
+#include <chrono>
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -26,7 +27,6 @@
 #include "weights_bias.h"
 #include "encrypted_weights_bias.h"
 #include "keys.h"
-#include "encryption.hpp"
 #include "constants.hpp"
 
 // XRT includes
@@ -82,9 +82,6 @@ void conv1_golden(
                 int idx = oc * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)
                             + oh * (IN_COLS - KERNEL_SIZE + 1)
                             + ow;
-                // printf("--------------------------------\n");
-                // printf("output index = %d\n", idx);
-                // Initialize accumulator with bias
                 data_ap_fixed_t acc = bias[oc];
                 
                 // Calculate convolution for current output position
@@ -99,22 +96,10 @@ void conv1_golden(
                             data_ap_fixed_t in_val = in_data[ic][ih][iw];
                             data_ap_fixed_t w_val = weights[oc][ic][kh][kw];
                             acc += in_val * w_val;
-                            // printf("in_data[%d][%d][%d] = %d\n", ic, ih, iw, in_val);
-                            // printf("w_data[%d][%d][%d][%d] = %d\n", oc, ic, kh, kw, w_val);
                         }
                     }
                 }
 
-                // Quantize output
-                // data_ap_fixed_t acc_float = data_ap_fixed_t(acc);
-                // data_ap_fixed_t scaled = acc_float * act_out_scale + (data_ap_fixed_t)act_out_zp;
-                // data_ap_fixed_t rounded = floor(scaled + 0.5f);
-                
-                // // Clip to data type range
-                // data_ap_fixed_t result = (data_ap_fixed_t)rounded;
-                // result = hls::max(hls::numeric_limits<data_ap_fixed_t>::min(), 
-                //             hls::min(hls::numeric_limits<data_ap_fixed_t>::max(), result));
-                
                 // Calculate output index and store result
                 int out_idx = oc * OUT_ROWS * OUT_COLS
                             + oh * OUT_COLS
@@ -207,10 +192,6 @@ int main(int argc, char **argv)
         }
     }
 
-    // Sync weights and bias to device
-    bo_weights.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-    bo_bias.sync(XCL_BO_SYNC_BO_TO_DEVICE);
-
     std::cout << "weight = [";
     for(int i = 0; i < 256; i++) {
         std::cout << bo_weights_map[i] << ", ";
@@ -229,7 +210,6 @@ int main(int argc, char **argv)
             bo_in_data_map[i * IN_COLS + j] = in_data[i * IN_COLS + j];
         }
     }
-    bo_in_data.sync(XCL_BO_SYNC_BO_TO_DEVICE);
 
     std::cout << "input = [";
     for(int i = 0; i < 784; i++) {
@@ -239,6 +219,13 @@ int main(int argc, char **argv)
 
     // Run convolution
     std::cout << "Running convolution\n";
+    auto hw_start = std::chrono::high_resolution_clock::now();
+
+    // Sync weights and bias to device
+    bo_weights.sync(XCL_BO_SYNC_BO_TO_DEVICE);
+    bo_bias.sync(XCL_BO_SYNC_BO_TO_DEVICE);
+    bo_in_data.sync(XCL_BO_SYNC_BO_TO_DEVICE);
+
     auto run = conv1_krnl(bo_in_data, bo_out_data, bo_weights, bo_bias);
     // auto state = run.wait(std::chrono::seconds(20)); // Add timeout
     // if (state != ERT_CMD_STATE_COMPLETED) {
@@ -246,13 +233,24 @@ int main(int argc, char **argv)
     //     // Handle error
     // }
     run.wait();
-    std::cout << "Done convolution\n";
 
     // Read output from stream
     bo_out_data.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
+    auto hw_end = std::chrono::high_resolution_clock::now();
+    auto hw_duration = std::chrono::duration<double, std::milli>(hw_end - hw_start).count();
+    std::cout << "Hardware kernel execution time: " << hw_duration << " ms" << std::endl;
+    std::cout << "Done convolution\n";
+
     data_ap_fixed_t bo_out_data_golden[OUT_C * OUT_ROWS * OUT_COLS];
+
+    auto cpu_start = std::chrono::high_resolution_clock::now();
     conv1_golden(bo_in_data_map, bo_out_data_golden, bo_weights_map, bo_bias_map);
+
+    auto cpu_end = std::chrono::high_resolution_clock::now();
+    auto cpu_duration = std::chrono::duration<double, std::milli>(cpu_end - cpu_start).count();
+    std::cout << "CPU reference execution time: " << cpu_duration << " ms" << std::endl;
+
     // Print results
     std::cout << "Convolution results:\n";
     std::cout << "out_data = [";

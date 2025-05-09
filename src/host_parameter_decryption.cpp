@@ -29,6 +29,8 @@
 #include "encrypted_weights_bias.h"
 #include "constants.hpp"
 
+#include "hls_math.h"
+
 // XRT includes
 #include "experimental/xrt_bo.h"
 #include "experimental/xrt_device.h"
@@ -307,11 +309,11 @@ int main(int argc, char **argv)
     std::cout << "Test" << std::endl;
     for (int i = 0; i < POLYNOMIAL_DEGREE; i++)
     {
-        data_ap_fixed_t diff = std::abs(bo_plaintext_map[i] - paintext_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(bo_plaintext_map[i] - paintext_ref[i]);
         if(diff > max_err) {
             max_err = diff;
         }
-        if(diff > 0.01f) {
+        if(diff > data_ap_fixed_t(0.01)) {
             std::cout << "Error at index " << i << std::endl;
             std::cout << "i = " << i << " Device result = " << bo_plaintext_map[i] << std::endl;
             std::cout << "i = " << i << " Ref result = " << paintext_ref[i] << std::endl;

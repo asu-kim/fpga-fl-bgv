@@ -15,6 +15,7 @@
  */
 
 #include "cmdlineparser.h"
+#include <chrono>
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -25,7 +26,6 @@
 #include "weights_bias.h"
 #include "encrypted_weights_bias.h"
 #include "keys.h"
-#include "encryption.hpp"
 #include "constants.hpp"
 
 // XRT includes
@@ -161,29 +161,31 @@ int main(int argc, char **argv)
     bo_weights.sync(XCL_BO_SYNC_BO_TO_DEVICE);
     bo_bias.sync(XCL_BO_SYNC_BO_TO_DEVICE);
 
-    std::cout << "input = [";
-    for(int i = 0; i < IN_DIM; i++) {
-        std::cout << bo_in_data_map[i] << ", ";
-    }
-    std::cout << "]" << std::endl << std::endl;
+    // std::cout << "input = [";
+    // for(int i = 0; i < IN_DIM; i++) {
+    //     std::cout << bo_in_data_map[i] << ", ";
+    // }
+    // std::cout << "]" << std::endl << std::endl;
 
-    std::cout << "weight = [";
-    for(int i = 0; i < IN_DIM*OUT_DIM; i++) {
-        std::cout << bo_weights_map[i] << ", ";
-    }
-    std::cout << "]" << std::endl << std::endl;
+    // std::cout << "weight = [";
+    // for(int i = 0; i < IN_DIM*OUT_DIM; i++) {
+    //     std::cout << bo_weights_map[i] << ", ";
+    // }
+    // std::cout << "]" << std::endl << std::endl;
 
-    std::cout << "bias = [";
-    for(int i = 0; i < OUT_DIM; i++) {
-        std::cout << bo_bias_map[i] << ", ";
-    }
-    std::cout << "]" << std::endl << std::endl;
+    // std::cout << "bias = [";
+    // for(int i = 0; i < OUT_DIM; i++) {
+    //     std::cout << bo_bias_map[i] << ", ";
+    // }
+    // std::cout << "]" << std::endl << std::endl;
 
     // Define the use_relu value
     bool use_relu = true;
 
     // Run FC layer with use_relu parameter
     std::cout << "Running fc\n";
+
+    auto hw_start = std::chrono::high_resolution_clock::now();
     auto run = fc1_krnl(bo_in_data, bo_out_data, bo_weights, bo_bias, use_relu);
     // auto state = run.wait(std::chrono::seconds(20)); // Add timeout
     // if (state != ERT_CMD_STATE_COMPLETED) {
@@ -191,33 +193,43 @@ int main(int argc, char **argv)
     //     // Handle error
     // }
     run.wait();
-    std::cout << "Done fc\n";
 
     // Read output from stream
     bo_out_data.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
-    data_ap_fixed_t bo_out_data_golden[OUT_DIM];
-    fc_golden(bo_in_data_map, bo_out_data_golden, bo_weights_map, bo_bias_map, use_relu);
-    // Print results
-    std::cout << "FC results:\n";
-    std::cout << "out_data = [";
-    for(int i=0; i< OUT_DIM; i++) {
-        std::cout << bo_out_data_map[i] << ", ";
-    }
-    std::cout << "]" << std::endl << std::endl;
+    auto hw_end = std::chrono::high_resolution_clock::now();
+    auto hw_duration = std::chrono::duration<double, std::milli>(hw_end - hw_start).count();
+    std::cout << "Hardware kernel execution time: " << hw_duration << " ms" << std::endl;
+    std::cout << "Done FC1\n";
 
-    std::cout << "out_data_golden = [";
-    for(int i=0; i< OUT_DIM; ++i) {
-        std::cout << bo_out_data_golden[i] << ", ";
-    }
-    std::cout << "]" << std::endl;
+    data_ap_fixed_t bo_out_data_golden[OUT_DIM];
+    auto cpu_start = std::chrono::high_resolution_clock::now();
+    fc_golden(bo_in_data_map, bo_out_data_golden, bo_weights_map, bo_bias_map, use_relu);
+
+    auto cpu_end = std::chrono::high_resolution_clock::now();
+    auto cpu_duration = std::chrono::duration<double, std::milli>(cpu_end - cpu_start).count();
+    std::cout << "CPU reference execution time: " << cpu_duration << " ms" << std::endl;
+
+    // // Print results
+    // std::cout << "FC results:\n";
+    // std::cout << "out_data = [";
+    // for(int i=0; i< OUT_DIM; i++) {
+    //     std::cout << bo_out_data_map[i] << ", ";
+    // }
+    // std::cout << "]" << std::endl << std::endl;
+
+    // std::cout << "out_data_golden = [";
+    // for(int i=0; i< OUT_DIM; ++i) {
+    //     std::cout << bo_out_data_golden[i] << ", ";
+    // }
+    // std::cout << "]" << std::endl;
     int errors = 0;
     data_ap_fixed_t max_error = 0.0f;
 
     for(int i=0; i < OUT_DIM; i++) {
-        data_ap_fixed_t diff = std::abs(bo_out_data_map[i] - bo_out_data_golden[i]);
+        data_ap_fixed_t diff = hls::abs(bo_out_data_map[i] - bo_out_data_golden[i]);
         max_error = std::max(max_error, diff);
-        if(diff > 0.001f) {
+        if(diff > data_ap_fixed_t(0.001)) {
             errors++;
         }
     }

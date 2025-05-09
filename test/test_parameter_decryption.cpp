@@ -223,7 +223,8 @@ void parameter_encryption_reference(
 
     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
         data_ap_fixed_t quantized = pt[i] / scale+ zp;
-        quantized = (quantized > 127) ? 127 : ((quantized < -128) ? -128 : quantized);
+        quantized = (quantized > data_ap_fixed_t(127)) ? data_ap_fixed_t(127) : 
+        ((quantized < data_ap_fixed_t(-128)) ? data_ap_fixed_t(-128) : quantized);
         quantized_pt[i] = (data_t) quantized;
     }
 
@@ -359,18 +360,19 @@ int main() {
 
     // Compare HLS and reference decryption results
     int decryption_result_errors = 0;
-    data_ap_fixed_t max_result_diff = 0.0f;
+    data_ap_fixed_t max_result_diff = data_ap_fixed_t(0.0);
+    data_ap_fixed_t epsilon = data_ap_fixed_t(0.00001);
 
     for(int i = 0; i < num_conv1_weights_slices; i++) {
         for(int j = 0; j < POLYNOMIAL_DEGREE; j++) {
-            data_ap_fixed_t diff = std::abs(decrypted_conv1_weights[i][j] - decrypted_conv1_weights_ref[i][j]);
+            data_ap_fixed_t diff = hls::fabs(decrypted_conv1_weights[i][j] - decrypted_conv1_weights_ref[i][j]);
             
             if(diff > max_result_diff) {
                 max_result_diff = diff;
             }
             
             // Consider any difference as an error
-            if(diff > 0.00001f) {  // Using a small epsilon for floating point comparison
+            if(diff > epsilon) {  // Using a small epsilon for floating point comparison
                 decryption_result_errors++;
                 if (decryption_result_errors < 10) {
                     std::cout << "Decryption result error at index " << i*POLYNOMIAL_DEGREE+j 
