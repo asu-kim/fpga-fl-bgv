@@ -11,11 +11,12 @@ void conv2d(
     const data_ap_fixed_t weight[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE],
     const data_ap_fixed_t bias[OUT_C]
 ) {
-    #pragma HLS ARRAY_PARTITION variable=weight complete dim=2
-    #pragma HLS ARRAY_PARTITION variable=weight complete dim=3
-    #pragma HLS ARRAY_PARTITION variable=weight complete dim=4
+    #pragma HLS ARRAY_PARTITION variable=in_data cyclic factor=2 dim=0
+    #pragma HLS ARRAY_PARTITION variable=weight cyclic factor=2 dim=0
+    #pragma HLS ARRAY_PARTITION variable=weight cyclic factor=2 dim=1
+    #pragma HLS ARRAY_PARTITION variable=weight cyclic factor=3 dim=2
     #pragma HLS ARRAY_PARTITION variable=bias complete
-    #pragma HLS ARRAY_PARTITION variable=out_data cyclic factor=2 dim=1
+    #pragma HLS ARRAY_PARTITION variable=out_data cyclic factor=4 dim=0
 
     const int OUT_H = ROW - KERNEL_SIZE + 1;
     const int OUT_W = COL - KERNEL_SIZE + 1;

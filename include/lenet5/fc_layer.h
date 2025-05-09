@@ -13,9 +13,9 @@ void fc(
         bool use_relu = true
 ) {
     data_ap_fixed_t line_buffer[OUT_DIM];
-    #pragma HLS ARRAY_PARTITION variable=weight complete dim=2
-    #pragma HLS ARRAY_PARTITION variable=bias complete dim=1
-    #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=1
+    #pragma HLS ARRAY_PARTITION variable=weight cyclic factor=2 dim=0
+    #pragma HLS ARRAY_PARTITION variable=bias complete dim=0
+    #pragma HLS ARRAY_PARTITION variable=line_buffer complete dim=0
 
     for(int j=0; j<OUT_DIM; ++j) {
         #pragma HLS PIPELINE

@@ -236,7 +236,8 @@ void parameter_encryption_reference(
 
     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
         data_ap_fixed_t quantized = pt[i] / scale+ zp;
-        quantized = (quantized > 127) ? 127 : ((quantized < -128) ? -128 : quantized);
+        quantized = (quantized > data_ap_fixed_t(127)) ? data_ap_fixed_t(127) : 
+        ((quantized < data_ap_fixed_t(-128)) ? data_ap_fixed_t(-128) : quantized);
         quantized_pt[i] = (data_t) quantized;
     }
 
@@ -474,14 +475,15 @@ void parameter_decryption_test(const xrt::device& device, const xrt::uuid& uuid,
 
     int num_err = 0;
     data_ap_fixed_t max_err = 0;
+    data_ap_fixed_t epsilon = data_ap_fixed_t(0.01);
     std::cout << "Test" << std::endl;
     for (int i = 0; i < POLYNOMIAL_DEGREE; i++)
     {
-        data_ap_fixed_t diff = std::abs(bo_plaintext_map[i] - paintext_ref[i]);
+        data_ap_fixed_t diff = hls::fabs(bo_plaintext_map[i] - paintext_ref[i]);
         if(diff > max_err) {
             max_err = diff;
         }
-        if(diff > 0.01f) {
+        if(diff > epsilon) {
             std::cout << "Error at index " << i << std::endl;
             std::cout << "i = " << i << " Device result = " << bo_plaintext_map[i] << std::endl;
             std::cout << "i = " << i << " Ref result = " << paintext_ref[i] << std::endl;
@@ -638,13 +640,14 @@ void forward_path_test(const xrt::device& device, const xrt::uuid& uuid, xrt::ke
     // Conv1 Test
     int global_errors = 0;
     int errors = 0;
-    data_ap_fixed_t max_diff = 0.0f;
+    data_ap_fixed_t max_diff = data_ap_fixed_t(0.0);
+    data_ap_fixed_t epsilon = data_ap_fixed_t(0.1);
     std::cout << "Conv1 error indexes: ";
     for(int i=0; i<NUM_CONV1_OUTS; i++) {
         data_ap_fixed_t diff = hls::fabs(bo_conv1_out[i] - conv1_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > data_ap_fixed_t(0.1f)) {
+        if (diff > epsilon) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_conv1_out[i] 
@@ -676,7 +679,7 @@ void forward_path_test(const xrt::device& device, const xrt::uuid& uuid, xrt::ke
         data_ap_fixed_t diff = hls::fabs(bo_pool1_out[i] - pool1_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > data_ap_fixed_t(0.1f)) {
+        if (diff > epsilon) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_pool1_out[i] 
@@ -707,7 +710,7 @@ void forward_path_test(const xrt::device& device, const xrt::uuid& uuid, xrt::ke
         data_ap_fixed_t diff = hls::fabs(bo_conv2_out[i] - conv2_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > data_ap_fixed_t(0.1f)) {
+        if (diff > epsilon) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_conv2_out[i] 
@@ -739,7 +742,7 @@ void forward_path_test(const xrt::device& device, const xrt::uuid& uuid, xrt::ke
         data_ap_fixed_t diff = hls::fabs(bo_pool2_out[i] - pool2_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > data_ap_fixed_t(0.1f)) {
+        if (diff > epsilon) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_pool2_out[i] 
@@ -768,7 +771,7 @@ void forward_path_test(const xrt::device& device, const xrt::uuid& uuid, xrt::ke
         data_ap_fixed_t diff = hls::fabs(bo_fc1_out[i] - fc1_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > data_ap_fixed_t(0.1f)) {
+        if (diff > epsilon) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_fc1_out[i] 
@@ -797,7 +800,7 @@ void forward_path_test(const xrt::device& device, const xrt::uuid& uuid, xrt::ke
         data_ap_fixed_t diff = hls::fabs(bo_fc2_out[i] - fc2_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > data_ap_fixed_t(0.1f)) {
+        if (diff > epsilon) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_fc2_out[i] 
@@ -826,7 +829,7 @@ void forward_path_test(const xrt::device& device, const xrt::uuid& uuid, xrt::ke
         data_ap_fixed_t diff = hls::fabs(bo_fc3_out[i] - fc3_out_golden[i]);
         max_diff = std::max(max_diff, diff);
         
-        if (diff > data_ap_fixed_t(0.1f)) {
+        if (diff > epsilon) {
             errors++;
             if (errors < 10) { // Limit error reporting to avoid flooding console
                 std::cout << "Error at output " << i << ": got " << bo_fc3_out[i] 
@@ -866,10 +869,16 @@ int main(int argc, char **argv)
 
     auto krnl_enc = xrt::kernel(device, uuid, "parameter_encryption");
     auto krnl_dec = xrt::kernel(device, uuid, "parameter_decryption");
+    auto krnl_forward_path = xrt::kernel(device, uuid, "forward_path");
 
+    std::cout << "-----------Encryption Test-----------" << std::endl;
     parameter_encryption_test(device, uuid, krnl_enc);
+
+    std::cout << "-----------Decryption Test-----------" << std::endl;
     parameter_decryption_test(device, uuid, krnl_dec);
-    forward_path_test(device, uuid, krnl_dec);
+
+    std::cout << "-----------Forward Path Test-----------" << std::endl;
+    forward_path_test(device, uuid, krnl_forward_path);
 
     return 0;
 }
