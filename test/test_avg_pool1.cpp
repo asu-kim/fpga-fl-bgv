@@ -15,9 +15,9 @@
 
 int main() {
     // Allocate memory for input and output data
-    float in_data[IN_CHANNELS * IN_ROWS * IN_COLS];
-    float out_data[IN_CHANNELS * OUT_ROWS * OUT_COLS];
-    float out_data_ref[IN_CHANNELS * OUT_ROWS * OUT_COLS];
+    data_ap_fixed_t in_data[IN_CHANNELS * IN_ROWS * IN_COLS];
+    data_ap_fixed_t out_data[IN_CHANNELS * OUT_ROWS * OUT_COLS];
+    data_ap_fixed_t out_data_ref[IN_CHANNELS * OUT_ROWS * OUT_COLS];
     
     // Initialize input data with a pattern that makes it easy to verify results
     for(int ch=0; ch < IN_CHANNELS; ch++) {
@@ -32,7 +32,7 @@ int main() {
     for(int ch=0; ch < IN_CHANNELS; ch++) {
         for(int out_r=0; out_r < OUT_ROWS; out_r++) {
             for(int out_c=0; out_c < OUT_COLS; out_c++) {
-                float sum = 0.0f;
+                data_ap_fixed_t sum = 0.0f;
                 for(int i=0; i < POOL_SIZE; i++) {
                     for(int j=0; j < POOL_SIZE; j++) {
                         int r = out_r * STRIDE + i;
@@ -41,7 +41,7 @@ int main() {
                     }
                 }
                 // Calculate average
-                float avg = sum / (POOL_SIZE * POOL_SIZE);
+                data_ap_fixed_t avg = sum / (POOL_SIZE * POOL_SIZE);
                 out_data_ref[ch*OUT_ROWS*OUT_COLS + out_r*OUT_COLS + out_c] = avg;
             }
         }
@@ -78,7 +78,7 @@ int main() {
     }
 
     int errors = 0;
-    const float EPSILON = 1e-5f; // Allow for small floating-point differences
+    const data_ap_fixed_t EPSILON = 1e-5f; // Allow for small floating-point differences
     
     // Check for errors
     std::cout << "\nChecking for errors..." << std::endl;

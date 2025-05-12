@@ -7,7 +7,16 @@
 #include "BGV/encryption.hpp"
 
 extern "C" {
-void encryption(data_t* e1, data_t* e2, data_t* r, data_t* pk1, data_t* pk2, data_t* pt, data_t* ct1, data_t* ct2) {
+void encryption(
+    data_t e1[POLYNOMIAL_DEGREE], 
+    data_t e2[POLYNOMIAL_DEGREE],
+    data_t r[POLYNOMIAL_DEGREE], 
+    data_t pk1[POLYNOMIAL_DEGREE],
+    data_t pk2[POLYNOMIAL_DEGREE],
+    data_t pt[POLYNOMIAL_DEGREE],
+    data_t ct1[POLYNOMIAL_DEGREE],
+    data_t ct2[POLYNOMIAL_DEGREE]
+) {
     #pragma HLS INTERFACE m_axi port=e1 bundle=gmem0 depth=POLYNOMIAL_DEGREE
     #pragma HLS INTERFACE m_axi port=e2 bundle=gmem1 depth=POLYNOMIAL_DEGREE
     #pragma HLS INTERFACE m_axi port=r bundle=gmem2 depth=POLYNOMIAL_DEGREE
@@ -16,7 +25,7 @@ void encryption(data_t* e1, data_t* e2, data_t* r, data_t* pk1, data_t* pk2, dat
     #pragma HLS INTERFACE m_axi port=pt bundle=gmem1 depth=POLYNOMIAL_DEGREE
     #pragma HLS INTERFACE m_axi port=ct1 bundle=gmem2 depth=POLYNOMIAL_DEGREE
     #pragma HLS INTERFACE m_axi port=ct2 bundle=gmem2 depth=POLYNOMIAL_DEGREE
-    // #pragma HLS INTERFACE s_axilite port=size bundle=control
+
     // #pragma HLS INTERFACE s_axilite port=return bundle=control
 
     int n = POLYNOMIAL_DEGREE;
@@ -38,11 +47,11 @@ void encryption(data_t* e1, data_t* e2, data_t* r, data_t* pk1, data_t* pk2, dat
 }
 
 void decryption(data_t* sk, data_t* ct1, data_t* ct2, data_t* pt) {
-    #pragma HLS INTERFACE m_axi port=sk bundle=gmem0 depth=POLYNOMIAL_DEGREE
-    #pragma HLS INTERFACE m_axi port=ct1 bundle=gmem1 depth=POLYNOMIAL_DEGREE
-    #pragma HLS INTERFACE m_axi port=ct2 bundle=gmem2 depth=POLYNOMIAL_DEGREE
-    #pragma HLS INTERFACE m_axi port=pt bundle=gmem3 depth=POLYNOMIAL_DEGREE
-    // #pragma HLS INTERFACE s_axilite port=size bundle=control
+    // #pragma HLS INTERFACE m_axi port=sk bundle=gmem0 depth=POLYNOMIAL_DEGREE
+    // #pragma HLS INTERFACE m_axi port=ct1 bundle=gmem1 depth=POLYNOMIAL_DEGREE
+    // #pragma HLS INTERFACE m_axi port=ct2 bundle=gmem2 depth=POLYNOMIAL_DEGREE
+    // #pragma HLS INTERFACE m_axi port=pt bundle=gmem3 depth=POLYNOMIAL_DEGREE
+
     // #pragma HLS INTERFACE s_axilite port=return bundle=control
 
     int n = POLYNOMIAL_DEGREE;

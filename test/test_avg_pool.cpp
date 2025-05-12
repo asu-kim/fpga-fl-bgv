@@ -14,9 +14,9 @@
 
 int main() {
     // Allocate memory for input and output data
-    float in_data[IN_CHANNELS * IN_ROWS * IN_COLS];
-    float out_data[IN_CHANNELS * OUT_ROWS * OUT_COLS];
-    float out_data_ref[IN_CHANNELS * OUT_ROWS * OUT_COLS];
+    data_ap_fixed_t in_data[IN_CHANNELS * IN_ROWS * IN_COLS];
+    data_ap_fixed_t out_data[IN_CHANNELS * OUT_ROWS * OUT_COLS];
+    data_ap_fixed_t out_data_ref[IN_CHANNELS * OUT_ROWS * OUT_COLS];
     
     // Initialize input data with a pattern that makes it easy to verify results
     for(int ch=0; ch < IN_CHANNELS; ch++) {
@@ -34,7 +34,7 @@ int main() {
     for(int ch=0; ch < IN_CHANNELS; ch++) {
         for(int pr=0; pr < OUT_ROWS; pr++) {
             for(int pc=0; pc < OUT_COLS; pc++) {
-                float sum = 0;
+                data_ap_fixed_t sum = 0;
                 for(int i=0; i < POOL_SIZE; i++) {
                     for(int j=0; j < POOL_SIZE; j++) {
                         // sum += in_data[ch + IN_CHANNELS*((pr*POOL_SIZE+i)*IN_COLS + (pc*POOL_SIZE+j))];
@@ -42,7 +42,7 @@ int main() {
                     }
                 }
                 // Calculate average with rounding
-                float avg = sum / (POOL_SIZE*POOL_SIZE);
+                data_ap_fixed_t avg = sum / (POOL_SIZE*POOL_SIZE);
                 out_data_ref[ch*OUT_ROWS*OUT_COLS + pr*OUT_COLS + pc] = avg;
             }
         }

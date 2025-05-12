@@ -60,9 +60,9 @@ int main(int argc, char **argv)
     std::cout << "Load the xclbin " << binaryFile << std::endl;
     auto uuid = device.load_xclbin(binaryFile);
 
-    // size_t vector_size_bytes = sizeof(float) * DATA_SIZE;
-    size_t in_size_bytes = sizeof(float) * IN_C * OUT_ROWS * OUT_COLS;
-    size_t out_size_bytes = sizeof(float) * IN_C * IN_ROWS * IN_COLS;
+    // size_t vector_size_bytes = sizeof(data_ap_fixed_t) * DATA_SIZE;
+    size_t in_size_bytes = sizeof(data_ap_fixed_t) * IN_C * OUT_ROWS * OUT_COLS;
+    size_t out_size_bytes = sizeof(data_ap_fixed_t) * IN_C * IN_ROWS * IN_COLS;
 
     // Create kernels
     auto avg_pool1_bwd_krnl = xrt::kernel(device, uuid, "avg_pool1_bwd");
@@ -74,8 +74,8 @@ int main(int argc, char **argv)
     auto bo_out_data = xrt::bo(device, out_size_bytes, avg_pool1_bwd_krnl.group_id(1));
 
     // Map buffers to host memory
-    auto bo_in_data_map = bo_in_data.map<float *>();
-    auto bo_out_data_map = bo_out_data.map<float *>();
+    auto bo_in_data_map = bo_in_data.map<data_ap_fixed_t *>();
+    auto bo_out_data_map = bo_out_data.map<data_ap_fixed_t *>();
 
     std::cout << "Initialize buffers\n";
     // Initialize buffers
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
     // Read output from stream
     bo_out_data.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
-    float bo_out_data_golden[IN_C * IN_ROWS * IN_COLS];
+    data_ap_fixed_t bo_out_data_golden[IN_C * IN_ROWS * IN_COLS];
     pool_bwd_golden<2, 2, 6, 24, 24>(bo_in_data_map, bo_out_data_golden);
 
     // Print sample of output data for verification
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
     }
 
     int errors = 0;
-    const float EPSILON = 1e-5f; // Allow for small floating-point differences
+    const data_ap_fixed_t EPSILON = 1e-5f; // Allow for small floating-point differences
     
     // Check for errors
     std::cout << "\nChecking for errors..." << std::endl;

@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <string>
 
+#include "constants.hpp"
 #include "data_type.hpp"
 
 // typedef ap_fixed<8, 3> data_t;
@@ -56,9 +57,7 @@
 #define FC3_IN_DIM 84
 #define FC3_OUT_DIM 10
 
-#define lr 1e-3
-
-float SAMPLE_INPUT[784] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+data_ap_fixed_t SAMPLE_INPUT[784] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -101,10 +100,10 @@ float SAMPLE_INPUT[784] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 
 template<int OUT_C, int IN_C, int KERNEL, int IN_ROWS, int IN_COLS>
 void conv_golden(
-    const float in_data[IN_C * IN_ROWS * IN_COLS],
-    float out_data[OUT_C * (IN_ROWS - KERNEL + 1) * (IN_COLS - KERNEL + 1)],
-    const float weights[OUT_C * IN_C * KERNEL * KERNEL],
-    const float bias[OUT_C]
+    const data_ap_fixed_t in_data[IN_C * IN_ROWS * IN_COLS],
+    data_ap_fixed_t out_data[OUT_C * (IN_ROWS - KERNEL + 1) * (IN_COLS - KERNEL + 1)],
+    const data_ap_fixed_t weights[OUT_C * IN_C * KERNEL * KERNEL],
+    const data_ap_fixed_t bias[OUT_C]
 ) {
     const int OUT_ROWS = IN_ROWS - KERNEL + 1;
     const int OUT_COLS = IN_COLS - KERNEL + 1;
@@ -116,7 +115,7 @@ void conv_golden(
             // Loop over each output column
             for (int ow = 0; ow < OUT_COLS; ow++) {
                 // Initialize accumulator with bias
-                float acc = bias[oc];
+                data_ap_fixed_t acc = bias[oc];
                 
                 // Calculate convolution for current output position
                 for (int ic = 0; ic < IN_C; ic++) {
@@ -148,8 +147,8 @@ void conv_golden(
 
 template<int POOL_SIZE, int STRIDE, int IN_C, int IN_ROWS, int IN_COLS>
 void pool_golden(
-    const float in_data[IN_C*IN_ROWS*IN_COLS],
-    float out_data[IN_C * ((IN_ROWS - POOL_SIZE) / STRIDE + 1) * ((IN_COLS - POOL_SIZE) / STRIDE + 1)]
+    const data_ap_fixed_t in_data[IN_C*IN_ROWS*IN_COLS],
+    data_ap_fixed_t out_data[IN_C * ((IN_ROWS - POOL_SIZE) / STRIDE + 1) * ((IN_COLS - POOL_SIZE) / STRIDE + 1)]
 ) {
     int OUT_ROWS = (IN_ROWS - POOL_SIZE) / STRIDE + 1;
     int OUT_COLS = (IN_COLS - POOL_SIZE) / STRIDE + 1;
@@ -158,7 +157,7 @@ void pool_golden(
     for(int ch=0; ch < IN_C; ch++) {
         for(int out_r=0; out_r < OUT_ROWS; out_r++) {
             for(int out_c=0; out_c < OUT_COLS; out_c++) {
-                float sum = 0.0f;
+                data_ap_fixed_t sum = 0.0f;
                 for(int i=0; i < POOL_SIZE; i++) {
                     for(int j=0; j < POOL_SIZE; j++) {
                         int r = out_r * STRIDE + i;
@@ -167,7 +166,7 @@ void pool_golden(
                     }
                 }
                 // Calculate average
-                float avg = sum / (POOL_SIZE * POOL_SIZE);
+                data_ap_fixed_t avg = sum / (POOL_SIZE * POOL_SIZE);
                 out_data[ch*OUT_ROWS*OUT_COLS + out_r*OUT_COLS + out_c] = avg;
             }
         }
@@ -176,10 +175,10 @@ void pool_golden(
 
 template<int IN_DIM, int OUT_DIM>
 void fc_golden(
-    const float in_data[IN_DIM],
-    float out_data[OUT_DIM],
-    const float weight[IN_DIM*OUT_DIM],
-    const float bias[OUT_DIM],
+    const data_ap_fixed_t in_data[IN_DIM],
+    data_ap_fixed_t out_data[OUT_DIM],
+    const data_ap_fixed_t weight[IN_DIM*OUT_DIM],
+    const data_ap_fixed_t bias[OUT_DIM],
     bool use_relu
 ) {
     // Initialize with bias
@@ -205,25 +204,67 @@ void fc_golden(
 }
 
 void forward_golden(
-    const float* in_data,
-    const float* conv1_weight,
-    const float* conv1_bias,
-    float* conv1_out,
-    float* pool1_out,
-    const float* conv2_weight,
-    const float* conv2_bias,
-    float* conv2_out,
-    float* pool2_out,
-    const float* fc1_weight,
-    const float* fc1_bias,
-    float* fc1_out,
-    const float* fc2_weight,
-    const float* fc2_bias,
-    float* fc2_out,  
-    const float* fc3_weight,
-    const float* fc3_bias,
-    float* fc3_out
+    const data_ap_fixed_t* in_data,
+    const data_ap_fixed_t* weights,
+    const data_ap_fixed_t* biases,
+    data_ap_fixed_t* outs
 ) {
+    data_ap_fixed_t conv1_out[NUM_CONV1_OUTS];
+    data_ap_fixed_t pool1_out[NUM_POOL1_OUTS];
+    data_ap_fixed_t conv2_out[NUM_CONV2_OUTS];
+    data_ap_fixed_t pool2_out[NUM_POOL2_OUTS];
+    data_ap_fixed_t fc1_out[NUM_FC1_OUTS];
+    data_ap_fixed_t fc2_out[NUM_FC2_OUTS];
+    data_ap_fixed_t fc3_out[NUM_FC3_OUTS];
+    
+    // Create local arrays for weights and biases
+    data_ap_fixed_t conv1_weight[NUM_CONV1_WEIGHTS];
+    data_ap_fixed_t conv1_bias[NUM_CONV1_BIASES];
+    data_ap_fixed_t conv2_weight[NUM_CONV2_WEIGHTS];
+    data_ap_fixed_t conv2_bias[NUM_CONV2_BIASES];
+    data_ap_fixed_t fc1_weight[NUM_FC1_WEIGHTS];
+    data_ap_fixed_t fc1_bias[NUM_FC1_BIASES];
+    data_ap_fixed_t fc2_weight[NUM_FC2_WEIGHTS];
+    data_ap_fixed_t fc2_bias[NUM_FC2_BIASES];
+    data_ap_fixed_t fc3_weight[NUM_FC3_WEIGHTS];
+    data_ap_fixed_t fc3_bias[NUM_FC3_BIASES];
+    
+    // Copy weights and biases from consolidated arrays
+    for(int i = 0; i < NUM_CONV1_WEIGHTS; i++) {
+        conv1_weight[i] = weights[CONV1_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_CONV1_BIASES; i++) {
+        conv1_bias[i] = biases[CONV1_BIAS_OFFSET + i];
+    }
+    
+    for(int i = 0; i < NUM_CONV2_WEIGHTS; i++) {
+        conv2_weight[i] = weights[CONV2_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_CONV2_BIASES; i++) {
+        conv2_bias[i] = biases[CONV2_BIAS_OFFSET + i];
+    }
+    
+    for(int i = 0; i < NUM_FC1_WEIGHTS; i++) {
+        fc1_weight[i] = weights[FC1_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_FC1_BIASES; i++) {
+        fc1_bias[i] = biases[FC1_BIAS_OFFSET + i];
+    }
+    
+    for(int i = 0; i < NUM_FC2_WEIGHTS; i++) {
+        fc2_weight[i] = weights[FC2_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_FC2_BIASES; i++) {
+        fc2_bias[i] = biases[FC2_BIAS_OFFSET + i];
+    }
+    
+    for(int i = 0; i < NUM_FC3_WEIGHTS; i++) {
+        fc3_weight[i] = weights[FC3_WEIGHT_OFFSET + i];
+    }
+    for(int i = 0; i < NUM_FC3_BIASES; i++) {
+        fc3_bias[i] = biases[FC3_BIAS_OFFSET + i];
+    }
+    
     // Conv1
     conv_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_IN_COLS>(in_data, conv1_out, conv1_weight, conv1_bias);
 
@@ -244,23 +285,52 @@ void forward_golden(
 
     // FC3
     fc_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out, fc3_out, fc3_weight, fc3_bias, false);
+    
+    // Copy outputs to the consolidated output array
+    for(int i = 0; i < NUM_CONV1_OUTS; i++) {
+        outs[CONV1_OUT_OFFSET + i] = conv1_out[i];
+    }
+    
+    for(int i = 0; i < NUM_POOL1_OUTS; i++) {
+        outs[POOL1_OUT_OFFSET + i] = pool1_out[i];
+    }
+    
+    for(int i = 0; i < NUM_CONV2_OUTS; i++) {
+        outs[CONV2_OUT_OFFSET + i] = conv2_out[i];
+    }
+    
+    for(int i = 0; i < NUM_POOL2_OUTS; i++) {
+        outs[POOL2_OUT_OFFSET + i] = pool2_out[i];
+    }
+    
+    for(int i = 0; i < NUM_FC1_OUTS; i++) {
+        outs[FC1_OUT_OFFSET + i] = fc1_out[i];
+    }
+    
+    for(int i = 0; i < NUM_FC2_OUTS; i++) {
+        outs[FC2_OUT_OFFSET + i] = fc2_out[i];
+    }
+    
+    for(int i = 0; i < NUM_FC3_OUTS; i++) {
+        outs[FC3_OUT_OFFSET + i] = fc3_out[i];
+    }
 }
 
 template<int N>
 void mse_loss_golden(
-        const float y_pred[N],
-        const float y_true[N],
-        float &loss,
-        float grads[N]
+        const data_ap_fixed_t y_pred[N],
+        const data_ap_fixed_t y_true[N],
+        data_ap_fixed_t &loss,
+        data_ap_fixed_t grads[N]
         ) {
-    float acc_loss = 0.0f;
+    data_ap_fixed_t acc_loss = 0.0f;
 
     for(int i=0; i<N; ++i) {
-        float p = y_pred[i];
-        float t = y_true[i];
-        float diff = t - p;
+        data_ap_fixed_t p = y_pred[i];
+        data_ap_fixed_t t = y_true[i];
+        data_ap_fixed_t diff = t - p;
         acc_loss += diff * diff;
-        grads[i] = (2.0f * diff) / N;
+        grads[i] = (data_ap_fixed_t(2.0) * diff) / N;
     }
 
     loss = (acc_loss / N);
@@ -268,16 +338,16 @@ void mse_loss_golden(
 
 template<int IN_DIM, int OUT_DIM>
 void fc_bwd_golden(
-    const float in_activation[IN_DIM],
-    const float grads[OUT_DIM],
-    const float in_weight[IN_DIM*OUT_DIM],
-    float dX[IN_DIM],
-    float dW[IN_DIM*OUT_DIM],
-    float dB[OUT_DIM],
+    const data_ap_fixed_t in_activation[IN_DIM],
+    const data_ap_fixed_t grads[OUT_DIM],
+    const data_ap_fixed_t in_weight[IN_DIM*OUT_DIM],
+    data_ap_fixed_t dX[IN_DIM],
+    data_ap_fixed_t dW[IN_DIM*OUT_DIM],
+    data_ap_fixed_t dB[OUT_DIM],
     bool use_relu = true
 ) {
     // Reconstruct weights for easier access
-    float weight[IN_DIM][OUT_DIM];
+    data_ap_fixed_t weight[IN_DIM][OUT_DIM];
     for(int i=0; i<IN_DIM; ++i) {
         for(int j=0; j<OUT_DIM; ++j) {
             int idx = i * OUT_DIM + j;
@@ -300,19 +370,21 @@ void fc_bwd_golden(
 
     // Input gradients
     for(int i=0; i<IN_DIM; ++i) {
-        float acc = 0;
+        data_ap_fixed_t acc = 0;
         for(int j=0; j<OUT_DIM; ++j) {
             acc += weight[i][j] * grads[j];
         }
-        if(use_relu) acc *= (in_activation[i] > 0 ? 1.0f : 0.0f);
+        if(use_relu) {
+            acc *= (in_activation[i] > 0 ? data_ap_fixed_t(1.0) : data_ap_fixed_t(0.0));
+        }
         dX[i] = acc;
     }
 }
 
 template<int POOL_SIZE, int STRIDE, int IN_C, int IN_ROWS, int IN_COLS>
 void pool_bwd_golden(
-    const float in_data[IN_C*((IN_ROWS-POOL_SIZE)/STRIDE+1)*((IN_COLS-POOL_SIZE)/STRIDE+1)],
-    float out_data[IN_C*IN_ROWS*IN_COLS]
+    const data_ap_fixed_t in_data[IN_C*((IN_ROWS-POOL_SIZE)/STRIDE+1)*((IN_COLS-POOL_SIZE)/STRIDE+1)],
+    data_ap_fixed_t out_data[IN_C*IN_ROWS*IN_COLS]
 ) {
     int OUT_ROWS = (IN_ROWS - POOL_SIZE) / STRIDE + 1;
     int OUT_COLS = (IN_COLS - POOL_SIZE) / STRIDE + 1;
@@ -322,7 +394,7 @@ void pool_bwd_golden(
         out_data[i] = 0.0f;
     }
     
-    const float scale = 1.0f / (POOL_SIZE * POOL_SIZE);
+    const data_ap_fixed_t scale = 1.0f / (POOL_SIZE * POOL_SIZE);
     
     // For each input position
     for (int c = 0; c < IN_C; c++) {
@@ -356,12 +428,12 @@ void pool_bwd_golden(
 
 template<int OUT_C, int IN_C, int KERNEL, int IN_ROWS, int IN_COLS>
 void conv_bwd_golden(
-    const float in_activation[IN_C * IN_ROWS * IN_COLS],
-    const float grads[OUT_C * (IN_ROWS - KERNEL + 1) * (IN_COLS - KERNEL + 1)],
-    const float in_weight[OUT_C * IN_C * KERNEL * KERNEL],
-    float out_grads[IN_C * IN_ROWS * IN_COLS],
-    float dW[OUT_C * IN_C * KERNEL * KERNEL],
-    float dB[OUT_C]
+    const data_ap_fixed_t in_activation[IN_C * IN_ROWS * IN_COLS],
+    const data_ap_fixed_t grads[OUT_C * (IN_ROWS - KERNEL + 1) * (IN_COLS - KERNEL + 1)],
+    const data_ap_fixed_t in_weight[OUT_C * IN_C * KERNEL * KERNEL],
+    data_ap_fixed_t out_grads[IN_C * IN_ROWS * IN_COLS],
+    data_ap_fixed_t dW[OUT_C * IN_C * KERNEL * KERNEL],
+    data_ap_fixed_t dB[OUT_C]
 ) {
     const int OUT_ROWS = IN_ROWS - KERNEL + 1;
     const int OUT_COLS = IN_COLS - KERNEL + 1;
@@ -397,7 +469,7 @@ void conv_bwd_golden(
         for (int ic = 0; ic < IN_C; ++ic) {
             for (int kr = 0; kr < KERNEL; ++kr) {
                 for (int kc = 0; kc < KERNEL; ++kc) {
-                    float gradient_sum = 0.0f;
+                    data_ap_fixed_t gradient_sum = 0.0f;
                     
                     for (int r = 0; r < OUT_ROWS; ++r) {
                         for (int c = 0; c < OUT_COLS; ++c) {
@@ -421,7 +493,7 @@ void conv_bwd_golden(
     for (int ic = 0; ic < IN_C; ++ic) {
         for (int r = 0; r < IN_ROWS; ++r) {
             for (int c = 0; c < IN_COLS; ++c) {
-                float gradient_sum = 0.0f;
+                data_ap_fixed_t gradient_sum = 0.0f;
                 
                 // Iterate over all output channels
                 for (int oc = 0; oc < OUT_C; ++oc) {
@@ -456,111 +528,127 @@ void conv_bwd_golden(
 }
 
 void backward_golden(
-    const float* in_data,
-    const float* conv1_weight,
-    const float* conv1_bias,
-    const float* conv1_out,
-    const float* pool1_out,
-    const float* conv2_weight,
-    const float* conv2_bias,
-    const float* conv2_out,
-    const float* pool2_out,
-    const float* fc1_weight,
-    const float* fc1_bias,
-    const float* fc1_out,
-    const float* fc2_weight,
-    const float* fc2_bias,
-    const float* fc2_out,
-    const float* fc3_weight,
-    const float* fc3_bias,
-    const float* fc3_out,
-    const float* label,
-    float* conv1_updated_weight,
-    float* conv1_updated_bias,
-    float* conv2_updated_weight,
-    float* conv2_updated_bias,
-    float* fc1_updated_weight,
-    float* fc1_updated_bias,
-    float* fc2_updated_weight,
-    float* fc2_updated_bias,
-    float* fc3_updated_weight,
-    float* fc3_updated_bias,
-    float loss
+    const data_ap_fixed_t* in_data,
+    const data_ap_fixed_t* weights,
+    const data_ap_fixed_t* biases,
+    const data_ap_fixed_t* outputs,
+    const data_ap_fixed_t* label,
+    data_ap_fixed_t* updated_weights,
+    data_ap_fixed_t* updated_biases,
+    data_ap_fixed_t& loss
 ) {
-    float out_grad[FC3_OUT_DIM];
+    // Extract layer outputs from consolidated outputs array
+    const data_ap_fixed_t* conv1_out = &outputs[CONV1_OUT_OFFSET];
+    const data_ap_fixed_t* pool1_out = &outputs[POOL1_OUT_OFFSET];
+    const data_ap_fixed_t* conv2_out = &outputs[CONV2_OUT_OFFSET];
+    const data_ap_fixed_t* pool2_out = &outputs[POOL2_OUT_OFFSET];
+    const data_ap_fixed_t* fc1_out = &outputs[FC1_OUT_OFFSET];
+    const data_ap_fixed_t* fc2_out = &outputs[FC2_OUT_OFFSET];
+    const data_ap_fixed_t* fc3_out = &outputs[FC3_OUT_OFFSET];
+    
+    // Extract weights from consolidated weights array
+    const data_ap_fixed_t* conv1_weight = &weights[CONV1_WEIGHT_OFFSET];
+    const data_ap_fixed_t* conv2_weight = &weights[CONV2_WEIGHT_OFFSET];
+    const data_ap_fixed_t* fc1_weight = &weights[FC1_WEIGHT_OFFSET];
+    const data_ap_fixed_t* fc2_weight = &weights[FC2_WEIGHT_OFFSET];
+    const data_ap_fixed_t* fc3_weight = &weights[FC3_WEIGHT_OFFSET];
+    
+    // Extract biases from consolidated biases array
+    const data_ap_fixed_t* conv1_bias = &biases[CONV1_BIAS_OFFSET];
+    const data_ap_fixed_t* conv2_bias = &biases[CONV2_BIAS_OFFSET];
+    const data_ap_fixed_t* fc1_bias = &biases[FC1_BIAS_OFFSET];
+    const data_ap_fixed_t* fc2_bias = &biases[FC2_BIAS_OFFSET];
+    const data_ap_fixed_t* fc3_bias = &biases[FC3_BIAS_OFFSET];
+    
+    // Prepare pointers to updated weights and biases
+    data_ap_fixed_t* conv1_updated_weight = &updated_weights[CONV1_WEIGHT_OFFSET];
+    data_ap_fixed_t* conv2_updated_weight = &updated_weights[CONV2_WEIGHT_OFFSET];
+    data_ap_fixed_t* fc1_updated_weight = &updated_weights[FC1_WEIGHT_OFFSET];
+    data_ap_fixed_t* fc2_updated_weight = &updated_weights[FC2_WEIGHT_OFFSET];
+    data_ap_fixed_t* fc3_updated_weight = &updated_weights[FC3_WEIGHT_OFFSET];
+    
+    data_ap_fixed_t* conv1_updated_bias = &updated_biases[CONV1_BIAS_OFFSET];
+    data_ap_fixed_t* conv2_updated_bias = &updated_biases[CONV2_BIAS_OFFSET];
+    data_ap_fixed_t* fc1_updated_bias = &updated_biases[FC1_BIAS_OFFSET];
+    data_ap_fixed_t* fc2_updated_bias = &updated_biases[FC2_BIAS_OFFSET];
+    data_ap_fixed_t* fc3_updated_bias = &updated_biases[FC3_BIAS_OFFSET];
+    
+    // Create temporary buffers for gradients
+    data_ap_fixed_t out_grad[FC3_OUT_DIM];
+    
     // Loss
     mse_loss_golden<FC3_OUT_DIM>(fc3_out, label, loss, out_grad);
 
-    float fc3_dX[FC3_IN_DIM];
-    float fc3_dW[FC3_IN_DIM*FC3_OUT_DIM];
-    float fc3_dB[FC3_OUT_DIM];
+    data_ap_fixed_t fc3_dX[FC3_IN_DIM];
+    data_ap_fixed_t fc3_dW[NUM_FC3_WEIGHTS];
+    data_ap_fixed_t fc3_dB[NUM_FC3_BIASES];
     // FC3 Bwd
     fc_bwd_golden<FC3_IN_DIM, FC3_OUT_DIM>(fc2_out, out_grad, fc3_weight, fc3_dX, fc3_dW, fc3_dB, false);
     // Update FC3 weights and biases
-    for(int i = 0; i < FC3_IN_DIM*FC3_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC3_WEIGHTS; i++) {
         fc3_updated_weight[i] = fc3_weight[i] - lr * fc3_dW[i];
     }
-    for(int i = 0; i < FC3_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC3_BIASES; i++) {
         fc3_updated_bias[i] = fc3_bias[i] - lr * fc3_dB[i];
     }
 
-    float fc2_dX[FC2_IN_DIM];
-    float fc2_dW[FC2_IN_DIM*FC2_OUT_DIM];
-    float fc2_dB[FC2_OUT_DIM];
+    data_ap_fixed_t fc2_dX[FC2_IN_DIM];
+    data_ap_fixed_t fc2_dW[NUM_FC2_WEIGHTS];
+    data_ap_fixed_t fc2_dB[NUM_FC2_BIASES];
     // FC2 Bwd
     fc_bwd_golden<FC2_IN_DIM, FC2_OUT_DIM>(fc1_out, fc3_dX, fc2_weight, fc2_dX, fc2_dW, fc2_dB, true);
     // Update FC2 weights and biases
-    for(int i = 0; i < FC2_IN_DIM*FC2_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC2_WEIGHTS; i++) {
         fc2_updated_weight[i] = fc2_weight[i] - lr * fc2_dW[i];
     }
-    for(int i = 0; i < FC2_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC2_BIASES; i++) {
         fc2_updated_bias[i] = fc2_bias[i] - lr * fc2_dB[i];
     }
 
-    float fc1_dX[FC1_IN_DIM];
-    float fc1_dW[FC1_IN_DIM*FC1_OUT_DIM];
-    float fc1_dB[FC1_OUT_DIM];
+    data_ap_fixed_t fc1_dX[FC1_IN_DIM];
+    data_ap_fixed_t fc1_dW[NUM_FC1_WEIGHTS];
+    data_ap_fixed_t fc1_dB[NUM_FC1_BIASES];
     // FC1 Bwd
     fc_bwd_golden<FC1_IN_DIM, FC1_OUT_DIM>(pool2_out, fc2_dX, fc1_weight, fc1_dX, fc1_dW, fc1_dB, true);
     // Update FC1 weights and biases
-    for(int i = 0; i < FC1_IN_DIM*FC1_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC1_WEIGHTS; i++) {
         fc1_updated_weight[i] = fc1_weight[i] - lr * fc1_dW[i];
     }
-    for(int i = 0; i < FC1_OUT_DIM; i++) {
+    for(int i = 0; i < NUM_FC1_BIASES; i++) {
         fc1_updated_bias[i] = fc1_bias[i] - lr * fc1_dB[i];
     }
 
-    float pool2_dX[CONV2_OUT_CH*CONV2_OUT_ROWS*CONV2_OUT_COLS];
+    data_ap_fixed_t pool2_dX[CONV2_OUT_CH*CONV2_OUT_ROWS*CONV2_OUT_COLS];
     // Pool2 Bwd
     pool_bwd_golden<2, 2, CONV2_OUT_CH, CONV2_OUT_ROWS, CONV2_OUT_COLS>(fc1_dX, pool2_dX);
 
-    float conv2_dX[CONV2_IN_CH*CONV2_IN_ROWS*CONV2_IN_COLS];
-    float conv2_dW[CONV2_OUT_CH*CONV2_IN_CH*KERNEL_SIZE*KERNEL_SIZE];
-    float conv2_dB[CONV2_OUT_CH];
+    data_ap_fixed_t conv2_dX[CONV2_IN_CH*CONV2_IN_ROWS*CONV2_IN_COLS];
+    data_ap_fixed_t conv2_dW[NUM_CONV2_WEIGHTS];
+    data_ap_fixed_t conv2_dB[NUM_CONV2_BIASES];
     // Conv2 Bwd
     conv_bwd_golden<CONV2_OUT_CH, CONV2_IN_CH, KERNEL_SIZE, CONV2_IN_ROWS, CONV2_OUT_ROWS>(pool1_out, pool2_dX, conv2_weight, conv2_dX, conv2_dW, conv2_dB);
     // Update Conv2 weights and biases
-    for(int i = 0; i < CONV2_OUT_CH*CONV2_IN_CH*KERNEL_SIZE*KERNEL_SIZE; i++) {
+    for(int i = 0; i < NUM_CONV2_WEIGHTS; i++) {
         conv2_updated_weight[i] = conv2_weight[i] - lr * conv2_dW[i];
     }
-    for(int i = 0; i < CONV2_OUT_CH; i++) {
+    for(int i = 0; i < NUM_CONV2_BIASES; i++) {
         conv2_updated_bias[i] = conv2_bias[i] - lr * conv2_dB[i];
     }
 
-    float pool1_dX[CONV1_OUT_CH*CONV1_OUT_ROWS*CONV1_OUT_COLS];
+    data_ap_fixed_t pool1_dX[CONV1_OUT_CH*CONV1_OUT_ROWS*CONV1_OUT_COLS];
     // Pool1 Bwd
     pool_bwd_golden<2, 2, CONV1_OUT_CH, CONV1_OUT_ROWS, CONV1_OUT_COLS>(conv2_dX, pool1_dX);
 
-    float conv1_dX[CONV1_IN_CH*CONV1_IN_ROWS*CONV1_IN_COLS];
-    float conv1_dW[CONV1_OUT_CH*CONV1_IN_CH*KERNEL_SIZE*KERNEL_SIZE];
-    float conv1_dB[CONV1_OUT_CH];
+    data_ap_fixed_t conv1_dX[CONV1_IN_CH*CONV1_IN_ROWS*CONV1_IN_COLS];
+    data_ap_fixed_t conv1_dW[NUM_CONV1_WEIGHTS];
+    data_ap_fixed_t conv1_dB[NUM_CONV1_BIASES];
     // Conv1 Bwd
     conv_bwd_golden<CONV1_OUT_CH, CONV1_IN_CH, KERNEL_SIZE, CONV1_IN_ROWS, CONV1_OUT_ROWS>(in_data, pool1_dX, conv1_weight, conv1_dX, conv1_dW, conv1_dB);
     // Update Conv1 weights and biases
-    for(int i = 0; i < CONV1_OUT_CH*CONV1_IN_CH*KERNEL_SIZE*KERNEL_SIZE; i++) {
+    for(int i = 0; i < NUM_CONV1_WEIGHTS; i++) {
         conv1_updated_weight[i] = conv1_weight[i] - lr * conv1_dW[i];
     }
-    for(int i = 0; i < CONV1_OUT_CH; i++) {
+    for(int i = 0; i < NUM_CONV1_BIASES; i++) {
         conv1_updated_bias[i] = conv1_bias[i] - lr * conv1_dB[i];
     }
 }

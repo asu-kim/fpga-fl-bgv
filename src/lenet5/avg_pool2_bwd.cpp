@@ -3,8 +3,8 @@
 
 extern "C" {
     void avg_pool2_bwd(
-        const float* grads,
-        float* dX
+        const data_ap_fixed_t* grads,
+        data_ap_fixed_t* dX
     ) { 
         #pragma HLS INTERFACE m_axi port=grads bundle=gmem0 depth=16*(8/2)*(8/2)
         #pragma HLS INTERFACE m_axi port=dX bundle=gmem1 depth=16*8*8

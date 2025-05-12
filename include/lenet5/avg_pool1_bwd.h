@@ -3,8 +3,8 @@
 
 extern "C" {
 void avg_pool1_bwd(
-    const float* grads,
-    float* dX
+    const data_ap_fixed_t* grads,
+    data_ap_fixed_t* dX
 );
 }
 #endif

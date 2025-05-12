@@ -1,38 +1,18 @@
 #ifndef BACKWARD_PATH_H
 #define BACKWARD_PATH_H
 
+#include "data_type.hpp"
+
 extern "C" {
 void backward_path(
-    const float* in_data,
-    const float* conv1_weight,
-    const float* conv1_bias,
-    const float* conv1_out,
-    const float* pool1_out,
-    const float* conv2_weight,
-    const float* conv2_bias,
-    const float* conv2_out,
-    const float* pool2_out,
-    const float* fc1_weight,
-    const float* fc1_bias,
-    const float* fc1_out,
-    const float* fc2_weight,
-    const float* fc2_bias,
-    const float* fc2_out,
-    const float* fc3_weight,
-    const float* fc3_bias,
-    const float* fc3_out,
-    const float* label,
-    float* conv1_updated_weight,
-    float* conv1_updated_bias,
-    float* conv2_updated_weight,
-    float* conv2_updated_bias,
-    float* fc1_updated_weight,
-    float* fc1_updated_bias,
-    float* fc2_updated_weight,
-    float* fc2_updated_bias,
-    float* fc3_updated_weight,
-    float* fc3_updated_bias,
-    float loss
+    const data_ap_fixed_t* in_data,             // gmem0
+    const data_ap_fixed_t* weights,             // gmem1 - consolidated weights
+    const data_ap_fixed_t* biases,              // gmem2 - consolidated biases
+    const data_ap_fixed_t* outputs,             // gmem3 - consolidated outputs
+    const data_ap_fixed_t* label,               // gmem4
+    data_ap_fixed_t* updated_weights,           // gmem5 - consolidated updated weights
+    data_ap_fixed_t* updated_biases,            // gmem6 - consolidated updated biases
+    data_ap_fixed_t& loss
 );
 }
 #endif

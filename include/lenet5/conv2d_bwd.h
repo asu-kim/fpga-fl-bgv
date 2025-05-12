@@ -14,8 +14,8 @@
 // bias grads
 template<int OUT_C, int OUT_H, int OUT_W>
 void bias_grad(
-        const float grads[OUT_C*OUT_H*OUT_W],
-        float dB[OUT_C]
+        const data_ap_fixed_t grads[OUT_C*OUT_H*OUT_W],
+        data_ap_fixed_t dB[OUT_C]
         ) {
     for(int k=0; k<OUT_C; ++k) dB[k] = 0;
 
@@ -33,9 +33,9 @@ void bias_grad(
 // wieght grads
 template<int OUT_C, int IN_C, int K, int H, int W>
 void weight_grad(
-        const float X[IN_C*H*W],
-        const float grads[OUT_C*(H-K+1)*(W-K+1)],
-        float dW[OUT_C*IN_C*K*K]
+        const data_ap_fixed_t X[IN_C*H*W],
+        const data_ap_fixed_t grads[OUT_C*(H-K+1)*(W-K+1)],
+        data_ap_fixed_t dW[OUT_C*IN_C*K*K]
         ) {
     for(int k=0; k<OUT_C; ++k) {
         for(int i=0; i<IN_C; ++i) {
@@ -56,8 +56,8 @@ void weight_grad(
         for(int r=0; r<OUT_H; ++r) {
             for(int c=0; c<OUT_W; ++c) {
                 int grad_idx = k*(OUT_H*OUT_W) + r*OUT_W + c;
-                float grad = grads[grad_idx];
-                // float grad = grads[k][r][c];
+                data_ap_fixed_t grad = grads[grad_idx];
+                // data_ap_fixed_t grad = grads[k][r][c];
 
                 for(int i=0; i<IN_C; ++i) {
                     for(int kr=0; kr<K; ++kr) {
@@ -77,9 +77,9 @@ void weight_grad(
 // input grads
 template<int OUT_C, int IN_C, int K, int H, int W>
 void input_grad(
-        const float weight[OUT_C*IN_C*K*K],
-        const float grads[OUT_C * (H-K+1) * (W-K+1)],
-        float dX[IN_C*H*W]
+        const data_ap_fixed_t weight[OUT_C*IN_C*K*K],
+        const data_ap_fixed_t grads[OUT_C * (H-K+1) * (W-K+1)],
+        data_ap_fixed_t dX[IN_C*H*W]
         ) {
     for(int i=0; i<IN_C; ++i) {
         for(int r=0; r<H; ++r) {
@@ -98,8 +98,8 @@ void input_grad(
         for(int r=0; r<OUT_H; ++r) {
             for(int c=0; c<OUT_W; ++c) {
                 int grad_idx = k*(OUT_H*OUT_W) + r*(OUT_W) + c;
-                float grad = grads[grad_idx];
-                // float grad = grads[k][r][c];
+                data_ap_fixed_t grad = grads[grad_idx];
+                // data_ap_fixed_t grad = grads[k][r][c];
 
                 for(int i=0; i<IN_C; ++i) {
 
@@ -120,18 +120,18 @@ void input_grad(
 // backprop for conv2d
 template<int OUT_C, int IN_C, int K, int H, int W>
 void conv2d_backward(
-        const float in_activation[IN_C * H * W],
-        const float grads[OUT_C * (H-K+1) * (W-K+1)],
-        const float in_weight[OUT_C*IN_C*K*K],
-        float out_grads[IN_C * H * W],
-        float dW[OUT_C*IN_C*K*K],
-        float dB[OUT_C]
+        const data_ap_fixed_t in_activation[IN_C * H * W],
+        const data_ap_fixed_t grads[OUT_C * (H-K+1) * (W-K+1)],
+        const data_ap_fixed_t in_weight[OUT_C*IN_C*K*K],
+        data_ap_fixed_t out_grads[IN_C * H * W],
+        data_ap_fixed_t dW[OUT_C*IN_C*K*K],
+        data_ap_fixed_t dB[OUT_C]
         ) {
 
     const int OUT_H = H - K + 1;
     const int OUT_W = W - K + 1;
-    float local_weight[OUT_C * IN_C * K * K];
-    float local_grads[OUT_C * (H-K+1) * (W-K+1)];
+    data_ap_fixed_t local_weight[OUT_C * IN_C * K * K];
+    data_ap_fixed_t local_grads[OUT_C * (H-K+1) * (W-K+1)];
     
     copy_loop_weight: for (int i = 0; i < OUT_C * IN_C * K * K; i++) {
         #pragma HLS PIPELINE II=1
@@ -142,7 +142,7 @@ void conv2d_backward(
         local_grads[i] = grads[i];
     }
 
-    float dX[IN_C * H * W];
+    data_ap_fixed_t dX[IN_C * H * W];
 
     bias_grad<OUT_C, OUT_H, OUT_W>(grads, dB);
     weight_grad<OUT_C, IN_C, K, H, W>(in_activation, local_grads, dW);

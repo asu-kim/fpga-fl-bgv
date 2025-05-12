@@ -11,10 +11,10 @@
 #define OUT_C 16
 
 void conv2_golden(
-    const float in_data[IN_C][IN_ROWS][IN_COLS],
-    float out_data[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)],
-    const float weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE],
-    const float bias[OUT_C]
+    const data_ap_fixed_t in_data[IN_C][IN_ROWS][IN_COLS],
+    data_ap_fixed_t out_data[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)],
+    const data_ap_fixed_t weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE],
+    const data_ap_fixed_t bias[OUT_C]
 ) {
     // Loop over each output channel
     for (int oc = 0; oc < OUT_C; oc++) {
@@ -23,7 +23,7 @@ void conv2_golden(
             // Loop over each output column
             for (int ow = 0; ow < IN_COLS - KERNEL_SIZE + 1; ow++) {
                 // Initialize accumulator with bias
-                float acc = bias[oc];
+                data_ap_fixed_t acc = bias[oc];
                 
                 // Calculate convolution for current output position
                 for (int ic = 0; ic < IN_C; ic++) {
@@ -34,22 +34,22 @@ void conv2_golden(
                             int iw = ow + kw;
                             
                             // Accumulate weighted input
-                            float in_val = in_data[ic][ih][iw];
-                            float w_val = weights[oc][ic][kh][kw];
+                            data_ap_fixed_t in_val = in_data[ic][ih][iw];
+                            data_ap_fixed_t w_val = weights[oc][ic][kh][kw];
                             acc += in_val * w_val;
                         }
                     }
                 }
                 
                 // Quantize output
-                // float acc_float = float(acc);
-                // float scaled = acc_float * act_out_scale + (float)act_out_zp;
-                // float rounded = floor(scaled + 0.5f);
+                // data_ap_fixed_t acc_float = data_ap_fixed_t(acc);
+                // data_ap_fixed_t scaled = acc_float * act_out_scale + (data_ap_fixed_t)act_out_zp;
+                // data_ap_fixed_t rounded = floor(scaled + 0.5f);
                 
                 // // Clip to data type range
-                // float result = (float)rounded;
-                // result = hls::max(hls::numeric_limits<float>::min(), 
-                //             hls::min(hls::numeric_limits<float>::max(), result));
+                // data_ap_fixed_t result = (data_ap_fixed_t)rounded;
+                // result = hls::max(hls::numeric_limits<data_ap_fixed_t>::min(), 
+                //             hls::min(hls::numeric_limits<data_ap_fixed_t>::max(), result));
                 
                 // Calculate output index and store result
                 int out_idx = oc * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)
@@ -62,16 +62,16 @@ void conv2_golden(
 }
 
 int main() {
-    // hls::stream<float> in_stream, out_stream;
+    // hls::stream<data_ap_fixed_t> in_stream, out_stream;
 
-    float in_data[IN_C * IN_ROWS * IN_COLS];
-    float in_data_ref[IN_C][IN_ROWS][IN_COLS];
-    float out_data[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)];
-    float out_data_ref[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)];
-    float weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE];
-    float flatten_weights[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
-    float bias[OUT_C];
-    float flatten_bias[OUT_C];
+    data_ap_fixed_t in_data[IN_C * IN_ROWS * IN_COLS];
+    data_ap_fixed_t in_data_ref[IN_C][IN_ROWS][IN_COLS];
+    data_ap_fixed_t out_data[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)];
+    data_ap_fixed_t out_data_ref[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)];
+    data_ap_fixed_t weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE];
+    data_ap_fixed_t flatten_weights[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
+    data_ap_fixed_t bias[OUT_C];
+    data_ap_fixed_t flatten_bias[OUT_C];
 
     for(int channel=0; channel<OUT_C; ++channel) {
         bias[channel] = CONV2_BIAS_INT8_DATA[channel];
@@ -81,8 +81,8 @@ int main() {
             // flatten_bias[channel] = 0.0;
             for(int i=0; i<KERNEL_SIZE; ++i) {
                 for(int j=0; j<KERNEL_SIZE; ++j) {
-                    float weight = CONV2_WEIGHT_INT8_DATA[channel*(IN_C*KERNEL_SIZE*KERNEL_SIZE) + ic*(KERNEL_SIZE*KERNEL_SIZE) + i*(KERNEL_SIZE) + j];
-                    // float weight = 1.0f;
+                    data_ap_fixed_t weight = CONV2_WEIGHT_INT8_DATA[channel*(IN_C*KERNEL_SIZE*KERNEL_SIZE) + ic*(KERNEL_SIZE*KERNEL_SIZE) + i*(KERNEL_SIZE) + j];
+                    // data_ap_fixed_t weight = 1.0f;
                     weights[channel][ic][i][j] = weight;
                     flatten_weights[channel*(IN_C*KERNEL_SIZE*KERNEL_SIZE) + ic*(KERNEL_SIZE*KERNEL_SIZE) + i*(KERNEL_SIZE) + j] = weight;
                 }

@@ -20,7 +20,7 @@ void conv1_golden(
     data_t out_data[OUT_C * (IN_ROWS - KERNEL_SIZE + 1) * (IN_COLS - KERNEL_SIZE + 1)],
     const data_t weights[OUT_C][IN_C][KERNEL_SIZE][KERNEL_SIZE],
     const data_t bias[OUT_C],
-    float act_out_scale = 1.0f, 
+    data_ap_fixed_t act_out_scale = 1.0f, 
     int act_out_zp = 0
 ) {
     // Loop over each output channel
@@ -49,9 +49,9 @@ void conv1_golden(
                 }
                 
                 // Quantize output
-                float acc_float = float(acc);
-                float scaled = acc_float * act_out_scale + (float)act_out_zp;
-                float rounded = floor(scaled + 0.5f);
+                data_ap_fixed_t acc_float = data_ap_fixed_t(acc);
+                data_ap_fixed_t scaled = acc_float * act_out_scale + (data_ap_fixed_t)act_out_zp;
+                data_ap_fixed_t rounded = floor(scaled + 0.5f);
                 
                 // Clip to data type range
                 data_t result = (data_t)rounded;

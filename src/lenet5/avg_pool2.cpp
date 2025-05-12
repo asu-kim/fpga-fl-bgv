@@ -9,8 +9,8 @@ extern "C" {
     void avg_pool2(
         // hls::stream<data_t>& in_stream,
         // hls::stream<data_t>& out_stream,
-        float* in_data,
-        float* out_data
+        data_ap_fixed_t* in_data,
+        data_ap_fixed_t* out_data
     ) { 
         #pragma HLS INTERFACE m_axi port=in_data bundle=gmem0 depth=16*8*8
         #pragma HLS INTERFACE m_axi port=out_data bundle=gmem1 depth=16*(8/2)*(8/2)
@@ -22,16 +22,16 @@ extern "C" {
     // void avg_pool1(
     //     // hls::stream<data_t>& in_stream,
     //     // hls::stream<data_t>& out_stream,
-    //     float* in_data,
-    //     float* out_data
+    //     data_ap_fixed_t* in_data,
+    //     data_ap_fixed_t* out_data
     // ) { 
     //     #pragma HLS INTERFACE m_axi port=in_data bundle=gmem0 depth=1*24*24
     //     #pragma HLS INTERFACE m_axi port=out_data bundle=gmem1 depth=1*(24/2)*(24/2)
     //     const int OUT_ROWS = (IN_ROWS - POOL_SIZE) / STRIDE + 1;
     //     const int OUT_COLS = (IN_COLS - POOL_SIZE) / STRIDE + 1;
-    //     const float pool_area = POOL_SIZE * POOL_SIZE;
+    //     const data_ap_fixed_t pool_area = POOL_SIZE * POOL_SIZE;
 
-    //     static float plane[24][24]; // scratch pad
+    //     static data_ap_fixed_t plane[24][24]; // scratch pad
     //     #pragma HLS ARRAY_PARTITION variable=plane complete dim=1
 
     //     for(int channel = 0; channel < IN_C; channel++) {
@@ -51,7 +51,7 @@ extern "C" {
     //         for(int out_r = 0; out_r < OUT_ROWS; out_r++) {
     //             for(int out_c = 0; out_c < OUT_COLS; out_c++) {
     //                 #pragma HLS PIPELINE II=3
-    //                 float sum = 0.0f;
+    //                 data_ap_fixed_t sum = 0.0f;
 
     //                 // Sum the values in the pooling window
     //                 for(int i = 0; i < POOL_SIZE; i++) {
@@ -64,7 +64,7 @@ extern "C" {
     //                 printf("r = %d, c = %d\n", out_r, out_c);
     //                 printf("sum = %f\n", sum);
     //                 // Compute average
-    //                 float avg = sum / pool_area;
+    //                 data_ap_fixed_t avg = sum / pool_area;
                     
     //                 // Store result
     //                 out_data[out_channel_offset + out_r * OUT_COLS + out_c] = avg;

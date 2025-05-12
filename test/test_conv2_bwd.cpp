@@ -12,7 +12,7 @@
 #define OUT_ROW (IN_ROW-KERNEL_SIZE+1)
 #define OUT_COL (IN_COL-KERNEL_SIZE+1)
 
-void print_array(const float* arr, int size, const std::string& name) {
+void print_array(const data_ap_fixed_t* arr, int size, const std::string& name) {
     std::cout << name << " (first 10 elements): ";
     for(int i=0; i < std::min(10, size); i++) {
         std::cout << arr[i] << " ";
@@ -21,18 +21,18 @@ void print_array(const float* arr, int size, const std::string& name) {
 }
 
 int main() {
-    // hls::stream<float> in_stream, out_stream;
+    // hls::stream<data_ap_fixed_t> in_stream, out_stream;
 
-    float in_activation[IN_C * IN_ROW * IN_COL];
-    float grads[OUT_C * OUT_ROW * OUT_COL];
-    float in_weight[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
-    float out_grads[IN_C * IN_ROW * IN_COL];
-    float dW[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
-    float dB[OUT_C];
+    data_ap_fixed_t in_activation[IN_C * IN_ROW * IN_COL];
+    data_ap_fixed_t grads[OUT_C * OUT_ROW * OUT_COL];
+    data_ap_fixed_t in_weight[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
+    data_ap_fixed_t out_grads[IN_C * IN_ROW * IN_COL];
+    data_ap_fixed_t dW[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
+    data_ap_fixed_t dB[OUT_C];
 
-    float out_grads_golden[IN_C * IN_ROW * IN_COL];
-    float dW_golden[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
-    float dB_golden[OUT_C];
+    data_ap_fixed_t out_grads_golden[IN_C * IN_ROW * IN_COL];
+    data_ap_fixed_t dW_golden[OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE];
+    data_ap_fixed_t dB_golden[OUT_C];
 
     for(int i = 0; i < IN_C * IN_ROW * IN_COL; i++) {
         in_activation[i] = 0.01f * i;
@@ -69,12 +69,12 @@ int main() {
     // Compare results
     int total_errs = 0;
     int errs = 0;
-    float max_diff = 0.0f;
+    data_ap_fixed_t max_diff = 0.0f;
     
     // Verify out_grads
     int out_grads_length = IN_C * IN_ROW * IN_COL;
     for(int j=0; j<out_grads_length; j++) {
-        float diff = std::fabs(out_grads[j] - out_grads_golden[j]);
+        data_ap_fixed_t diff = std::fabs(out_grads[j] - out_grads_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {
@@ -106,7 +106,7 @@ int main() {
     errs = 0;
     int dW_length = OUT_C*IN_C*KERNEL_SIZE*KERNEL_SIZE;
     for(int j=0; j<dW_length; j++) {
-        float diff = std::fabs(dW[j] - dW_golden[j]);
+        data_ap_fixed_t diff = std::fabs(dW[j] - dW_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {
@@ -138,7 +138,7 @@ int main() {
     errs = 0;
     int dB_length = OUT_C;
     for(int j=0; j<dB_length; j++) {
-        float diff = std::fabs(dB[j] - dB_golden[j]);
+        data_ap_fixed_t diff = std::fabs(dB[j] - dB_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {

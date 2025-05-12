@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     std::cout << "Load the xclbin " << binaryFile << std::endl;
     auto uuid = device.load_xclbin(binaryFile);
 
-    // size_t vector_size_bytes = sizeof(float) * DATA_SIZE;
+    // size_t vector_size_bytes = sizeof(data_ap_fixed_t) * DATA_SIZE;
     size_t in_activation_size = IN_DIM;
     size_t grads_size = OUT_DIM;
     size_t in_weight_size = IN_DIM*OUT_DIM;
@@ -66,20 +66,20 @@ int main(int argc, char **argv)
     std::cout << "Allocate Buffer in Global Memory\n";
 
     // Allocate buffers
-    auto bo_in_activation = xrt::bo(device, sizeof(float) * in_activation_size, fc3_bwd_krnl.group_id(0));
-    auto bo_grads = xrt::bo(device, sizeof(float) * grads_size, fc3_bwd_krnl.group_id(1));
-    auto bo_in_weight = xrt::bo(device, sizeof(float) * in_weight_size, fc3_bwd_krnl.group_id(2));
-    auto bo_dX = xrt::bo(device, sizeof(float) * dX_size, fc3_bwd_krnl.group_id(3));
-    auto bo_dW = xrt::bo(device, sizeof(float) * dW_size, fc3_bwd_krnl.group_id(4));
-    auto bo_dB = xrt::bo(device, sizeof(float) * dB_size, fc3_bwd_krnl.group_id(5));
+    auto bo_in_activation = xrt::bo(device, sizeof(data_ap_fixed_t) * in_activation_size, fc3_bwd_krnl.group_id(0));
+    auto bo_grads = xrt::bo(device, sizeof(data_ap_fixed_t) * grads_size, fc3_bwd_krnl.group_id(1));
+    auto bo_in_weight = xrt::bo(device, sizeof(data_ap_fixed_t) * in_weight_size, fc3_bwd_krnl.group_id(2));
+    auto bo_dX = xrt::bo(device, sizeof(data_ap_fixed_t) * dX_size, fc3_bwd_krnl.group_id(3));
+    auto bo_dW = xrt::bo(device, sizeof(data_ap_fixed_t) * dW_size, fc3_bwd_krnl.group_id(4));
+    auto bo_dB = xrt::bo(device, sizeof(data_ap_fixed_t) * dB_size, fc3_bwd_krnl.group_id(5));
 
     // Map buffers to host memory
-    auto bo_in_activation_map = bo_in_activation.map<float *>();
-    auto bo_grads_map = bo_grads.map<float *>();
-    auto bo_in_weight_map = bo_in_weight.map<float *>();
-    auto bo_dX_map = bo_dX.map<float *>();
-    auto bo_dW_map = bo_dW.map<float *>();
-    auto bo_dB_map = bo_dB.map<float *>();
+    auto bo_in_activation_map = bo_in_activation.map<data_ap_fixed_t *>();
+    auto bo_grads_map = bo_grads.map<data_ap_fixed_t *>();
+    auto bo_in_weight_map = bo_in_weight.map<data_ap_fixed_t *>();
+    auto bo_dX_map = bo_dX.map<data_ap_fixed_t *>();
+    auto bo_dW_map = bo_dW.map<data_ap_fixed_t *>();
+    auto bo_dB_map = bo_dB.map<data_ap_fixed_t *>();
 
     std::cout << "Initialize buffers\n";
     // Initialize buffers
@@ -125,20 +125,20 @@ int main(int argc, char **argv)
     bo_dW.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
     bo_dB.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
-    float dX_golden[IN_DIM];
-    float dW_golden[IN_DIM*OUT_DIM];
-    float dB_golden[OUT_DIM];
+    data_ap_fixed_t dX_golden[IN_DIM];
+    data_ap_fixed_t dW_golden[IN_DIM*OUT_DIM];
+    data_ap_fixed_t dB_golden[OUT_DIM];
     fc_bwd_golden<IN_DIM, OUT_DIM>(bo_in_activation_map, bo_grads_map, bo_in_weight_map, dX_golden, dW_golden, dB_golden, use_relu);
 
     // Compare results
     int total_errs = 0;
     int errs = 0;
-    float max_diff = 0.0f;
+    data_ap_fixed_t max_diff = 0.0f;
     
     // Verify dX
     int dX_length = IN_DIM;
     for(int j=0; j<dX_length; j++) {
-        float diff = std::fabs(bo_dX_map[j] - dX_golden[j]);
+        data_ap_fixed_t diff = std::fabs(bo_dX_map[j] - dX_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
     errs = 0;
     int dW_length = IN_DIM*OUT_DIM;
     for(int j=0; j<dW_length; j++) {
-        float diff = std::fabs(bo_dW_map[j] - dW_golden[j]);
+        data_ap_fixed_t diff = std::fabs(bo_dW_map[j] - dW_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {
@@ -202,7 +202,7 @@ int main(int argc, char **argv)
     errs = 0;
     int dB_length = OUT_DIM;
     for(int j=0; j<dB_length; j++) {
-        float diff = std::fabs(bo_dB_map[j] - dB_golden[j]);
+        data_ap_fixed_t diff = std::fabs(bo_dB_map[j] - dB_golden[j]);
         max_diff = std::max(max_diff, diff);
         
         if (diff > 0.01f) {

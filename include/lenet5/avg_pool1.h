@@ -5,8 +5,8 @@
 
 extern "C" {
 void avg_pool1(
-    float* in_data,
-    float* out_data
+    data_ap_fixed_t* in_data,
+    data_ap_fixed_t* out_data
 );
 }
 #endif

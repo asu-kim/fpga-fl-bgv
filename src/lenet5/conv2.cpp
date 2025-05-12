@@ -6,10 +6,10 @@
 
 extern "C" {
     void conv2(
-        float* in_data,
-        float* out_data,
-        float* conv1_weight,
-        float* conv1_bias
+        data_ap_fixed_t* in_data,
+        data_ap_fixed_t* out_data,
+        data_ap_fixed_t* conv1_weight,
+        data_ap_fixed_t* conv1_bias
     ) { 
         #pragma HLS INTERFACE m_axi port=in_data bundle=gmem0 depth=864
         #pragma HLS INTERFACE m_axi port=out_data bundle=gmem1 depth=1024
@@ -21,8 +21,8 @@ extern "C" {
         // #pragma HLS INTERFACE m_axi port=conv1_bias bundle=gmem3 depth=1
         #pragma HLS INTERFACE s_axilite port=return bundle=control
 
-        // float local_weight[2400];
-        // float local_bias[16];
+        // data_ap_fixed_t local_weight[2400];
+        // data_ap_fixed_t local_bias[16];
         // for(int i = 0; i < 2400; i++) {
         //     local_weight[i] = conv1_weight[i];
         // }
@@ -55,8 +55,8 @@ extern "C" {
             int oc_start = call_idx * OUT_C_PER_CALL;
             
             // Create local arrays for the current batch of output channels
-            float local_weight_slice[OUT_C_PER_CALL*IN_C*KERNEL_SIZE*KERNEL_SIZE]; // 4*6*5*5 = 600 weights
-            float local_bias_slice[OUT_C_PER_CALL]; // 4 bias values
+            data_ap_fixed_t local_weight_slice[OUT_C_PER_CALL*IN_C*KERNEL_SIZE*KERNEL_SIZE]; // 4*6*5*5 = 600 weights
+            data_ap_fixed_t local_bias_slice[OUT_C_PER_CALL]; // 4 bias values
             
             // Copy weights and biases for the current batch of output channels
             for (int oc_offset = 0; oc_offset < OUT_C_PER_CALL; oc_offset++) {
@@ -86,7 +86,7 @@ extern "C" {
             }
             
             // Calculate output pointer offset for this batch
-            float* out_batch_ptr = out_data + (oc_start * OUT_ROWS * OUT_COLS);
+            data_ap_fixed_t* out_batch_ptr = out_data + (oc_start * OUT_ROWS * OUT_COLS);
             
             // Call conv2d for this batch of output channels
             conv2d<OUT_C_PER_CALL, IN_C, KERNEL_SIZE, IN_ROWS, IN_COLS>(

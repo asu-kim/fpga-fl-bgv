@@ -40,7 +40,7 @@
 // std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
 std::mt19937 rng(42);
 
-void print_float_array(const float* arr, int size, const std::string& name) {
+void print_float_array(const data_ap_fixed_t* arr, int size, const std::string& name) {
     std::cout << name << " (first 10 elements): ";
     for(int i=0; i < std::min(10, size); i++) {
         std::cout << arr[i] << ", ";
@@ -218,9 +218,9 @@ void decryption_reference(data_t* private_key, data_t* ciphertext1, data_t* ciph
 }
 
 void parameter_encryption_reference(
-    float pt[POLYNOMIAL_DEGREE],
-    float scale,
-    float zp,
+    data_ap_fixed_t pt[POLYNOMIAL_DEGREE],
+    data_ap_fixed_t scale,
+    data_ap_fixed_t zp,
     data_t errors[POLYNOMIAL_DEGREE*3],
     data_t pk0[POLYNOMIAL_DEGREE],
     data_t pk1[POLYNOMIAL_DEGREE],
@@ -232,8 +232,9 @@ void parameter_encryption_reference(
     data_t quantized_pt[POLYNOMIAL_DEGREE];
 
     for(int i = 0; i < POLYNOMIAL_DEGREE; i++) {
-        float quantized = pt[i] / scale+ zp;
-        quantized = (quantized > 127) ? 127 : ((quantized < -128) ? -128 : quantized);
+        data_ap_fixed_t quantized = pt[i] / scale+ zp;
+        quantized = (quantized > data_ap_fixed_t(127)) ? data_ap_fixed_t(127) : 
+        ((quantized < data_ap_fixed_t(-128)) ? data_ap_fixed_t(-128) : quantized);
         quantized_pt[i] = (data_t) quantized;
     }
 
@@ -269,10 +270,10 @@ void parameter_decryption_reference(
     data_t sk[POLYNOMIAL_DEGREE*3],
     data_t ct0[POLYNOMIAL_DEGREE],
     data_t ct1[POLYNOMIAL_DEGREE],
-    float scale,
-    float zp,
+    data_ap_fixed_t scale,
+    data_ap_fixed_t zp,
 
-    float pt[POLYNOMIAL_DEGREE]
+    data_ap_fixed_t pt[POLYNOMIAL_DEGREE]
 ) {
     // Dequantize
     data_t quantized_pt[POLYNOMIAL_DEGREE];
@@ -317,7 +318,7 @@ int main(int argc, char **argv)
     auto krnl = xrt::kernel(device, uuid, "parameter_encryption");
 
     std::cout << "Allocate Buffer in Global Memory\n";
-    auto bo_plaintext = xrt::bo(device, sizeof(float)*POLYNOMIAL_DEGREE, krnl.group_id(0));
+    auto bo_plaintext = xrt::bo(device, sizeof(data_ap_fixed_t)*POLYNOMIAL_DEGREE, krnl.group_id(0));
     auto bo_errors = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE*3, krnl.group_id(3));
     auto bo_public_key0 = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(4));
     auto bo_public_key1 = xrt::bo(device, sizeof(data_t)*POLYNOMIAL_DEGREE, krnl.group_id(5));
@@ -326,7 +327,7 @@ int main(int argc, char **argv)
 
     std::cout << "Create maps\n";
     // Map the contents of the buffer object into host memory
-    auto bo_plaintext_map = bo_plaintext.map<float *>();
+    auto bo_plaintext_map = bo_plaintext.map<data_ap_fixed_t *>();
     auto bo_errors_map = bo_errors.map<data_t *>();
     auto bo_public_key0_map = bo_public_key0.map<data_t *>();
     auto bo_public_key1_map = bo_public_key1.map<data_t *>();
@@ -360,8 +361,8 @@ int main(int argc, char **argv)
     // Synchronize buffer content with device side
     std::cout << "synchronize input buffer data to device global memory\n";
 
-    float scale = CONV1_ACT_SCALE_DATA[0];
-    float zp = CONV1_ACT_ZP_DATA[0];
+    data_ap_fixed_t scale = CONV1_ACT_SCALE_DATA[0];
+    data_ap_fixed_t zp = CONV1_ACT_ZP_DATA[0];
 
     std::cout << "Execution of the kernel\n";
     auto hw_start = std::chrono::high_resolution_clock::now();

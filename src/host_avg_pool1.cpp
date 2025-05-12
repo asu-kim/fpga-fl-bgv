@@ -45,13 +45,13 @@ std::mt19937 rng(static_cast<unsigned int>(time(nullptr)));
 #define OUT_COLS (IN_COLS / POOL_SIZE)
 #define POOL_SIZE 2
 void avg_pool1_golden(
-    const float in_data[IN_C*IN_ROWS*IN_COLS],
-    float out_data[IN_C * OUT_ROWS * OUT_COLS]
+    const data_ap_fixed_t in_data[IN_C*IN_ROWS*IN_COLS],
+    data_ap_fixed_t out_data[IN_C * OUT_ROWS * OUT_COLS]
 ) {
     for(int ch=0; ch < IN_C; ch++) {
         for(int pr=0; pr < OUT_ROWS; pr++) {
             for(int pc=0; pc < OUT_COLS; pc++) {
-                float sum = 0;
+                data_ap_fixed_t sum = 0;
                 for(int i=0; i < POOL_SIZE; i++) {
                     for(int j=0; j < POOL_SIZE; j++) {
                         // sum += in_data[ch + IN_CHANNELS*((pr*POOL_SIZE+i)*IN_COLS + (pc*POOL_SIZE+j))];
@@ -59,7 +59,7 @@ void avg_pool1_golden(
                     }
                 }
                 // Calculate average with rounding
-                float avg = sum / (POOL_SIZE*POOL_SIZE);
+                data_ap_fixed_t avg = sum / (POOL_SIZE*POOL_SIZE);
                 out_data[ch*OUT_ROWS*OUT_COLS + pr*OUT_COLS + pc] = avg;
             }
         }
@@ -82,17 +82,17 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    std::vector<float> in_data(IN_C* IN_ROWS * IN_COLS);
-    std::vector<float> out_data(IN_C * OUT_ROWS * OUT_COLS);
+    std::vector<data_ap_fixed_t> in_data(IN_C* IN_ROWS * IN_COLS);
+    std::vector<data_ap_fixed_t> out_data(IN_C * OUT_ROWS * OUT_COLS);
 
     std::cout << "Open the device " << device_index << std::endl;
     auto device = xrt::device(device_index);
     std::cout << "Load the xclbin " << binaryFile << std::endl;
     auto uuid = device.load_xclbin(binaryFile);
 
-    // size_t vector_size_bytes = sizeof(float) * DATA_SIZE;
-    size_t in_size_bytes = sizeof(float) * IN_C * IN_ROWS * IN_COLS;
-    size_t out_size_bytes = sizeof(float) * IN_C * OUT_ROWS * OUT_COLS;
+    // size_t vector_size_bytes = sizeof(data_ap_fixed_t) * DATA_SIZE;
+    size_t in_size_bytes = sizeof(data_ap_fixed_t) * IN_C * IN_ROWS * IN_COLS;
+    size_t out_size_bytes = sizeof(data_ap_fixed_t) * IN_C * OUT_ROWS * OUT_COLS;
 
     // Create kernels
     auto conv1_krnl = xrt::kernel(device, uuid, "avg_pool1");
@@ -104,8 +104,8 @@ int main(int argc, char **argv)
     auto bo_out_data = xrt::bo(device, out_size_bytes, conv1_krnl.group_id(1));
 
     // Map buffers to host memory
-    auto bo_in_data_map = bo_in_data.map<float *>();
-    auto bo_out_data_map = bo_out_data.map<float *>();
+    auto bo_in_data_map = bo_in_data.map<data_ap_fixed_t *>();
+    auto bo_out_data_map = bo_out_data.map<data_ap_fixed_t *>();
 
     std::cout << "Initialize buffers\n";
     // Initialize buffers
@@ -153,7 +153,7 @@ int main(int argc, char **argv)
     // Read output from stream
     bo_out_data.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
-    float bo_out_data_golden[IN_C * OUT_ROWS * OUT_COLS];
+    data_ap_fixed_t bo_out_data_golden[IN_C * OUT_ROWS * OUT_COLS];
     avg_pool1_golden(bo_in_data_map, bo_out_data_golden);
     // Print results
     std::cout << "Avg pooling results:\n";

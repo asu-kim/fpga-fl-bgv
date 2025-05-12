@@ -38,10 +38,10 @@
 
 // Golden reference implementation for FC layer
 void fc_golden(
-    const float in_data[IN_DIM],
-    float out_data[OUT_DIM],
-    const float weight[IN_DIM*OUT_DIM],
-    const float bias[OUT_DIM],
+    const data_ap_fixed_t in_data[IN_DIM],
+    data_ap_fixed_t out_data[OUT_DIM],
+    const data_ap_fixed_t weight[IN_DIM*OUT_DIM],
+    const data_ap_fixed_t bias[OUT_DIM],
     bool use_relu
 ) {
     // Initialize with bias
@@ -82,21 +82,21 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    std::vector<float> in_data(IN_DIM);
-    std::vector<float> out_data(OUT_DIM);
-    std::vector<float> weight_data(IN_DIM*OUT_DIM);
-    std::vector<float> bias_data(OUT_DIM);
+    std::vector<data_ap_fixed_t> in_data(IN_DIM);
+    std::vector<data_ap_fixed_t> out_data(OUT_DIM);
+    std::vector<data_ap_fixed_t> weight_data(IN_DIM*OUT_DIM);
+    std::vector<data_ap_fixed_t> bias_data(OUT_DIM);
 
     std::cout << "Open the device " << device_index << std::endl;
     auto device = xrt::device(device_index);
     std::cout << "Load the xclbin " << binaryFile << std::endl;
     auto uuid = device.load_xclbin(binaryFile);
 
-    // size_t vector_size_bytes = sizeof(float) * DATA_SIZE;
-    size_t in_size_bytes = sizeof(float) * IN_DIM;
-    size_t out_size_bytes = sizeof(float) * OUT_DIM;
-    size_t weight_size_bytes = sizeof(float) * IN_DIM*OUT_DIM;
-    size_t bias_size_bytes = sizeof(float) * OUT_DIM;
+    // size_t vector_size_bytes = sizeof(data_ap_fixed_t) * DATA_SIZE;
+    size_t in_size_bytes = sizeof(data_ap_fixed_t) * IN_DIM;
+    size_t out_size_bytes = sizeof(data_ap_fixed_t) * OUT_DIM;
+    size_t weight_size_bytes = sizeof(data_ap_fixed_t) * IN_DIM*OUT_DIM;
+    size_t bias_size_bytes = sizeof(data_ap_fixed_t) * OUT_DIM;
 
     // Create kernels
     auto fc2_krnl = xrt::kernel(device, uuid, "fc2");
@@ -112,10 +112,10 @@ int main(int argc, char **argv)
     auto bo_bias = xrt::bo(device, bias_size_bytes, fc2_krnl.group_id(3));
 
     // Map buffers to host memory
-    auto bo_in_data_map = bo_in_data.map<float *>();
-    auto bo_out_data_map = bo_out_data.map<float *>();
-    auto bo_weights_map = bo_weights.map<float *>();
-    auto bo_bias_map = bo_bias.map<float *>();
+    auto bo_in_data_map = bo_in_data.map<data_ap_fixed_t *>();
+    auto bo_out_data_map = bo_out_data.map<data_ap_fixed_t *>();
+    auto bo_weights_map = bo_weights.map<data_ap_fixed_t *>();
+    auto bo_bias_map = bo_bias.map<data_ap_fixed_t *>();
 
     std::cout << "Initialize buffers\n";
     // Initialize buffers
@@ -196,7 +196,7 @@ int main(int argc, char **argv)
     // Read output from stream
     bo_out_data.sync(XCL_BO_SYNC_BO_FROM_DEVICE);
 
-    float bo_out_data_golden[OUT_DIM];
+    data_ap_fixed_t bo_out_data_golden[OUT_DIM];
     fc_golden(bo_in_data_map, bo_out_data_golden, bo_weights_map, bo_bias_map, use_relu);
     // Print results
     std::cout << "FC results:\n";
@@ -212,10 +212,10 @@ int main(int argc, char **argv)
     }
     std::cout << "]" << std::endl;
     int errors = 0;
-    float max_error = 0.0f;
+    data_ap_fixed_t max_error = 0.0f;
 
     for(int i=0; i < OUT_DIM; i++) {
-        float diff = std::abs(bo_out_data_map[i] - bo_out_data_golden[i]);
+        data_ap_fixed_t diff = std::abs(bo_out_data_map[i] - bo_out_data_golden[i]);
         max_error = std::max(max_error, diff);
         if(diff > 0.001f) {
             errors++;
